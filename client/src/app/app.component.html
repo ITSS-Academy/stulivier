@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="header">
+    <app-header (menuClick)="onMenuClick()"></app-header>
+  </div>
+
+  <div class="main-content">
+    <div
+      [ngClass]="{
+        visible: !isSlideBarVisible,
+        hidden: isHiddenSidebar,
+        watch: currentUrl.includes('/watch/'),
+      }"
+      class="side-bar"
+    >
+      <app-sidebar [isSlideBarVisible]="isSlideBarVisible"></app-sidebar>
+    </div>
+    <div
+      [ngClass]="{
+        visible: !isSlideBarVisible,
+        hidden: isHiddenSidebar,
+        watch: currentUrl.includes('/watch/'),
+      }"
+      class="content"
+    >
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

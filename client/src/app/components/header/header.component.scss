@@ -1,0 +1,15 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+
+  .menu-icon {
+    cursor: pointer;
+  }
+}
+
+mat-icon::ng-deep {
+  color: var(--md-sys-color-primary);
+}

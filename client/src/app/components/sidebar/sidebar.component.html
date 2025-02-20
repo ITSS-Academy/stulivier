@@ -1,0 +1,34 @@
+<div id="sidebar-container">
+  <ul
+    [ngClass]="{
+      slideBarVisible: !isSlideBarVisible,
+    }"
+    id="sidebar-nav"
+  >
+    @for (page of navLinks; track $index) {
+      <li
+        class="sidebar-nav-item"
+        [ngClass]="{
+          active: activeLink === page,
+        }"
+        (click)="setActive(page)"
+      >
+        <mat-icon
+          [fontIcon]="page.icon"
+          class="icon material-symbols-rounded"
+          [ngClass]="{ fill: activeLink === page }"
+        ></mat-icon>
+
+        {{ page.name }}
+      </li>
+    }
+    <span class="spacer"></span>
+    <li class="sidenav-nav-item">
+      <mat-slide-toggle
+        #darkModeSwitch
+        (click)="toggleTheme()"
+        [checked]="checked"
+      ></mat-slide-toggle>
+    </li>
+  </ul>
+</div>
