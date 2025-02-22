@@ -1,0 +1,25 @@
+::ng-deep .mat-mdc-snack-bar-container .mat-mdc-snackbar-surface {
+  color: var(--md-sys-color-on-secondary-container);
+  background-color: var(--md-sys-color-secondary-container);
+  padding: 4px 12px 4px 4px;
+}
+
+//::ng-deep
+//  .mat-mdc-snack-bar-container
+//  .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
+//  color: var(--md-sys-color-on-tertiary-fixed-variant);
+//  --mat-text-button-state-layer-color: currentColor;
+//  --mat-text-button-ripple-color: currentColor;
+//}
+
+::ng-deep .mat-mdc-snack-bar-container .mdc-snackbar__label {
+  font-size: 16px;
+}
+
+::ng-deep .mat-mdc-button {
+  font-size: 16px;
+}
+
+#snack-bar-container {
+  display: flex;
+}

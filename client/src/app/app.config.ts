@@ -14,14 +14,18 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { environment } from '../environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { authReducer } from '../ngrxs/auth/auth.reducer';
+import * as AuthEffects from '../ngrxs/auth/auth.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(),
-    provideStore({}),
-    provideEffects(),
+    provideStore({
+      auth: authReducer,
+    }),
+    provideEffects(AuthEffects),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
     provideAnimationsAsync(),
