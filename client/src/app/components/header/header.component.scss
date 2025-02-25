@@ -1,15 +1,43 @@
 .container {
-  width: 100%;
-  height: 100%;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   padding: 0 10px;
-
+  justify-content: space-between;
+  align-content: baseline;
   .menu-icon {
     cursor: pointer;
   }
 }
-
 mat-icon::ng-deep {
   color: var(--md-sys-color-primary);
 }
+.left{
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+.right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.search{
+  border-radius: 30px;
+}
+.mat-form-field {
+  width: 680px;
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+}
+.avatar img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  cursor: pointer;
+}
+

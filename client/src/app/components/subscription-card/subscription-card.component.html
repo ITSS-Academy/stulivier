@@ -1,1 +1,19 @@
-<p>subscription-card works!</p>
+<div class="subscriptions-container">
+  <h1>Subscriptions</h1>
+  <div class="subscription-grid">
+    @for (subscription of subscriptions; track $index) {
+      <div class="subscription-card">
+        <img
+          src="{{ subscription.avatar }}"
+          alt="{{ subscription.name }}"
+          class="avatar"
+        />
+        <div class="subscription-details">
+          <h3>{{ subscription.name }}</h3>
+          <p>{{ subscription.subscribers }} M Subscribed</p>
+          <button mat-button disabled>Subscribed</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
