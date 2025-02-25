@@ -1,1 +1,5 @@
-<app-category-card></app-category-card>
+<div class="list-cate">
+  @for (cate of products; track $index){
+    <app-category-card [category]="cate" ></app-category-card>
+  }
+</div>
