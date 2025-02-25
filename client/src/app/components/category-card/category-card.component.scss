@@ -1,0 +1,67 @@
+
+.container {
+  position: absolute;
+}
+.category-container {
+  display: flex;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  padding: 10px 0 0 25px;
+}
+.category-container i {
+  font-size: 40px;
+  margin-right: 8px;
+}
+.category-container h2 {
+  font-size: 40px;
+  margin: 5px;
+}
+
+.category-container {
+  display: flex;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+/* CARD ÂM NHẠC */
+.card-container {
+  margin-top: 80px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0 0 30px;
+}
+
+.card {
+  width: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #000;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  box-shadow: 0 6px 12px rgba(255, 255, 255, 0.15);
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.card-info {
+  padding: 10px;
+  background-color: #000;
+}
+
+.card-info h3 {
+  margin: 5px 0;
+  font-size: 18px;
+}
+
+.card-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #bbb;
+}
