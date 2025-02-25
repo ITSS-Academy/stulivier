@@ -1,7 +1,28 @@
 <div class="container">
+  <div class="left">
   <mat-icon
     (click)="onMenuClick()"
     class="menu-icon material-symbols-rounded"
     fontIcon="menu"
   ></mat-icon>
+  <div class="logo">
+    <img src="" alt="logo">
+  </div>
+  </div>
+  <div class="search">
+    <mat-form-field class="mat-form-field" appearance="outline">
+      <mat-label>Search</mat-label>
+      <input matInput>
+      <mat-icon class="button-search" matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+  <div class="right">
+    <button mat-flat-button>
+      <mat-icon style="color: inherit">add</mat-icon>
+      Create</button>
+    <mat-icon style="cursor: pointer">notifications</mat-icon>
+    <div class="avatar">
+    <img src="https://danviet.mediacdn.vn/296231569849192448/2024/6/13/son-tung-mtp-17182382517241228747767.jpg" alt="avatar">
+  </div>
+</div>
 </div>
