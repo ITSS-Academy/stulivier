@@ -1,16 +1,16 @@
-<form>
+<form [formGroup]="createVideo">
   <div class="upload-video">
     <div id="header">
       <div class="video-upload-instructions"><h1>Video upload instructions</h1></div>
       <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
-        <mat-icon>close</mat-icon>
+        <mat-icon class="material-symbols-rounded">close</mat-icon>
       </button>
     </div>
 
     <div class="upload-video-ouline-ouside">
       <div class="upload-video-ouline-inside">
         <div class="safety-zone">
-          <mat-icon class="icon-video-upload" aria-hidden="false" aria-label="Example home icon"
+          <mat-icon class="icon-video-upload material-symbols-rounded" aria-hidden="false" aria-label="Example home icon"
                     fontIcon="upload"></mat-icon>
         </div>
         <div class="slot">Drag and drop videos here to upload</div>
@@ -19,22 +19,35 @@
     </div>
     <mat-form-field appearance="outline" style="width: 100%; margin-top: 10px">
       <mat-label>Video name</mat-label>
-      <input matInput placeholder="Input video name">
+      <input matInput placeholder="Input video name"
+             [formControl]="VideoName"
+             (blur)="updateVideoNameErrorMessage()"
+             required
+      >
       <!--      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
 <!--      <mat-hint>Hint</mat-hint>-->
+      @if (VideoName.invalid) {
+        <mat-error>{{errorVideoNameMessage()}}</mat-error>
+      }
     </mat-form-field>
     <mat-form-field appearance="outline" style="width: 100%">
       <mat-label>Describe</mat-label>
       <textarea matInput placeholder="Input describe" #textarea
                 (input)="autoResize()"
+                [formControl]="Describe"
+                (blur)="updateVideoNameErrorMessage()"
                 maxlength="1000"
       ></textarea>
+      @if (Describe.invalid) {
+        <mat-error>{{errorDescribeMessage()}}</mat-error>
+      }
 <!--      <mat-hint>Hint</mat-hint>-->
     </mat-form-field>
 
     <div class="input-data-item">
       <span>Thumbnail</span>
-      <button mat-fab extended style="height: 40px">
+      <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept="image/*">
+      <button mat-fab extended (click)="fileInput.click()" style="height: 40px">
         <mat-icon>smb_share</mat-icon>
         Upload photo
       </button>
@@ -66,7 +79,7 @@
       <div class="uploaded">
         90% uploaded
       </div>
-      <button mat-stroked-button>Complete</button>
+      <button [disabled]="VideoName.invalid" mat-flat-button>Complete</button>
     </div>
     <mat-progress-bar
       class="example-margin"
