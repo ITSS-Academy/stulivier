@@ -63,6 +63,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'profile',
+    loadChildren: () =>
+      import('./pages/profile/profile.route').then((m) => m.PROFILE_ROUTES),
+  },
+
+
+  {
     path: '**',
     redirectTo: 'home',
   },
