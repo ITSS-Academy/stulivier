@@ -20,7 +20,7 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'watch/:id',
+    path: 'watch',
     loadChildren: () =>
       import('./pages/watch/watch.route').then((m) => m.WATCH_ROUTES),
   },
@@ -56,7 +56,7 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'category/:id',
+    path: 'category',
     loadChildren: () =>
       import('./pages/category-detail/category-detail.route').then(
         (m) => m.CATEGORY_DETAIL_ROUTES,
@@ -67,7 +67,6 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./pages/profile/profile.route').then((m) => m.PROFILE_ROUTES),
   },
-
 
   {
     path: '**',

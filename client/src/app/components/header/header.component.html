@@ -1,25 +1,32 @@
 <div class="container">
   <div class="left">
-  <mat-icon
-    (click)="onMenuClick()"
-    class="menu-icon material-symbols-rounded"
-    fontIcon="menu"
-  ></mat-icon>
-    <img src="/../public/images.png" alt="logo">
+    <mat-icon
+      (click)="onMenuClick()"
+      class="menu-icon material-symbols-rounded"
+      fontIcon="menu"
+    ></mat-icon>
+    <img alt="logo" src="" />
   </div>
   <div class="search">
-      <input matInput type="text" placeholder="Search" class="input-search">
+    <input class="input-search" matInput placeholder="Search" type="text" />
     <div class="button-search">
-      <div style="padding: 0 18px" class="icon-search">
-      <mat-icon matSuffix>search</mat-icon>
+      <div class="icon-search" style="padding: 0 18px">
+        <mat-icon class="material-symbols-rounded" fontIcon="search"></mat-icon>
       </div>
     </div>
   </div>
   <div class="right">
     <button mat-flat-button>
-      <mat-icon style="color: inherit">add</mat-icon>
-      Create</button>
-    <mat-icon style="cursor: pointer">notifications</mat-icon>
-    <img src="https://danviet.mediacdn.vn/296231569849192448/2024/6/13/son-tung-mtp-17182382517241228747767.jpg" alt="avatar">
-</div>
+      <mat-icon class="material-symbols-rounded" fontIcon="add"></mat-icon>
+      Create
+    </button>
+    <mat-icon
+      class="material-symbols-rounded"
+      fontIcon="notifications"
+    ></mat-icon>
+    <img
+      alt="avatar"
+      src="https://danviet.mediacdn.vn/296231569849192448/2024/6/13/son-tung-mtp-17182382517241228747767.jpg"
+    />
+  </div>
 </div>

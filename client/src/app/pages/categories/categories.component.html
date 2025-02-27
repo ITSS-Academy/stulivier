@@ -1,5 +1,10 @@
-<div class="list-cate">
-  @for (cate of products; track $index){
-    <app-category-card [category]="cate" ></app-category-card>
-  }
+<div class="categories-header">
+  <i class='bx bx-category-alt'>Categories</i>
+</div>
+<div class="list-cate-container">
+  <div class="list-cate">
+    @for (cate of products; track $index){
+      <app-category-card [category]="cate" ></app-category-card>
+    }
+  </div>
 </div>
