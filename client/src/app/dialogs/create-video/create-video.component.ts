@@ -13,6 +13,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {merge} from 'rxjs';
 import {FormControl, FormGroup, isFormGroup, Validators} from '@angular/forms';
+import {DialogRef} from '@angular/cdk/dialog';
 
 @Component({
   selector: 'app-create-video',
@@ -51,7 +52,7 @@ export class CreateVideoComponent implements AfterViewInit {
   errorVideoNameMessage = signal('');
   errorDescribeMessage = signal('');
 
-  constructor() {
+  constructor(private dialogRef: DialogRef<CreateVideoComponent>) {
     merge(this.Describe.statusChanges, this.Describe.valueChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updateDescribeErrorMessage());
@@ -84,5 +85,10 @@ export class CreateVideoComponent implements AfterViewInit {
       // Handle the selected file
       console.log(file);
     }
+  }
+
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 }

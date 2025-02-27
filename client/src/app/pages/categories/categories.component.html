@@ -1,1 +1,5 @@
-<p>categories works!</p>
+<div class="list-cate">
+  @for (cate of products; track $index){
+    <app-category-card [category]="cate" ></app-category-card>
+  }
+</div>

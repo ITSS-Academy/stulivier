@@ -31,6 +31,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     importProvidersFrom(
       SocketIoModule.forRoot(environment.socketIoConfig as SocketIoConfig),
-    ),
+    ), provideAnimationsAsync(),
   ],
 };

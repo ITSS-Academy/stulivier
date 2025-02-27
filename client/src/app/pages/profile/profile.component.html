@@ -1,3 +1,59 @@
-<button (click)="openDialog()"></button>
-<app-create-video></app-create-video>
+<div id="user-data">
+  <div class="user-background">
+    <div class="background-img"></div>
+    <div class="background-linear">
+
+    </div>
+  </div>
+
+  <div class="user-data-controller">
+    <div class="avatar">
+      <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" class="avatar-img">
+      @if (self) {
+      <button mat-fab aria-label="Example icon button with a delete icon" class="avatar-button">
+        <mat-icon class="material-symbols-rounded">edit</mat-icon>
+      </button>
+      }
+    </div>
+    <div class="controller-and-info">
+      <div class="top-group">
+        @if (self) {
+        <button mat-fab aria-label="Example icon button with a delete icon" class="avatar-button"
+                (click)="openEditProfileDialog()">
+          <mat-icon class="material-symbols-rounded">edit</mat-icon>
+        </button>
+        <button mat-fab aria-label="Example icon button with a delete icon" class="avatar-button">
+          <mat-icon class="material-symbols-rounded">image</mat-icon>
+        </button>
+        }
+      </div>
+      <div class="bottom-group">
+        <div class="user-data">
+          <h1>Ivako Talavadze</h1>
+          <p class="Views">123,354 Views</p>
+          <p class="Describe">Art Direction UX/UI DESIGNER Founder of AdzeDesign</p>
+
+
+        </div>
+        <div class="user-controller">
+          <p>54K Follower</p>
+          @if (self) {
+            <button mat-fab extended (click)="openCreateVideoDialog()">
+              <mat-icon class="material-symbols-rounded">outbox</mat-icon>
+              UPLOAD NEW VIDEO
+            </button>
+          } @else {
+            <button mat-fab extended>
+              Subscribe
+            </button> <!--nút dành cho đăng ký-->
+          }
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="profile-category">
+
+</div>
 
