@@ -79,6 +79,10 @@ h1 {
       overflow: hidden;
       height: 214px;
       flex-shrink: 0;
+      font-size: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .slot {
@@ -174,6 +178,8 @@ span {
   flex-direction: row-reverse;
   gap: 20px;
 }
+
+
 
 
 
