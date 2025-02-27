@@ -1,0 +1,66 @@
+.container-video-card-vertical{
+  display: flex;
+  flex-direction: column;
+  color: var(--md-sys-color-on-background);
+}
+.image-video-card-vertical{
+  height: 170px;
+}
+.image-avatar{
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+.form-content{
+  display: flex;
+  width: 300px;
+  gap: 10px;
+  padding: 10px 0 0 0;
+}
+.form-title{
+  .material-icons {
+    font-size: 16px;
+  }
+}
+.main-content{
+  h6{
+    display: flex;
+    text-align: left;
+    margin: 0;
+    max-height: calc(1.5em * 2); /* Giữ đúng 2 dòng */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.5em;
+  }
+}
+.form-title{
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.other-content {
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 7px;
+  p{
+    font-size: 10px;
+    margin: 2px;
+  }
+}
+.under-username{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  .material-icons{
+    fill: var(--md-sys-color-primary);
+    font-size: 6px;
+  }
+  .mat-icon{
+    width: 6px;
+    height: 6px;
+  }
+}

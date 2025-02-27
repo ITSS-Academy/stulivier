@@ -1,8 +1,14 @@
-#container {
+.container-home {
+  display: flex;
   width: 100%;
+  padding: 20px;
   height: 100%;
+  overflow: auto;
+}
+.form-video {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 3 cột */
+  text-align: center;
+  gap: 20px;
 }
 
-#tittle {
-  color: var(--md-sys-color-on-surface);
-}
