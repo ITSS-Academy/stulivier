@@ -2,7 +2,7 @@
   <div class="upload-video">
     <div id="header">
       <div class="video-upload-instructions"><h1>Profile edit instructions</h1></div>
-      <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+      <button mat-icon-button (click)="closeDialog()" aria-label="Close dialog">
         <mat-icon class="material-symbols-rounded">close</mat-icon>
       </button>
     </div>
@@ -24,12 +24,6 @@
 <!--      <mat-hint>Hint</mat-hint>-->
     </mat-form-field>
 
-    <mat-form-field appearance="outline" style="width: 100%; margin-top: 10px">
-      <mat-label>Email</mat-label>
-      <input matInput placeholder="Input email">
-      <!--      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
-<!--      <mat-hint>Hint</mat-hint>-->
-    </mat-form-field>
 
     <mat-form-field appearance="outline" style="width: 100%">
       <mat-label>Describe</mat-label>
@@ -42,8 +36,9 @@
 
     <div class="input-data-item">
       <span>Background image</span>
-      <button mat-fab extended style="height: 40px">
-        <mat-icon>smb_share</mat-icon>
+      <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept="image/*">
+      <button mat-fab extended (click)="fileInput.click()" style="height: 40px">
+        <mat-icon class="material-symbols-rounded">smb_share</mat-icon>
         Upload photo
       </button>
     </div>
