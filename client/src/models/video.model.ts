@@ -12,6 +12,8 @@ export interface VideoModel {
   reaction_type: string;
   resume_position: number;
   category_id: string;
+  username: string;
+  avatar_url: string;
 }
 
 export interface CreateVideoDto {
