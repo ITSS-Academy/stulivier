@@ -2,7 +2,7 @@
   <div class="upload-video">
     <div id="header">
       <div class="video-upload-instructions"><h1>Video upload instructions</h1></div>
-      <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+      <button mat-icon-button (click)="closeDialog()" aria-label="Close dialog">
         <mat-icon class="material-symbols-rounded">close</mat-icon>
       </button>
     </div>
@@ -48,7 +48,7 @@
       <span>Thumbnail</span>
       <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept="image/*">
       <button mat-fab extended (click)="fileInput.click()" style="height: 40px">
-        <mat-icon>smb_share</mat-icon>
+        <mat-icon class="material-symbols-rounded">smb_share</mat-icon>
         Upload photo
       </button>
     </div>
