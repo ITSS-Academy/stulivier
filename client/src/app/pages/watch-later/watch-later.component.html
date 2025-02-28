@@ -1,22 +1,78 @@
-<div class="container">
-        <div class="background" id="bg">
-          <img class="background-img" src="https://cdn-media.sforum.vn/storage/app/media/wp-content/uploads/2023/12/hinh-nen-vu-tru-72.jpg" alt="background-img">
-        </div>
-        <div class="overlay">
-          <div class="bottom-left">
-            <div class="title">Watch Later</div>
-            <div class="buttons">
-              <button class="play-button" mat-flat-button>Play All</button>
-              <button class="shuffle-button" mat-flat-button>Shuffle</button>
-            </div>
+<div id="container">
+  <div id="cover">
+    <div class="cover-background">
+      <div class="background-img">
+        <input
+          #coverInput
+          (change)="onCoverSelected($event)"
+          accept="image/*"
+          style="display: none"
+          type="file"
+        />
+        @if (coverImage) {
+          <img
+            [src]="coverImage"
+            alt="Selected Image"
+            class="background-img-preview"
+          />
+        }
+      </div>
+      <div (click)="triggerCoverInput()" class="background-linear">
+        <div class="background-text">
+          <span class="title"> Watch later </span>
+          <div class="actions">
+            <button (click)="playAll($event)" mat-flat-button>
+              <mat-icon
+                class="material-symbols-rounded"
+                fontIcon="play_arrow"
+              ></mat-icon>
+              Play all
+            </button>
+            <button (click)="shuffle($event)" mat-stroked-button>
+              <mat-icon
+                class="material-symbols-rounded"
+                fontIcon="shuffle"
+              ></mat-icon>
+              Shuffle
+            </button>
           </div>
-          <button class="center-button" mat-flat-button (click)="toggleOptions()">Options</button>
-        </div>
-        <div class="options-panel" id="options-panel">
-          <button class="change-bg-color-button"  (click)="changeBackgroundColor()">Change Background Color</button>
-          <input class="color-picker" type="color" id="colorPicker" (change)="onColorChange($event)" />
-          <button class="change-bg-image-button">Change Background Image</button>
-          <input class="file-input" type="file" (change)="onBackgroundImageChange($event)" />
         </div>
       </div>
-
+    </div>
+  </div>
+  <div id="content-container">
+    <cdk-virtual-scroll-viewport id="main-content" itemSize="50">
+      <div id="content">
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </div>
+</div>

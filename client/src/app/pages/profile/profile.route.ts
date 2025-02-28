@@ -11,11 +11,11 @@ export const PROFILE_ROUTES: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'home',
+        redirectTo: 'featured',
         pathMatch: 'full',
       },
       {
-        path: 'home',
+        path: 'featured',
         component: HomeComponent,
       },
       {

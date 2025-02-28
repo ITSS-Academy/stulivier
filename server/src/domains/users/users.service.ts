@@ -27,10 +27,13 @@ export class UsersService {
         .from('playlists')
         .insert({
           user_id: createUserModel.uid,
-          name: 'Watch later',
+          title: 'Watch later',
           is_public: false,
         });
-      return;
+
+      if (errorPlaylist) {
+        throw new HttpException(errorPlaylist, HttpStatus.BAD_REQUEST);
+      }
     } catch (e) {
       throw new HttpException(e, HttpStatus.BAD_REQUEST);
     }
@@ -44,10 +47,6 @@ export class UsersService {
         .select('*')
         .eq('id', id)
         .single();
-
-      if (error) {
-        throw new HttpException(error, HttpStatus.BAD_REQUEST);
-      }
 
       if (!data || data.length === 0) {
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);

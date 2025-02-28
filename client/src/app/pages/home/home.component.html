@@ -1,7 +1,5 @@
 <div class="container-home">
   <div class="form-video">
-      @for (video of videos; track $index) {
-        <app-video-card-vertical [video]="video"></app-video-card-vertical>
-      }
+    <app-video-card-vertical [video]="videos[0]"></app-video-card-vertical>
   </div>
 </div>

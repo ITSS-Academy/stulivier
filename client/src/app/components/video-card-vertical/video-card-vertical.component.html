@@ -1,28 +1,37 @@
-<div class="container-video-card-vertical">
-  <img
-    alt="image-video-card-vertical"
-    class="image-video-card-vertical"
-    src="{{ video.video_url }}"
-  />
-  <div class="form-content">
-    <img alt="" class="image-avatar" src="{{ video.avatar_url }}" />
-    <div class="main-content">
-      <div class="form-title">
-        <div class="title">
-          <h6>{{ video.title }}</h6>
-        </div>
-        <mat-icon class="material-symbols-rounded">more_vert</mat-icon>
+<mat-card appearance="outlined" class="video-card">
+  <div class="video-container">
+    <img
+      [src]="video.video_url"
+      alt="Thumbnail"
+      class="thumbnail"
+      mat-card-image
+    />
+  </div>
+
+  <mat-card-content>
+    <div class="content-container">
+      <div class="main-content">
+        <p class="title">{{ video.title }}</p>
       </div>
-      <div class="other-content">
-        <p>{{ video.username }}</p>
-        <div class="under-username">
-          <p>{{ video.views | number }} views</p>
-          <mat-icon class="material-symbols-rounded"
-            >fiber_manual_record</mat-icon
-          >
-          <p>{{ video.created_at }}</p>
-        </div>
+      <div class="actions">
+        <button
+          [matMenuTriggerFor]="menu"
+          aria-label="Example icon-button with a menu"
+          mat-icon-button
+        >
+          <mat-icon class="material-symbols-rounded">more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>
+            <mat-icon class="material-symbols-rounded">schedule</mat-icon>
+            <span>Save to Watch later</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon class="material-symbols-rounded">bookmark</mat-icon>
+            <span>Save to playlist</span>
+          </button>
+        </mat-menu>
       </div>
     </div>
-  </div>
-</div>
+  </mat-card-content>
+</mat-card>

@@ -1,10 +1,17 @@
-<div class="categories-header">
-  <i class='bx bx-category-alt'>Categories</i>
-</div>
-<div class="list-cate-container">
-  <div class="list-cate">
-    @for (cate of products; track $index){
-      <app-category-card [category]="cate" ></app-category-card>
-    }
+<div id="container">
+  <div id="header">
+    <mat-icon
+      class="material-symbols-rounded"
+      fontIcon="category"
+      id="icon"
+    ></mat-icon>
+    <span id="title">Categories</span>
   </div>
+  <cdk-virtual-scroll-viewport id="scroll" itemSize="50">
+    <div id="cate-list">
+      @for (cate of products; track $index) {
+        <app-category-card [category]="cate"></app-category-card>
+      }
+    </div>
+  </cdk-virtual-scroll-viewport>
 </div>
