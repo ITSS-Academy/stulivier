@@ -4,11 +4,13 @@ import { MaterialModule } from '../../../shared/modules/material.module';
 import { VideoModule } from '../../../shared/modules/video.module';
 import {VideoCardVerticalComponent} from '../../components/video-card-vertical/video-card-vertical.component';
 import {VideoModel} from '../../../models/video.model';
+import {MatIconModule} from '@angular/material/icon';
+
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [SharedModule, MaterialModule, VideoModule, VideoCardVerticalComponent],
+  imports: [SharedModule, MaterialModule, VideoModule, VideoCardVerticalComponent, MatIconModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
