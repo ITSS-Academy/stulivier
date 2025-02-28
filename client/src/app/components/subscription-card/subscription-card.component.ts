@@ -13,63 +13,117 @@ export class SubscriptionCardComponent {
     {
       name: 'QuocDuy',
       subscribers: 1.1,
-      avatar:
-        'https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474094aUF/anh-dep-doremon_033145831.png',
+      avatar: 'https://avatar.iran.liara.run/public/19',
     },
     {
       name: 'QuangHuy',
       subscribers: 1.4,
-      avatar: 'https://via.placeholder.com/50?text=H',
+      avatar: 'https://avatar.iran.liara.run/public/25',
     },
     {
       name: 'GiaBao',
       subscribers: 1.6,
-      avatar: 'https://via.placeholder.com/50?text=G',
+      avatar: 'https://avatar.iran.liara.run/public/2 ',
     },
     {
       name: 'HoangPhi',
       subscribers: 1.7,
-      avatar: 'https://via.placeholder.com/50?text=P',
+      avatar: 'https://avatar.iran.liara.run/public/15',
     },
     {
       name: 'Milk',
       subscribers: 2.0,
-      avatar: 'https://via.placeholder.com/50?text=M',
+      avatar: 'https://avatar.iran.liara.run/public/4',
     },
     {
       name: 'TuHao',
       subscribers: 3.5,
-      avatar: 'https://via.placeholder.com/50?text=T',
+      avatar: 'https://avatar.iran.liara.run/public/86',
     },
     {
       name: 'Quan',
       subscribers: 2.5,
-      avatar: 'https://via.placeholder.com/50?text=Q',
+      avatar: 'https://avatar.iran.liara.run/public/84',
     },
     {
       name: 'FishKho',
       subscribers: 3.3,
-      avatar: 'https://via.placeholder.com/50?text=F',
+      avatar: 'https://avatar.iran.liara.run/public/19',
     },
     {
       name: 'TrunThen',
       subscribers: 5.6,
-      avatar: 'https://via.placeholder.com/50?text=T',
+      avatar: 'https://avatar.iran.liara.run/public/26',
     },
     {
       name: 'TrunHoe',
       subscribers: 1.8,
-      avatar: 'https://via.placeholder.com/50?text=H',
+      avatar: 'https://avatar.iran.liara.run/public/34',
     },
     {
       name: 'MinQuy',
       subscribers: 1.9,
-      avatar: 'https://via.placeholder.com/50?text=M',
+      avatar: 'https://avatar.iran.liara.run/public/6',
     },
     {
       name: 'Quan',
       subscribers: 13.0,
-      avatar: 'https://via.placeholder.com/50?text=Q',
+      avatar: 'https://avatar.iran.liara.run/public/9',
+    },
+    {
+      name: 'Quan',
+      subscribers: 13.0,
+      avatar: 'https://avatar.iran.liara.run/public/16',
+    },
+    {
+      name: 'Quan',
+      subscribers: 13.0,
+      avatar: 'https://avatar.iran.liara.run/public/38',
+    },
+    {
+      name: 'Quan',
+      subscribers: 13.0,
+      avatar: 'https://avatar.iran.liara.run/public/33',
+    },
+    {
+      name: 'Quan',
+      subscribers: 13.0,
+      avatar: 'https://avatar.iran.liara.run/public/27',
+    },
+    {
+      name: 'Quan',
+      subscribers: 13.0,
+      avatar: 'https://avatar.iran.liara.run/public/39',
+    },
+    {
+      name: 'Quan',
+      subscribers: 13.0,
+      avatar: 'https://avatar.iran.liara.run/public/7',
+    },
+    {
+      name: 'Quan',
+      subscribers: 13.0,
+      avatar: 'https://avatar.iran.liara.run/public/31',
+    },
+    {
+      name: 'Quan',
+      subscribers: 13.0,
+      avatar: 'https://avatar.iran.liara.run/public/32',
+    },
+    {
+      name: 'Quan',
+      subscribers: 13.0,
+      avatar: 'https://avatar.iran.liara.run/public/11',
+    },
+    {
+      name: 'Quan',
+      subscribers: 13.0,
+      avatar: 'https://avatar.iran.liara.run/public/13',
+    },
+    {
+      name: 'Quan',
+      subscribers: 13.0,
+      avatar: 'https://avatar.iran.liara.run/public/28',
     },
   ];
 }

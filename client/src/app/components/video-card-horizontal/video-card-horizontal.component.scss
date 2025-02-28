@@ -1,0 +1,23 @@
+.video-card {
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 320px;
+}
+
+.video-card img {
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.video-card h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.video-card p {
+  font-size: 0.875rem;
+  color: #a0a0a0;
+}

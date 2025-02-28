@@ -1,0 +1,9 @@
+DATABASE_HOST=aws-0-ap-southeast-1.pooler.supabase.com
+DATABASE_USERNAME=postgres.hybsmigdaummopabuqki
+DATABASE_PASSWORD=j7Emx5pHCWIbjZRC
+DATABASE_NAME=postgres
+JWT_SECRET=/Y5rIqwZFHoYpHsrRLmgoDzjKb1or/BPQPkWowckU+mDWi0R5LVtHEcq9XdePUG/7xh551440RMAEhuBYHeRMg==
+
+
+SUPABASE_URL=https://hybsmigdaummopabuqki.supabase.co
+SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh5YnNtaWdkYXVtbW9wYWJ1cWtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk5MzQ1MDIsImV4cCI6MjA1NTUxMDUwMn0.X2oldeqrCT6CACWaxqutCM90sbND9sxlNkFtzoO0iSM
