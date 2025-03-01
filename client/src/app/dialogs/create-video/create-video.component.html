@@ -5,128 +5,236 @@
       <mat-icon class="material-symbols-rounded">close</mat-icon>
     </button>
   </div>
-  <cdk-virtual-scroll-viewport id="scroll" itemSize="50">
-    <form [formGroup]="createVideo" id="form-container">
-      <div class="upload-video">
-        <div class="upload-video-ouline-ouside">
-          <div class="upload-video-ouline-inside">
-            <div class="safety-zone">
-              <mat-icon
-                aria-hidden="false"
-                aria-label="Example home icon"
-                class="icon-video-upload material-symbols-rounded"
-                fontIcon="upload"
-              ></mat-icon>
-            </div>
-            <div class="slot">Drag and drop videos here to upload</div>
-            <div class="or-click-this">Or click this box to select a video</div>
-          </div>
-        </div>
-        <mat-form-field
-          appearance="outline"
-          style="width: 100%; margin-top: 10px"
-        >
-          <mat-label>Video name</mat-label>
-          <input
-            (blur)="updateVideoNameErrorMessage()"
-            [formControl]="VideoName"
-            matInput
-            placeholder="Input video name"
-            required
-          />
-          <!--      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
-          <!--      <mat-hint>Hint</mat-hint>-->
-          @if (VideoName.invalid) {
-            <mat-error>{{ errorVideoNameMessage() }}</mat-error>
-          }
-        </mat-form-field>
-        <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label>Describe</mat-label>
-          <textarea
-            #textarea
-            (blur)="updateVideoNameErrorMessage()"
-            (input)="autoResize()"
-            [formControl]="Describe"
-            matInput
-            maxlength="1000"
-            placeholder="Input describe"
-          ></textarea>
-          @if (Describe.invalid) {
-            <mat-error>{{ errorDescribeMessage() }}</mat-error>
-          }
-        </mat-form-field>
+  <mat-progress-bar
+    mode="determinate"
+    value="{{ uploadProgress$ | async }}"
+  ></mat-progress-bar>
 
-        <div class="selection">
-          <div class="selection-left">
-            <div class="input-data-item">
-              <span>Thumbnail</span>
+  <div id="content-container">
+    <mat-stepper #stepper [linear]="false">
+      <mat-step
+        [completed]="isFileUploaded"
+        [editable]="!isFileUploaded"
+        [stepControl]="uploadForm"
+      >
+        <form [formGroup]="uploadForm">
+          <ng-template matStepperIcon="done">
+            <mat-icon
+              class="material-symbols-rounded"
+              fontIcon="done"
+            ></mat-icon>
+          </ng-template>
+          <ng-template matStepLabel>Upload your video</ng-template>
+          <div id="step1-container">
+            <div id="upload-video">
+              <mat-icon class="material-symbols-rounded" id="upload-icon"
+                >upload_2
+              </mat-icon>
+            </div>
+            <div
+              (dragover)="onDragOver($event)"
+              (drop)="onFileDrop($event)"
+              id="content"
+            >
+              <span>Drag and drop video files to upload </span>
               <input
-                #fileInput
                 (change)="onFileSelected($event)"
-                accept="image/*"
-                style="display: none"
+                accept="video/mp4"
+                hidden
+                id="file-input"
                 type="file"
               />
               <button
-                (click)="fileInput.click()"
-                extended
-                mat-fab
-                style="height: 40px"
+                (click)="onUploadButtonClick()"
+                id="upload-button"
+                mat-raised-button
               >
-                <mat-icon class="material-symbols-rounded">smb_share</mat-icon>
-                Upload photo
+                Select Video
               </button>
             </div>
+          </div>
 
-            <div class="input-data-item">
-              <div class="playlist">Playlist</div>
-              <mat-form-field>
-                <mat-label>Select playlist</mat-label>
-                <mat-select>
-                  <mat-option value="one">First option</mat-option>
-                  <mat-option value="two">Second option</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="uploadForm" label="Details">
+        <form [formGroup]="uploadForm">
+          <ng-template matStepLabel
+            >Fill out your video information
+          </ng-template>
+          <div id="step2-container">
+            <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
+              <div class="form-left">
+                <mat-form-field>
+                  <mat-label>Title</mat-label>
+                  <input
+                    formControlName="fileName"
+                    matInput
+                    maxlength="100"
+                    placeholder="Add a title that describes your video"
+                  />
+                  <mat-hint align="end" class="hint">
+                    {{ (uploadForm.get("fileName")?.value ?? "").length }}/100
+                  </mat-hint>
+                </mat-form-field>
 
-            <div class="input-data-item">
-              <div class="playlist">Category</div>
-              <mat-form-field>
-                <mat-label>Select category</mat-label>
-                <mat-select>
-                  <mat-option value="one">First option</mat-option>
-                  <mat-option value="two">Second option</mat-option>
-                </mat-select>
-              </mat-form-field>
+                <mat-form-field>
+                  <mat-label>Description</mat-label>
+                  <textarea
+                    cdkAutosizeMaxRows="20"
+                    cdkAutosizeMinRows="5"
+                    cdkTextareaAutosize
+                    formControlName="description"
+                    matInput
+                    maxlength="5000"
+                    placeholder="Tell viewers about your video"
+                  ></textarea>
+                  <mat-hint align="end" class="hint">
+                    {{
+                      (uploadForm.get("description")?.value ?? "").length
+                    }}/5000
+                  </mat-hint>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>Category</mat-label>
+                  <mat-select formControlName="categories" multiple>
+                    @for (category of categories$ | async; track $index) {
+                      <mat-option [value]="category.id"
+                        >{{ category.name }}
+                      </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </cdk-virtual-scroll-viewport>
+
+            <div class="form-right">
+              <div class="thumbnail-container">
+                @if (uploadForm.get("thumbnail")?.value) {
+                  <div class="thumbnail-img">
+                    <img
+                      [src]="uploadForm.get('thumbnail')?.value"
+                      alt="Thumbnail"
+                    />
+                    <button
+                      mat-icon-button
+                      class="edit-icon"
+                      [disabled]="this.isFormDisabled"
+                      (click)="onEditThumbnailClick()"
+                    >
+                      <mat-icon class="material-symbols-rounded">edit</mat-icon>
+                    </button>
+                  </div>
+
+                  <input
+                    type="file"
+                    class="edit-thumbnail-file-input"
+                    accept="image/*"
+                    (change)="onThumbnailSelected($event)"
+                    hidden
+                  />
+                } @else {
+                  <div
+                    class="thumbnail-input"
+                    (click)="onThumbnailInputClick()"
+                  >
+                    Choose your thumbnail image
+                  </div>
+                  <input
+                    type="file"
+                    class="thumbnail-file-input"
+                    accept="image/*"
+                    (change)="onThumbnailSelected($event)"
+                    hidden
+                  />
+                }
+              </div>
             </div>
           </div>
-          <div class="selection-right">
-            <p [style.display]="previewThumbnail ? 'block' : 'none'">Thumbnail preview</p>
-            <img
-              [src]="previewThumbnail"
-              class="preview-image"
-              alt="Preview"
-              [style.display]="previewThumbnail ? 'block' : 'none'">
-          </div>
-        </div>
 
-        <div class="note-upload-will">
-          Note: upload will be canceled if this page is closed
-        </div>
-        <div class="button-parent">
-          <div class="uploaded">90% uploaded</div>
-          <button [disabled]="VideoName.invalid" mat-flat-button>
-            Complete
-          </button>
-        </div>
-        <mat-progress-bar
-          [bufferValue]="bufferValue"
-          [mode]="mode"
-          [value]="value"
-          class="example-margin"
-        >
-        </mat-progress-bar>
-      </div>
-    </form>
-  </cdk-virtual-scroll-viewport>
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <form [formGroup]="uploadForm">
+          <ng-template matStepperIcon="edit">
+            <mat-icon
+              class="material-symbols-rounded"
+              fontIcon="edit"
+            ></mat-icon>
+          </ng-template>
+
+          <ng-template matStepLabel>Visibility</ng-template>
+          <div id="step3-container">
+            <div class="form-left">
+              <span id="visibility">Visibility</span>
+              <mat-radio-group formControlName="visibility">
+                <mat-radio-button value="public">Public</mat-radio-button>
+                <mat-radio-button value="private">Private</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <div class="form-right">
+              <div class="thumbnail-container">
+                @if (uploadForm.get("thumbnail")?.value) {
+                  <div class="thumbnail-img">
+                    <img
+                      [src]="uploadForm.get('thumbnail')?.value"
+                      alt="Thumbnail"
+                    />
+                    <button
+                      mat-icon-button
+                      class="edit-icon"
+                      [disabled]="this.isFormDisabled"
+                      (click)="onEditThumbnailClick()"
+                    >
+                      <mat-icon class="material-symbols-rounded">edit</mat-icon>
+                    </button>
+                  </div>
+
+                  <input
+                    type="file"
+                    class="edit-thumbnail-file-input"
+                    accept="image/*"
+                    (change)="onThumbnailSelected($event)"
+                    hidden
+                  />
+                } @else {
+                  <div
+                    class="thumbnail-input"
+                    (click)="onThumbnailInputClick()"
+                  >
+                    Choose your thumbnail image
+                  </div>
+                  <input
+                    type="file"
+                    class="thumbnail-file-input"
+                    accept="image/*"
+                    (change)="onThumbnailSelected($event)"
+                    hidden
+                  />
+                }
+              </div>
+            </div>
+          </div>
+          <div id="footer-container">
+            <button mat-button matStepperPrevious>Back</button>
+            <button
+              (click)="onUploadClick()"
+              [disabled]="uploadForm.invalid || isFormDisabled"
+              id="create-button"
+              mat-raised-button
+            >
+              Upload Video
+            </button>
+          </div>
+        </form>
+      </mat-step>
+    </mat-stepper>
+  </div>
 </div>

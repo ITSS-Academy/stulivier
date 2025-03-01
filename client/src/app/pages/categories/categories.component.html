@@ -9,7 +9,7 @@
   </div>
   <cdk-virtual-scroll-viewport id="scroll" itemSize="50">
     <div id="cate-list">
-      @for (cate of products; track $index) {
+      @for (cate of categories$ | async; track $index) {
         <app-category-card [category]="cate"></app-category-card>
       }
     </div>

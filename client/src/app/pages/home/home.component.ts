@@ -19,7 +19,7 @@ import { VideoModel } from '../../../models/video.model';
 })
 export class HomeComponent {
   @Input() video!: VideoModel;
-  videos: VideoModel[] = [
+  videos: any[] = [
     {
       video_url:
         'https://i.ytimg.com/vi/1iMOtDC8ROk/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCF7Ubnq0Ev1FMFiISJ2797xZH79A',

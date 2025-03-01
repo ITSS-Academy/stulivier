@@ -20,15 +20,16 @@ export class VideosService {
   constructor(private videoGateway: VideoGateway) {}
 
   async createVideo(
-    file: Multer.File,
+    videoFile: Multer.File,
+    imageFile: Multer.File,
     createVideoModel: CreateVideoModel,
     userId: string,
   ) {
-    // Create a new video in supabase
     const { data, error } = await this.supabase.from('videos').upsert({
       title: createVideoModel.title,
       description: createVideoModel.description,
       user_id: userId,
+      category_id: createVideoModel.category_id,
     });
 
     if (error) {
@@ -42,7 +43,8 @@ export class VideosService {
       const uploadResult = await this.handleVideoUpload(
         userId as any,
         videoId,
-        file,
+        videoFile,
+        imageFile,
       );
 
       // Update video record with storage link in supabase
@@ -65,7 +67,8 @@ export class VideosService {
   async handleVideoUpload(
     userId: string,
     filmId: string,
-    file: Multer.File,
+    videoFile: Multer.File,
+    imageFile: Multer.File,
   ): Promise<{ message: string; publicUrl: string; thumbnailUrl: string }> {
     ffmpeg.setFfmpegPath(ffmpegInstaller.path);
     ffmpeg.setFfprobePath(ffprobeInstaller.path);
@@ -74,7 +77,7 @@ export class VideosService {
     const hlsOutputDir = path.join(tempDir, 'hls');
 
     // Sanitize file name
-    const sanitizedFileName = slugify(file.originalname, {
+    const sanitizedFileName = slugify(videoFile.originalname, {
       replacement: '_',
       lower: true,
       strict: true,
@@ -86,7 +89,7 @@ export class VideosService {
     await fs.ensureDir(hlsOutputDir);
 
     // Save temporary file
-    await fs.writeFile(filePath, file.buffer);
+    await fs.writeFile(filePath, videoFile.buffer);
 
     // Variables for progress tracking
     let lastProgress = 0;
@@ -122,7 +125,8 @@ export class VideosService {
       });
 
       console.log('Uploading thumbnail to storage...');
-      const thumbnailContent = await fs.readFile(thumbnailPath);
+      // const thumbnailContent = await fs.readFile(thumbnailPath);
+      const thumbnailContent = imageFile.buffer;
       const thumbnailStoragePath = `${userId}/${filmId}/thumbnail.jpg`;
 
       const { error: thumbnailUploadError } = await this.supabase.storage
@@ -264,16 +268,30 @@ export class VideosService {
 
   async getAllVideos() {
     try {
-      const { data, error } = await this.supabase.from('videos').select('*');
+      const { data, error } = await this.supabase.from('videos').select(`
+    *,
+    user_data:users (
+      username,
+      avatar_url
+    )
+  `);
 
       if (error) {
         throw new HttpException(error, HttpStatus.BAD_REQUEST);
       }
 
-      return data;
+      return this.shuffleArray(data);
     } catch (e) {
       throw new HttpException(e, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  shuffleArray(array: any[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
   }
 
   async getVideoById(videoId: string, userId: string) {
@@ -287,7 +305,7 @@ export class VideosService {
         throw new HttpException(error, HttpStatus.BAD_REQUEST);
       }
 
-      if (userId) {
+      if (userId == null) {
         // Update video history
         const { error } = await this.supabase.rpc('upsert_watch_history', {
           p_video_id: videoId,
@@ -305,5 +323,50 @@ export class VideosService {
     }
   }
 
+  async getVideosByCategoryId(categoryId: string) {
+    try {
+      const { data, error } = await this.supabase.rpc(
+        'get_videos_by_category_id',
+        {
+          p_category_id: categoryId,
+        },
+      );
 
+      if (error) {
+        throw new HttpException(error, HttpStatus.BAD_REQUEST);
+      }
+
+      return data;
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async increaseViewCount(videoId: string) {
+    try {
+      const { error } = await this.supabase.rpc('increase_video_views', {
+        p_video_id: videoId,
+      });
+      if (error) {
+        throw new HttpException(error, HttpStatus.BAD_REQUEST);
+      }
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async updateWatchTime(videoId: string, userId: string, currentTime: number) {
+    try {
+      const { error } = await this.supabase.rpc('update_resume_position', {
+        p_video_id: videoId,
+        p_user_id: userId,
+        p_new_position: currentTime,
+      });
+      if (error) {
+        throw new HttpException(error, HttpStatus.BAD_REQUEST);
+      }
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
+  }
 }
