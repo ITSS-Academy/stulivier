@@ -1,43 +1,131 @@
 .container {
+  width: 100%;
   display: flex;
-  align-items: baseline;
   padding: 0 10px;
   justify-content: space-between;
-  align-content: baseline;
+
   .menu-icon {
     cursor: pointer;
   }
 }
-mat-icon::ng-deep {
-  color: var(--md-sys-color-primary);
-}
-.left{
+
+.left {
   display: flex;
   align-items: center;
   gap: 30px;
+
+  img {
+    cursor: pointer;
+  }
 }
+
 .right {
   display: flex;
   align-items: center;
   gap: 20px;
+
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+  }
 }
-.search{
-  border-radius: 30px;
-}
-.mat-form-field {
-  width: 680px;
-}
-.avatar {
-  width: 40px;
-  height: 40px;
-}
-.avatar img {
+
+.search {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
+  justify-content: space-between;
+  padding: 10px;
+  width: 680px;
+  border-radius: 30px;
+  overflow: hidden;
+  border: var(--md-sys-color-outline-variant) 1px solid;
+}
+
+.search:hover,
+.search:focus-within {
+  border: var(--md-sys-color-outline) 1px solid; /* Khi hover hoặc focus vào input */
+}
+
+.input-search {
+  border: none;
+  outline: none;
+}
+
+.button-search {
   cursor: pointer;
 }
 
+.input-search {
+  font-family: "Lexend", sans-serif;
+  padding: 4px 20px 4px 18px;
+  width: 100%;
+  font-size: 1rem;
+  background-color: var(--md-sys-color-surface-container-lowest);
+}
+
+.icon-add {
+  color: var(--md-sys-color-on-primary);
+}
+
+.search-container {
+  width: 680px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--md-sys-color-surface-container-highest);
+  border-radius: 28px;
+  margin: 0 auto; /* Center the search container */
+
+  .search-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 8px 8px 18px;
+    border-radius: 28px 0 0 28px;
+    width: 90%;
+    height: 100%;
+
+    input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background-color: unset;
+      font-size: 1rem;
+      color: var(--md-sys-color-on-surface);
+    }
+  }
+
+  .search-action {
+    width: 10%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 0 28px 28px 0;
+    padding: 8px;
+
+    background-color: var(--md-sys-color-surface-container-highest);
+  }
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}
+
+mat-icon {
+  color: var(--md-sys-color-primary);
+}

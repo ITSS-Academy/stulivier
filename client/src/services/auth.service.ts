@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   Auth,
   signInWithPopup,
@@ -8,8 +8,6 @@ import {
 } from '@angular/fire/auth';
 import { from, Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { AuthState } from '../ngrxs/auth/auth.state';
-import { Store } from '@ngrx/store';
 
 @Injectable({
   providedIn: 'root',

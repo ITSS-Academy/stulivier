@@ -1,1 +1,78 @@
-<app-video-card-horizontal></app-video-card-horizontal>
+<div id="container">
+  <div id="cover">
+    <div class="cover-background">
+      <div class="background-img">
+        <input
+          #coverInput
+          (change)="onCoverSelected($event)"
+          accept="image/*"
+          style="display: none"
+          type="file"
+        />
+        @if (coverImage) {
+          <img
+            [src]="coverImage"
+            alt="Selected Image"
+            class="background-img-preview"
+          />
+        }
+      </div>
+      <div (click)="triggerCoverInput()" class="background-linear">
+        <div class="background-text">
+          <span class="title"> Watch later </span>
+          <div class="actions">
+            <button (click)="playAll($event)" mat-flat-button>
+              <mat-icon
+                class="material-symbols-rounded"
+                fontIcon="play_arrow"
+              ></mat-icon>
+              Play all
+            </button>
+            <button (click)="shuffle($event)" mat-stroked-button>
+              <mat-icon
+                class="material-symbols-rounded"
+                fontIcon="shuffle"
+              ></mat-icon>
+              Shuffle
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="content-container">
+    <cdk-virtual-scroll-viewport id="main-content" itemSize="50">
+      <div id="content">
+        <app-video-card-horizontal></app-video-card-horizontal>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+        <p>list here</p>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </div>
+</div>

@@ -1,1 +1,17 @@
-<p>categories works!</p>
+<div id="container">
+  <div id="header">
+    <mat-icon
+      class="material-symbols-rounded"
+      fontIcon="category"
+      id="icon"
+    ></mat-icon>
+    <span id="title">Categories</span>
+  </div>
+  <cdk-virtual-scroll-viewport id="scroll" itemSize="50">
+    <div id="cate-list">
+      @for (cate of products; track $index) {
+        <app-category-card [category]="cate"></app-category-card>
+      }
+    </div>
+  </cdk-virtual-scroll-viewport>
+</div>

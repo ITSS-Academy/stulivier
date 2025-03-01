@@ -1,0 +1,46 @@
+#container {
+  width: 100%;
+  height: 100%;
+  padding: 30px 20px;
+
+  #header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+
+    #icon {
+      scale: 2;
+    }
+
+    #title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-left: 20px;
+      color: var(--md-sys-color-primary);
+    }
+  }
+
+  #scroll {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    #cate-list {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+    }
+  }
+}
+
+mat-icon::ng-deep {
+  color: var(--md-sys-color-primary);
+}

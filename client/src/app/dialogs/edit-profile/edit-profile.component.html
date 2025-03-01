@@ -1,8 +1,10 @@
 <form>
   <div class="upload-video">
     <div id="header">
-      <div class="video-upload-instructions"><h1>Profile edit instructions</h1></div>
-      <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+      <div class="video-upload-instructions">
+        <h1>Profile edit instructions</h1>
+      </div>
+      <button (click)="closeDialog()" aria-label="Close dialog" mat-icon-button>
         <mat-icon class="material-symbols-rounded">close</mat-icon>
       </button>
     </div>
@@ -10,8 +12,10 @@
     <div class="upload-video-ouline-ouside">
       <div class="upload-video-ouline-inside">
         <div class="safety-zone">
-          <mat-icon class="icon-video-upload material-symbols-rounded" aria-hidden="false" aria-label="Example home icon"
-                    fontIcon="upload"></mat-icon>
+          <mat-icon
+            class="icon-video-upload material-symbols-rounded"
+            fontIcon="upload"
+          ></mat-icon>
         </div>
         <div class="slot">Drag and drop photo here to change your avata</div>
         <div class="or-click-this">Or click this box to select a photo</div>
@@ -19,42 +23,40 @@
     </div>
     <mat-form-field appearance="outline" style="width: 100%; margin-top: 10px">
       <mat-label>Channel name</mat-label>
-      <input matInput placeholder="Input channel name">
+      <input matInput placeholder="Input channel name" />
       <!--      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
-<!--      <mat-hint>Hint</mat-hint>-->
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" style="width: 100%; margin-top: 10px">
-      <mat-label>Email</mat-label>
-      <input matInput placeholder="Input email">
-      <!--      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
-<!--      <mat-hint>Hint</mat-hint>-->
+      <!--      <mat-hint>Hint</mat-hint>-->
     </mat-form-field>
 
     <mat-form-field appearance="outline" style="width: 100%">
       <mat-label>Describe</mat-label>
-      <textarea matInput placeholder="Input describe" #textarea
-                (input)="autoResize()"
-                maxlength="1000"
+      <textarea
+        #textarea
+        matInput
+        maxlength="1000"
+        placeholder="Input describe"
       ></textarea>
-<!--      <mat-hint>Hint</mat-hint>-->
+      <!--      <mat-hint>Hint</mat-hint>-->
     </mat-form-field>
 
     <div class="input-data-item">
       <span>Background image</span>
-      <button mat-fab extended style="height: 40px">
-        <mat-icon>smb_share</mat-icon>
+      <input
+        #fileInput
+        (change)="onFileSelected($event)"
+        accept="image/*"
+        style="display: none"
+        type="file"
+      />
+      <button (click)="fileInput.click()" extended mat-fab style="height: 40px">
+        <mat-icon class="material-symbols-rounded">smb_share</mat-icon>
         Upload photo
       </button>
     </div>
 
     <div class="button-group">
-      <button mat-flat-button color="primary">Save</button>
-      <button mat-stroked-button color="warn">Cancel</button>
+      <button color="primary" mat-flat-button>Save</button>
+      <button color="warn" mat-stroked-button>Cancel</button>
     </div>
-
   </div>
 </form>
-
-
-

@@ -1,1 +1,37 @@
-<p>video-card-vertical works!</p>
+<mat-card appearance="outlined" class="video-card">
+  <div class="video-container">
+    <img
+      [src]="video.video_url"
+      alt="Thumbnail"
+      class="thumbnail"
+      mat-card-image
+    />
+  </div>
+
+  <mat-card-content>
+    <div class="content-container">
+      <div class="main-content">
+        <p class="title">{{ video.title }}</p>
+      </div>
+      <div class="actions">
+        <button
+          [matMenuTriggerFor]="menu"
+          aria-label="Example icon-button with a menu"
+          mat-icon-button
+        >
+          <mat-icon class="material-symbols-rounded">more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>
+            <mat-icon class="material-symbols-rounded">schedule</mat-icon>
+            <span>Save to Watch later</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon class="material-symbols-rounded">bookmark</mat-icon>
+            <span>Save to playlist</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
