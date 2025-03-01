@@ -13,7 +13,7 @@ import { UserState } from '../../../ngrxs/user/user.state';
 import * as AuthActions from '../../../ngrxs/auth/auth.actions';
 import * as UserActions from '../../../ngrxs/user/user.actions';
 import { MatDialog } from '@angular/material/dialog';
-import { CreateVideoComponent } from '../../dialogs/create-video/create-video.component';
+import { CreateVideoDialogComponent } from '../../dialogs/create-video-dialog/create-video-dialog.component';
 
 @Component({
   selector: 'app-header',
@@ -44,7 +44,7 @@ export class HeaderComponent {
   }
 
   openCreateVideoDialog() {
-    const dialogRef = this.dialog.open(CreateVideoComponent, {
+    const dialogRef = this.dialog.open(CreateVideoDialogComponent, {
       minWidth: '1000px',
     });
   }

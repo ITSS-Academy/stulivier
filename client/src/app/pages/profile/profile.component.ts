@@ -2,14 +2,14 @@ import { Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
 import { MaterialModule } from '../../../shared/modules/material.module';
 import { VideoModule } from '../../../shared/modules/video.module';
-import { EditProfileComponent } from '../../dialogs/edit-profile/edit-profile.component';
-import { CreateVideoComponent } from '../../dialogs/create-video/create-video.component';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { UserState } from '../../../ngrxs/user/user.state';
 import { Observable } from 'rxjs';
 import { UserModel } from '../../../models/user.model';
 import { MatDialog } from '@angular/material/dialog';
+import { CreateVideoDialogComponent } from '../../dialogs/create-video-dialog/create-video-dialog.component';
+import { EditProfileDialogComponent } from '../../dialogs/edit-profile-dialog/edit-profile-dialog.component';
 
 @Component({
   selector: 'app-profile',
@@ -55,14 +55,14 @@ export class ProfileComponent {
   }
 
   openEditProfileDialog() {
-    this.dialog.open(EditProfileComponent, {
+    this.dialog.open(EditProfileDialogComponent, {
       minWidth: '1000px',
       disableClose: true,
     });
   }
 
   openCreateVideoDialog() {
-    this.dialog.open(CreateVideoComponent, {
+    this.dialog.open(CreateVideoDialogComponent, {
       minWidth: '1000px',
       disableClose: true,
     });

@@ -1,6 +1,6 @@
 <div id="container">
   <div id="header">
-      <span id="title">Profile edit instructions</span>
+    <span id="title">Profile edit instructions</span>
     <button (click)="closeDialog()" aria-label="Close dialog" mat-icon-button>
       <mat-icon class="material-symbols-rounded">close</mat-icon>
     </button>
@@ -8,28 +8,53 @@
   <cdk-virtual-scroll-viewport id="scroll" itemSize="50">
     <form [formGroup]="editProfile" id="form-container">
       <div class="upload-video">
-        <div class="upload-video-ouline-ouside"
-             #dropZone
-             (click)="fileInput.click()"
-             (dragover)="onDragOver($event)"
-             (dragleave)="onDragLeave($event)"
-             (drop)="onDrop($event)">
-          <div class="upload-video-ouline-inside" [style.display]="previewImage ? 'none' : 'flex'">
+        <div
+          #dropZone
+          (click)="fileInput.click()"
+          (dragleave)="onDragLeave($event)"
+          (dragover)="onDragOver($event)"
+          (drop)="onDrop($event)"
+          class="upload-video-ouline-ouside"
+        >
+          <div
+            [style.display]="previewImage ? 'none' : 'flex'"
+            class="upload-video-ouline-inside"
+          >
             <div class="safety-zone">
               <mat-icon
                 class="icon-video-upload material-symbols-rounded"
                 fontIcon="upload"
               ></mat-icon>
             </div>
-            <div class="slot">Drag and drop photo here to change your background</div>
+            <div class="slot">
+              Drag and drop photo here to change your background
+            </div>
             <div class="or-click-this">Or click this box to select a photo</div>
           </div>
-          <input type="file" #fileInput (change)="onFileSelectedAvatar($event)" accept="image/*" hidden>
-          <img [src]="previewImage" class="preview-image" alt="Preview" [style.display]="previewImage ? 'block' : 'none'">
+          <input
+            #fileInput
+            (change)="onFileSelectedAvatar($event)"
+            accept="image/*"
+            hidden
+            type="file"
+          />
+          <img
+            [src]="previewImage"
+            [style.display]="previewImage ? 'block' : 'none'"
+            alt="Preview"
+            class="preview-image"
+          />
         </div>
-        <mat-form-field appearance="outline" style="width: 100%; margin-top: 10px">
+        <mat-form-field
+          appearance="outline"
+          style="width: 100%; margin-top: 10px"
+        >
           <mat-label>Channel name</mat-label>
-          <input matInput placeholder="Input channel name" [value]="current.username"/>
+          <input
+            [value]="current.username"
+            matInput
+            placeholder="Input channel name"
+          />
           <!--      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
           <!--      <mat-hint>Hint</mat-hint>-->
         </mat-form-field>
@@ -39,10 +64,10 @@
           <mat-label>Describe</mat-label>
           <textarea
             #textarea
+            [value]="current.joined_date"
             matInput
             maxlength="1000"
             placeholder="Input describe"
-            [value]="current.joined_date"
           ></textarea>
           <!--      <mat-hint>Hint</mat-hint>-->
         </mat-form-field>
@@ -57,7 +82,12 @@
             style="display: none"
             type="file"
           />
-          <button (click)="fileInput.click()" extended mat-fab style="height: 40px">
+          <button
+            (click)="fileInput.click()"
+            extended
+            mat-fab
+            style="height: 40px"
+          >
             <mat-icon class="material-symbols-rounded">smb_share</mat-icon>
             Upload photo
           </button>

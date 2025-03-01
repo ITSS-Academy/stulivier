@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
 import { MaterialModule } from '../../../shared/modules/material.module';
 import { VideoModule } from '../../../shared/modules/video.module';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-playlist-card',

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateVideoComponent } from './create-video.component';
+import { PlaylistDialogComponent } from './playlist-dialog.component';
 
-describe('CreateVideoComponent', () => {
-  let component: CreateVideoComponent;
-  let fixture: ComponentFixture<CreateVideoComponent>;
+describe('PlaylistDialogComponent', () => {
+  let component: PlaylistDialogComponent;
+  let fixture: ComponentFixture<PlaylistDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CreateVideoComponent]
+      imports: [PlaylistDialogComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CreateVideoComponent);
+    fixture = TestBed.createComponent(PlaylistDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

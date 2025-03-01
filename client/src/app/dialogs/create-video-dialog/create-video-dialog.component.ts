@@ -1,11 +1,13 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { SharedModule } from '../../../shared/modules/shared.module';
-import { MaterialModule } from '../../../shared/modules/material.module';
-import { VideoModule } from '../../../shared/modules/video.module';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
-import { DialogRef } from '@angular/cdk/dialog';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Observable, Subscription } from 'rxjs';
+import { CategoryModel } from '../../../models/category.model';
+import { CreateVideoDto } from '../../../models/video.model';
 import {
   MatStep,
   MatStepLabel,
@@ -14,41 +16,63 @@ import {
   MatStepperNext,
   MatStepperPrevious,
 } from '@angular/material/stepper';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
-import { CreateVideoDto } from '../../../models/video.model';
-import { CategoryModel } from '../../../models/category.model';
+import { DialogRef } from '@angular/cdk/dialog';
+import { Store } from '@ngrx/store';
 import { CategoryState } from '../../../ngrxs/category/category.state';
 import { VideoState } from '../../../ngrxs/video/video.state';
-import { Store } from '@ngrx/store';
-import * as CategoryActions from '../../../ngrxs/category/category.actions';
 import { VideoService } from '../../../services/video.service';
-import * as VideoActions from '../../../ngrxs/video/video.actions';
 import { AlertService } from '../../../services/alert.service';
 import { MatDialog } from '@angular/material/dialog';
+import * as CategoryActions from '../../../ngrxs/category/category.actions';
+import * as VideoActions from '../../../ngrxs/video/video.actions';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { AsyncPipe } from '@angular/common';
+import {
+  CdkFixedSizeVirtualScroll,
+  CdkVirtualScrollViewport,
+} from '@angular/cdk/scrolling';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
+import { MatOption } from '@angular/material/core';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatSelect } from '@angular/material/select';
 
 @Component({
-  selector: 'app-create-video',
+  selector: 'app-create-video-dialog',
   standalone: true,
   imports: [
-    SharedModule,
-    MaterialModule,
-    VideoModule,
-    MatIconModule,
-    MatButtonModule,
-    MatDividerModule,
+    AsyncPipe,
+    CdkFixedSizeVirtualScroll,
+    CdkTextareaAutosize,
+    CdkVirtualScrollViewport,
+    MatButton,
+    MatFormField,
+    MatHint,
+    MatIcon,
+    MatIconButton,
+    MatInput,
+    MatLabel,
+    MatOption,
+    MatProgressBar,
+    MatRadioButton,
+    MatRadioGroup,
+    MatSelect,
     MatStep,
-    MatStepper,
-    MatStepperPrevious,
     MatStepLabel,
-    MatStepperNext,
+    MatStepper,
     MatStepperIcon,
+    MatStepperNext,
+    MatStepperPrevious,
+    ReactiveFormsModule,
   ],
-  templateUrl: './create-video.component.html',
-  styleUrl: './create-video.component.scss',
+  templateUrl: './create-video-dialog.component.html',
+  styleUrl: './create-video-dialog.component.scss',
 })
-export class CreateVideoComponent implements OnInit, OnDestroy {
+export class CreateVideoDialogComponent implements OnInit, OnDestroy {
   uploadForm!: FormGroup;
   videoFile!: File;
   thumbnailFile!: File;
@@ -65,7 +89,7 @@ export class CreateVideoComponent implements OnInit, OnDestroy {
   @Input() Progress!: number;
 
   constructor(
-    private dialogRef: DialogRef<CreateVideoComponent>,
+    private dialogRef: DialogRef<CreateVideoDialogComponent>,
     private formBuilder: FormBuilder,
     private store: Store<{ category: CategoryState; video: VideoState }>,
     private videoService: VideoService,
