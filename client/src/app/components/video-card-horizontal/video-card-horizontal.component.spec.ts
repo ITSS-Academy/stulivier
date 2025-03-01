@@ -8,9 +8,8 @@ describe('VideoCardHorizontalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [VideoCardHorizontalComponent]
-    })
-    .compileComponents();
+      imports: [VideoCardHorizontalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(VideoCardHorizontalComponent);
     component = fixture.componentInstance;
