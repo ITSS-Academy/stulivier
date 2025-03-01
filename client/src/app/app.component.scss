@@ -24,6 +24,9 @@
   margin-left: 10px;
   border-radius: 12px;
   background: var(--md-sys-color-surface);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .content.visible {

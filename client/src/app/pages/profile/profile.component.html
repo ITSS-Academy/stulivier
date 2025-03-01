@@ -1,59 +1,65 @@
-<div id="user-data">
-  <div class="user-background">
-    <div class="background-img"></div>
-    <div class="background-linear">
-
-    </div>
-  </div>
-
-  <div class="user-data-controller">
-    <div class="avatar">
-      <img src="https://www.w3schools.com/howto/img_avatar.png" alt="Avatar" class="avatar-img">
-      @if (self) {
-      <button mat-fab aria-label="Example icon button with a delete icon" class="avatar-button">
-        <mat-icon class="material-symbols-rounded">edit</mat-icon>
-      </button>
-      }
-    </div>
-    <div class="controller-and-info">
-      <div class="top-group">
-        @if (self) {
-        <button mat-fab aria-label="Example icon button with a delete icon" class="avatar-button"
-                (click)="openEditProfileDialog()">
-          <mat-icon class="material-symbols-rounded">edit</mat-icon>
-        </button>
-        <button mat-fab aria-label="Example icon button with a delete icon" class="avatar-button">
-          <mat-icon class="material-symbols-rounded">image</mat-icon>
-        </button>
+<div id="container">
+  <div id="user-data">
+    <div class="user-background">
+      <div class="background-img">
+        <input
+          #coverInput
+          (change)="onCoverSelected($event)"
+          accept="image/*"
+          style="display: none"
+          type="file"
+        />
+        @if (coverImage) {
+          <img
+            [src]="coverImage"
+            alt="Selected Image"
+            class="background-img-preview"
+          />
         }
       </div>
-      <div class="bottom-group">
+
+      <div (click)="triggerCoverInput()" class="background-linear"></div>
+    </div>
+
+    <div class="user-data-controller">
+      <div class="info">
+        <div class="avatar">
+          <img
+            alt="Selected Image"
+            class="avatar-img"
+            src="{{ (user$ | async)?.avatar_url }}"
+          />
+        </div>
         <div class="user-data">
-          <h1>Ivako Talavadze</h1>
-          <p class="Views">123,354 Views</p>
-          <p class="Describe">Art Direction UX/UI DESIGNER Founder of AdzeDesign</p>
-
-
+          <span class="username">Ivako Talavadze</span>
+          <span class="views">123,354 Views</span>
+          <span class="describe">
+            Art Direction UX/UI DESIGNER Founder of AdzeDesign
+          </span>
         </div>
-        <div class="user-controller">
-          <p>54K Follower</p>
-          @if (self) {
-            <button mat-fab extended (click)="openCreateVideoDialog()">
-              <mat-icon class="material-symbols-rounded">outbox</mat-icon>
-              UPLOAD NEW VIDEO
-            </button>
-          } @else {
-            <button mat-fab extended>
-              Subscribe
-            </button> <!--nút dành cho đăng ký-->
-          }
+      </div>
 
-        </div>
+      <div class="user-controller">
+        @if (self) {
+          <button mat-flat-button (click)="openCreateVideoDialog()">
+            <mat-icon class="material-symbols-rounded">outbox</mat-icon>
+            UPLOAD NEW VIDEO
+          </button>
+        } @else {
+          <button mat-flat-button>Subscribe</button>
+        }
       </div>
     </div>
   </div>
+  <mat-tab-group
+    (selectedTabChange)="onTabChange($event)"
+    class="sticky-tab-group"
+    mat-align-tabs="start"
+    mat-stretch-tabs="false"
+  >
+    <mat-tab label="Home"></mat-tab>
+    <mat-tab label="Videos"></mat-tab>
+    <mat-tab label="Playlist"></mat-tab>
+  </mat-tab-group>
+  <router-outlet></router-outlet>
 </div>
-<div id="profile-category">
-
-</div>
-

@@ -1,25 +1,50 @@
 <div class="container">
   <div class="left">
-  <mat-icon
-    (click)="onMenuClick()"
-    class="menu-icon material-symbols-rounded"
-    fontIcon="menu"
-  ></mat-icon>
-    <img src="/../public/images.png" alt="logo">
+    <mat-icon
+      (click)="onMenuClick()"
+      class="menu-icon material-symbols-rounded"
+      fontIcon="menu"
+    ></mat-icon>
+    <img alt="logo" src="" />
   </div>
-  <div class="search">
-      <input matInput type="text" placeholder="Search" class="input-search">
-    <div class="button-search">
-      <div style="padding: 0 18px" class="icon-search">
-      <mat-icon matSuffix>search</mat-icon>
-      </div>
+  <div class="search-container">
+    <div class="search-input">
+      <input placeholder="Search" type="text" />
+
+      <mat-icon
+        class="clear-icon material-symbols-rounded"
+        fontIcon="clear"
+      ></mat-icon>
+    </div>
+    <div [routerLink]="['/search']" class="search-action">
+      <mat-icon class="material-symbols-rounded" fontIcon="search"></mat-icon>
     </div>
   </div>
+
   <div class="right">
-    <button mat-flat-button>
-      <mat-icon style="color: inherit">add</mat-icon>
-      Create</button>
-    <mat-icon style="cursor: pointer">notifications</mat-icon>
-    <img src="https://danviet.mediacdn.vn/296231569849192448/2024/6/13/son-tung-mtp-17182382517241228747767.jpg" alt="avatar">
-</div>
+    <button (click)="openCreateVideoDialog()" mat-flat-button>
+      <mat-icon
+        class="material-symbols-rounded icon-add"
+        fontIcon="add"
+      ></mat-icon>
+      Create
+    </button>
+    @if ((user$ | async)?.id) {
+      <div [routerLink]="['/profile']" class="avatar">
+        <img alt="avatar" src="{{ (user$ | async)?.avatar_url }}" />
+      </div>
+    } @else {
+      <button
+        mat-stroked-button
+        [routerLink]="['/login']"
+        (click)="signInWithGoogle()"
+      >
+        <mat-icon
+          class="material-symbols-rounded"
+          fontIcon="account_circle"
+        ></mat-icon>
+        Sign in
+      </button>
+    }
+  </div>
 </div>
