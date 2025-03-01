@@ -1,6 +1,6 @@
 export interface CategoryModel {
   id: string;
-  image: string;
+  img_url: string;
   name: string;
-  videos: number;
+  number_of_videos: number;
 }

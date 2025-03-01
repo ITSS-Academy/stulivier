@@ -1,0 +1,179 @@
+#container {
+  width: 100%;
+  height: 100%;
+  background-color: var(--md-sys-color-surface);
+
+  #scroll {
+    width: 100%;
+    height: calc(100vh - 150px);
+    overflow-y: auto;
+    scroll-behavior: smooth;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  #header {
+    width: 100%;
+    min-height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+
+    #title {
+      font-size: 1.8rem;
+      color: var(--md-sys-color-on-surface);
+    }
+  }
+
+  #form-container {
+    width: 100%;
+    height: 100%;
+    padding: 24px;
+  }
+
+  .upload-video {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 15px;
+    text-align: left;
+    font-size: 16px;
+    color: var(--md-sys-color-on-background);
+    border-radius: 20px;
+  }
+
+  .video-upload-instructions {
+    width: 100%;
+    font-size: 32px;
+    line-height: 40px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .upload-video-ouline-ouside {
+    width: 100%;
+    height: 379px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    border: var(--md-sys-color-on-surface) 1px dashed;
+    border-radius: 15px;
+
+    .upload-video-ouline-ouside.drag-over {
+      background-color: #e0f7fa;
+      border-color: #0288d1;
+    }
+
+    .preview-image {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .upload-video-ouline-inside {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      border: 1px dashed var(--md-sys-color-on-surface);
+      box-sizing: border-box;
+      flex-direction: column;
+
+      .icon-video-upload {
+        width: 214px;
+        position: relative;
+        max-width: 100%;
+        height: 214px;
+        flex-shrink: 0;
+        font-size: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .slot {
+        font-size: 28px;
+        line-height: 36px;
+        text-align: center;
+      }
+
+      .or-click-this {
+        width: 240px;
+        font-size: 24px;
+        line-height: 32px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 240px;
+      }
+    }
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  span {
+    width: 100%;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .input-data-item {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    font-size: 16px;
+    color: #e2e2e2;
+    gap: 3px;
+  }
+
+  .playlist {
+    width: 100%;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    line-height: 24px;
+    color: #e2e2e2;
+    text-align: left;
+    display: inline-block;
+  }
+
+  .label-text {
+    letter-spacing: 0.1px;
+    line-height: 20px;
+    font-weight: 500;
+  }
+
+  .state-layer {
+    align-self: stretch;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 24px;
+  }
+
+  .button-group {
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 20px;
+  }
+}

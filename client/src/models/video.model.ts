@@ -12,11 +12,15 @@ export interface VideoModel {
   reaction_type: string;
   resume_position: number;
   category_id: string;
-  username: string;
-  avatar_url: string;
+  user_data: {
+    username: string;
+    avatar_url: string;
+  };
 }
 
 export interface CreateVideoDto {
   title: string;
   description: string;
+  category_id: string[];
+  playlist_id: string[];
 }

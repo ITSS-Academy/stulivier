@@ -17,8 +17,14 @@ import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { authReducer } from '../ngrxs/auth/auth.reducer';
 import * as AuthEffects from '../ngrxs/auth/auth.effects';
 import * as UserEffects from '../ngrxs/user/user.effects';
+import * as VideoEffects from '../ngrxs/video/video.effects';
+import * as PlaylistEffects from '../ngrxs/playlist/playlist.effects';
+import * as CategoryEffects from '../ngrxs/category/category.effects';
 import { HttpClientAuth } from '../utils/http-client-auth';
 import { userReducer } from '../ngrxs/user/user.reducer';
+import { videoReducer } from '../ngrxs/video/video.reducer';
+import { playlistReducer } from '../ngrxs/playlist/playlist.reducer';
+import { categoryReducer } from '../ngrxs/category/category.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,8 +35,17 @@ export const appConfig: ApplicationConfig = {
     provideStore({
       auth: authReducer,
       user: userReducer,
+      video: videoReducer,
+      playlist: playlistReducer,
+      category: categoryReducer,
     }),
-    provideEffects(AuthEffects, UserEffects),
+    provideEffects(
+      AuthEffects,
+      UserEffects,
+      VideoEffects,
+      PlaylistEffects,
+      CategoryEffects,
+    ),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
     provideAnimationsAsync(),

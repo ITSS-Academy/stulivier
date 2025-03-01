@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
+import { VideoCardVerticalComponent } from '../../../components/video-card-vertical/video-card-vertical.component';
 
 @Component({
   selector: 'app-videos',
   standalone: true,
-  imports: [],
+  imports: [VideoCardVerticalComponent],
   templateUrl: './videos.component.html',
-  styleUrl: './videos.component.scss'
+  styleUrl: './videos.component.scss',
 })
-export class VideosComponent {
-
-}
+export class VideosComponent {}

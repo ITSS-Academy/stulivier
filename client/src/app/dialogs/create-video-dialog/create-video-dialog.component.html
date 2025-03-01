@@ -1,1 +1,240 @@
-<p>create-video-dialog works!</p>
+<div id="container">
+  <div id="header">
+    <span id="title">Upload video</span>
+    <button (click)="closeDialog()" mat-icon-button>
+      <mat-icon class="material-symbols-rounded">close</mat-icon>
+    </button>
+  </div>
+  <mat-progress-bar
+    mode="determinate"
+    value="{{ uploadProgress$ | async }}"
+  ></mat-progress-bar>
+
+  <div id="content-container">
+    <mat-stepper #stepper [linear]="false">
+      <mat-step
+        [completed]="isFileUploaded"
+        [editable]="!isFileUploaded"
+        [stepControl]="uploadForm"
+      >
+        <form [formGroup]="uploadForm">
+          <ng-template matStepperIcon="done">
+            <mat-icon
+              class="material-symbols-rounded"
+              fontIcon="done"
+            ></mat-icon>
+          </ng-template>
+          <ng-template matStepLabel>Upload your video</ng-template>
+          <div id="step1-container">
+            <div id="upload-video">
+              <mat-icon class="material-symbols-rounded" id="upload-icon"
+                >upload_2
+              </mat-icon>
+            </div>
+            <div
+              (dragover)="onDragOver($event)"
+              (drop)="onFileDrop($event)"
+              id="content"
+            >
+              <span>Drag and drop video files to upload </span>
+              <input
+                (change)="onFileSelected($event)"
+                accept="video/mp4"
+                hidden
+                id="file-input"
+                type="file"
+              />
+              <button
+                (click)="onUploadButtonClick()"
+                id="upload-button"
+                mat-raised-button
+              >
+                Select Video
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="uploadForm" label="Details">
+        <form [formGroup]="uploadForm">
+          <ng-template matStepLabel
+            >Fill out your video information
+          </ng-template>
+          <div id="step2-container">
+            <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
+              <div class="form-left">
+                <mat-form-field>
+                  <mat-label>Title</mat-label>
+                  <input
+                    formControlName="fileName"
+                    matInput
+                    maxlength="100"
+                    placeholder="Add a title that describes your video"
+                  />
+                  <mat-hint align="end" class="hint">
+                    {{ (uploadForm.get("fileName")?.value ?? "").length }}/100
+                  </mat-hint>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>Description</mat-label>
+                  <textarea
+                    cdkAutosizeMaxRows="20"
+                    cdkAutosizeMinRows="5"
+                    cdkTextareaAutosize
+                    formControlName="description"
+                    matInput
+                    maxlength="5000"
+                    placeholder="Tell viewers about your video"
+                  ></textarea>
+                  <mat-hint align="end" class="hint">
+                    {{
+                      (uploadForm.get("description")?.value ?? "").length
+                    }}/5000
+                  </mat-hint>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>Category</mat-label>
+                  <mat-select formControlName="categories" multiple>
+                    @for (category of categories$ | async; track $index) {
+                      <mat-option [value]="category.id"
+                        >{{ category.name }}
+                      </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </cdk-virtual-scroll-viewport>
+
+            <div class="form-right">
+              <div class="thumbnail-container">
+                @if (uploadForm.get("thumbnail")?.value) {
+                  <div class="thumbnail-img">
+                    <img
+                      [src]="uploadForm.get('thumbnail')?.value"
+                      alt="Thumbnail"
+                    />
+                    <button
+                      mat-icon-button
+                      class="edit-icon"
+                      [disabled]="this.isFormDisabled"
+                      (click)="onEditThumbnailClick()"
+                    >
+                      <mat-icon class="material-symbols-rounded">edit</mat-icon>
+                    </button>
+                  </div>
+
+                  <input
+                    type="file"
+                    class="edit-thumbnail-file-input"
+                    accept="image/*"
+                    (change)="onThumbnailSelected($event)"
+                    hidden
+                  />
+                } @else {
+                  <div
+                    class="thumbnail-input"
+                    (click)="onThumbnailInputClick()"
+                  >
+                    Choose your thumbnail image
+                  </div>
+                  <input
+                    type="file"
+                    class="thumbnail-file-input"
+                    accept="image/*"
+                    (change)="onThumbnailSelected($event)"
+                    hidden
+                  />
+                }
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <button mat-button matStepperNext>Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <form [formGroup]="uploadForm">
+          <ng-template matStepperIcon="edit">
+            <mat-icon
+              class="material-symbols-rounded"
+              fontIcon="edit"
+            ></mat-icon>
+          </ng-template>
+
+          <ng-template matStepLabel>Visibility</ng-template>
+          <div id="step3-container">
+            <div class="form-left">
+              <span id="visibility">Visibility</span>
+              <mat-radio-group formControlName="visibility">
+                <mat-radio-button value="public">Public</mat-radio-button>
+                <mat-radio-button value="private">Private</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <div class="form-right">
+              <div class="thumbnail-container">
+                @if (uploadForm.get("thumbnail")?.value) {
+                  <div class="thumbnail-img">
+                    <img
+                      [src]="uploadForm.get('thumbnail')?.value"
+                      alt="Thumbnail"
+                    />
+                    <button
+                      mat-icon-button
+                      class="edit-icon"
+                      [disabled]="this.isFormDisabled"
+                      (click)="onEditThumbnailClick()"
+                    >
+                      <mat-icon class="material-symbols-rounded">edit</mat-icon>
+                    </button>
+                  </div>
+
+                  <input
+                    type="file"
+                    class="edit-thumbnail-file-input"
+                    accept="image/*"
+                    (change)="onThumbnailSelected($event)"
+                    hidden
+                  />
+                } @else {
+                  <div
+                    class="thumbnail-input"
+                    (click)="onThumbnailInputClick()"
+                  >
+                    Choose your thumbnail image
+                  </div>
+                  <input
+                    type="file"
+                    class="thumbnail-file-input"
+                    accept="image/*"
+                    (change)="onThumbnailSelected($event)"
+                    hidden
+                  />
+                }
+              </div>
+            </div>
+          </div>
+          <div id="footer-container">
+            <button mat-button matStepperPrevious>Back</button>
+            <button
+              (click)="onUploadClick()"
+              [disabled]="uploadForm.invalid || isFormDisabled"
+              id="create-button"
+              mat-raised-button
+            >
+              Upload Video
+            </button>
+          </div>
+        </form>
+      </mat-step>
+    </mat-stepper>
+  </div>
+</div>
