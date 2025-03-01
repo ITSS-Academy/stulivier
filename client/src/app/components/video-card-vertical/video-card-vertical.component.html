@@ -7,12 +7,28 @@
       mat-card-image
     />
   </div>
-
   <mat-card-content>
     <div class="content-container">
-      <div class="main-content">
-        <p class="title">{{ video.title }}</p>
+      <div class="avatar-container">
+        <img
+          [src]="video.avatar_url"
+          alt="Avatar"
+          class="avatar"
+          mat-card-image
+        />
       </div>
+      <div class="main-content">
+        <div class="info">
+          <p class="title">{{ video.title }}</p>
+          <div class="in-info">
+          <p class="username">{{ video.username }}</p>
+            <div class="other-info">
+              <p class="views">{{ video.views | number }} views</p>
+              <mat-icon class="fiber_manual_record">fiber_manual_record</mat-icon>
+              <p class="date">{{ video.created_at }}</p>
+            </div>
+          </div>
+        </div>
       <div class="actions">
         <button
           [matMenuTriggerFor]="menu"
@@ -31,6 +47,7 @@
             <span>Save to playlist</span>
           </button>
         </mat-menu>
+      </div>
       </div>
     </div>
   </mat-card-content>
