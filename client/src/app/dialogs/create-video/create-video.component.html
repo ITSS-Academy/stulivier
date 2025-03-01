@@ -56,47 +56,60 @@
           }
         </mat-form-field>
 
-        <div class="input-data-item">
-          <span>Thumbnail</span>
-          <input
-            #fileInput
-            (change)="onFileSelected($event)"
-            accept="image/*"
-            style="display: none"
-            type="file"
-          />
-          <button
-            (click)="fileInput.click()"
-            extended
-            mat-fab
-            style="height: 40px"
-          >
-            <mat-icon class="material-symbols-rounded">smb_share</mat-icon>
-            Upload photo
-          </button>
+        <div class="selection">
+          <div class="selection-left">
+            <div class="input-data-item">
+              <span>Thumbnail</span>
+              <input
+                #fileInput
+                (change)="onFileSelected($event)"
+                accept="image/*"
+                style="display: none"
+                type="file"
+              />
+              <button
+                (click)="fileInput.click()"
+                extended
+                mat-fab
+                style="height: 40px"
+              >
+                <mat-icon class="material-symbols-rounded">smb_share</mat-icon>
+                Upload photo
+              </button>
+            </div>
+
+            <div class="input-data-item">
+              <div class="playlist">Playlist</div>
+              <mat-form-field>
+                <mat-label>Select playlist</mat-label>
+                <mat-select>
+                  <mat-option value="one">First option</mat-option>
+                  <mat-option value="two">Second option</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="input-data-item">
+              <div class="playlist">Category</div>
+              <mat-form-field>
+                <mat-label>Select category</mat-label>
+                <mat-select>
+                  <mat-option value="one">First option</mat-option>
+                  <mat-option value="two">Second option</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="selection-right">
+            <p [style.display]="previewThumbnail ? 'block' : 'none'">Thumbnail preview</p>
+            <img
+              [src]="previewThumbnail"
+              class="preview-image"
+              alt="Preview"
+              [style.display]="previewThumbnail ? 'block' : 'none'">
+          </div>
         </div>
 
-        <div class="input-data-item">
-          <div class="playlist">Playlist</div>
-          <mat-form-field>
-            <mat-label>Select playlist</mat-label>
-            <mat-select>
-              <mat-option value="one">First option</mat-option>
-              <mat-option value="two">Second option</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-        <div class="input-data-item">
-          <div class="playlist">Category</div>
-          <mat-form-field>
-            <mat-label>Select category</mat-label>
-            <mat-select>
-              <mat-option value="one">First option</mat-option>
-              <mat-option value="two">Second option</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
         <div class="note-upload-will">
           Note: upload will be canceled if this page is closed
         </div>
