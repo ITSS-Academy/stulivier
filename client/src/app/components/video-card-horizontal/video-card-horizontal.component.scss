@@ -6,7 +6,7 @@
 }
 
 body {
-  background-color: #000;
+  background-color: var(--md-sys-color-on-surface);
   padding: 20px;
 }
 
@@ -14,14 +14,18 @@ body {
   display: flex;
   gap: 15px;
   max-width: 750px;
-  color: #fff;
-  background-color: #131318;
   padding: 10px;
   border-radius: 8px;
+
+  .video-title {
+    color: var(--md-sys-color-on-background);
+    font-weight: bolder;
+  }
 }
 
 .video-card:hover {
-  background-color: #303030;
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-background);
 }
 
 .thumbnail {
@@ -41,7 +45,6 @@ body {
   position: absolute;
   bottom: 8px;
   right: 8px;
-  color: #fff;
   padding: 2px 4px;
   font-size: 12px;
   border-radius: 2px;
@@ -62,22 +65,24 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
+
+  p {
+    color: var(--md-sys-color-on-background);
+  }
 }
 
 .channel-name {
   font-size: 14px;
-  color: #aaa;
   margin-bottom: 5px;
 }
 
 .video-stats {
   font-size: 14px;
-  color: #aaa;
 }
 
 .channel {
   margin: 0;
   font-size: 14px;
-  color: #aaa;
   gap: 10px;
+  color: var(--md-sys-color-on-background);
 }

@@ -1,18 +1,22 @@
 .subscriptions-container {
   padding: 20px;
-  background-color: #1e1e1e;
   color: #fff;
   border-radius: 10px;
+  height: 800px;
+  overflow-y: auto;
+  background-color: var(--md-sys-color-on-surface);
 
   h1 {
     font-size: 24px;
     margin-bottom: 20px;
+    position: sticky;
   }
 
   .subscription-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 15px;
+    //background-color: var(--md-sys-color-on-surface);
   }
 
   .subscription-card {
@@ -45,7 +49,6 @@
         color: #fff;
         width: 100%;
       }
-      }
     }
   }
-
+}
