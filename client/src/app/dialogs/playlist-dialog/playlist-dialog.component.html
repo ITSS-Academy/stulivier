@@ -1,3 +1,26 @@
 <div id="container">
-  <p>Work</p>
+  <div class="header">
+    <span class="container-ribbon">
+      <mat-icon style="font-size: 2.5rem; width: 100%; height: 100%">bookmark</mat-icon>
+    </span>
+    <div class="title">
+      <p>Save to Playlist</p>
+    </div>
+  </div>
+  <div class="main-content">
+    <mat-checkbox>Sơn Tùng</mat-checkbox>
+    <mat-checkbox>J97</mat-checkbox>
+    <mat-checkbox>kkk</mat-checkbox>
+    <mat-checkbox>Nothing</mat-checkbox>
+    <mat-checkbox>Soobin</mat-checkbox>
+    <mat-checkbox>Black</mat-checkbox>
+    <mat-checkbox>Black</mat-checkbox>
+    <mat-checkbox>Black</mat-checkbox>
+  </div>
+  <div class="button">
+    <button (click)="openCreatePlaylistDialog()" mat-flat-button>
+      <mat-icon>add</mat-icon>
+      New playlist
+    </button>
+  </div>
 </div>
