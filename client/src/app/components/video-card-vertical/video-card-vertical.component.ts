@@ -4,6 +4,7 @@ import {
   ElementRef,
   inject,
   Input,
+  OnDestroy,
   OnInit,
   Renderer2,
 } from '@angular/core';
@@ -30,7 +31,9 @@ import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
   templateUrl: './video-card-vertical.component.html',
   styleUrl: './video-card-vertical.component.scss',
 })
-export class VideoCardVerticalComponent implements AfterViewInit, OnInit {
+export class VideoCardVerticalComponent
+  implements AfterViewInit, OnInit, OnDestroy
+{
   @Input() video!: VideoModel;
   readonly dialog = inject(MatDialog);
   subscriptions: Subscription[] = [];
@@ -93,8 +96,8 @@ export class VideoCardVerticalComponent implements AfterViewInit, OnInit {
 
   openPlaylistDialog() {
     const dialogRef = this.dialog.open(PlaylistDialogComponent, {
-      minWidth: 600,
-      minHeight: 400,
+      minWidth: 400,
+      minHeight: 410,
       data: this.video.id,
     });
   }
@@ -108,5 +111,9 @@ export class VideoCardVerticalComponent implements AfterViewInit, OnInit {
         }),
       );
     }
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

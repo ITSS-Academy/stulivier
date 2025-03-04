@@ -10,4 +10,12 @@ export class CategoryService {
   getAllCategories() {
     return this.http.get('categories/');
   }
+
+  getCategoryById(id: string) {
+    return this.http.get(`categories`, { params: { id } });
+  }
+
+  getTopCategories() {
+    return this.http.get('categories/top');
+  }
 }

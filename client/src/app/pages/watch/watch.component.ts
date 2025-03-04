@@ -24,6 +24,7 @@ import * as CommentActions from '../../../ngrxs/comment/comment.actions';
 import { filter, map, take } from 'rxjs/operators';
 import { CommentState } from '../../../ngrxs/comment/comment.state';
 import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
+import {CommentCardComponent} from '../../components/comment-card/comment-card.component';
 
 @Component({
   selector: 'app-watch',
@@ -33,6 +34,7 @@ import { VideoCardVerticalComponent } from '../../components/video-card-vertical
     MaterialModule,
     VideoModule,
     VideoCardVerticalComponent,
+    CommentCardComponent,
   ],
   templateUrl: './watch.component.html',
   styleUrl: './watch.component.scss',
@@ -254,9 +256,6 @@ export class WatchComponent implements OnInit, OnDestroy {
   }
 
   createComment(): void {
-    console.log('Creating comment:', this.comment);
-    console.log('Video id', this.videoId);
-    console.log('User id', this.user?.id);
     this.store.dispatch(
       CommentActions.createComment({
         comment: {
