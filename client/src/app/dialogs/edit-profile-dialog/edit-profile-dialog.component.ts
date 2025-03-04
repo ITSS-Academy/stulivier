@@ -14,6 +14,10 @@ import {MatInput} from '@angular/material/input';
 import {FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {UserModel} from '../../../models/user.model';
 import {DialogRef} from '@angular/cdk/dialog';
+import {Observable} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {UserState} from '../../../ngrxs/user/user.state';
+import {AsyncPipe} from '@angular/common';
 
 @Component({
   selector: 'app-edit-profile-dialog',
@@ -29,6 +33,7 @@ import {DialogRef} from '@angular/cdk/dialog';
     MatInput,
     MatLabel,
     ReactiveFormsModule,
+    AsyncPipe,
   ],
   templateUrl: './edit-profile-dialog.component.html',
   styleUrl: './edit-profile-dialog.component.scss',
@@ -39,19 +44,16 @@ export class EditProfileDialogComponent {
   @Input() Progress!: number;
   value = 90;
   editProfile = new FormGroup({});
-  current: UserModel = {
-    id: 'string',
-    username: 'Nguyen Van A',
-    email: 'string',
-    avatar_url: 'string',
-    joined_date:
-      'Gemini hiện được trang bị sức mạnh của 2.0 Flash, \n mô hình mới nhất của chúng tôi cho kỷ nguyên trợ lý AI.\n Mô hình này có tốc độ phản hồi nhanh hơn và hiệu suất vượt trội theo một số thang đo quan trọng đánh giá khả năng trợ giúp các nhiệm vụ hằng ngày, như lên ý tưởng, học tập hay viết lách.\n ',
-  }; //data mẫu để test
+  user$!: Observable<UserModel>;
   @ViewChild('dropZone', {static: false}) dropZone!: ElementRef;
   @ViewChild('dropZoneAvatar', {static: false}) dropZoneAvatar!: ElementRef;
   previewBackground: string | null = null;
 
-  constructor(private dialogRef: DialogRef<EditProfileDialogComponent>) {
+  constructor(
+    private dialogRef: DialogRef<EditProfileDialogComponent>,
+    private store: Store<{ user: UserState }>
+  ) {
+    this.user$ = this.store.select('user', 'user');
   }
 
   closeDialog() {

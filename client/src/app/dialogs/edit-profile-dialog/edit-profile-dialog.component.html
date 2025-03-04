@@ -55,7 +55,7 @@
 
           <mat-label>Channel name</mat-label>
           <input
-            [value]="current.username"
+            [value]="(user$ | async)?.username"
             matInput
             placeholder="Input channel name"
           />
@@ -67,7 +67,7 @@
           <mat-label>Describe</mat-label>
           <textarea
             #textarea
-            [value]="current.joined_date"
+            [value]="(user$ | async)?.describe"
             matInput
             maxlength="1000"
             placeholder="Input describe"
