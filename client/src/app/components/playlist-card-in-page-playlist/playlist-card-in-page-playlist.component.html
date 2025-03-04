@@ -1,0 +1,44 @@
+<div class="playlist-card">
+  <div class="video-image">
+    <img src="https://i.ytimg.com/vi/FVF6ld2PaTs/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLC9ZYmI5q_xC64YZALE6bvZKjn_AQ" alt="video-image">
+  </div>
+  <div class="content">
+    <div class="main-content">
+      <p style="margin-top: 10px; font-size: 1.25rem; font-weight: bold">SKY</p>
+      <p style="font-size: 0.9rem">Private</p>
+      <p style="font-size: 0.9rem">15 videos</p>
+    </div>
+    <div class="playlist-button">
+      <div class="actions">
+        <button
+          [matMenuTriggerFor]="menu"
+          aria-label="Example icon-button with a menu"
+          mat-icon-button
+        >
+          <mat-icon class="material-symbols-rounded">more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>
+            <mat-icon class="material-symbols-rounded">delete</mat-icon>
+            <span>Delete</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon class="material-symbols-rounded">edit</mat-icon>
+            <span>Edit</span>
+          </button>
+        </mat-menu>
+      </div>
+      <mat-card-actions>
+        <button mat-stroked-button>
+          <mat-icon class="material-symbols-rounded" fontIcon="shuffle" style="font-size: 19px"></mat-icon>
+          Shuffle
+        </button>
+        <button mat-flat-button style="margin-left: 10px;">
+          <mat-icon class="material-symbols-rounded" fontIcon="play_arrow" style="font-size: 19px"></mat-icon>
+          Play all
+        </button>
+      </mat-card-actions>
+    </div>
+  </div>
+</div>
+
