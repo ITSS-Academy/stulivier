@@ -4,6 +4,7 @@ import {
   ElementRef,
   inject,
   Input,
+  OnInit,
   Renderer2,
 } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
@@ -14,6 +15,13 @@ import { DecimalPipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { PlaylistDialogComponent } from '../../dialogs/playlist-dialog/playlist-dialog.component';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { UserState } from '../../../ngrxs/user/user.state';
+import { UserModel } from '../../../models/user.model';
+import { Subscription } from 'rxjs';
+import { AlertService } from '../../../services/alert.service';
+import { PlaylistState } from '../../../ngrxs/playlist/playlist.state';
+import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
 
 @Component({
   selector: 'app-video-card-vertical',
@@ -22,15 +30,43 @@ import { Router } from '@angular/router';
   templateUrl: './video-card-vertical.component.html',
   styleUrl: './video-card-vertical.component.scss',
 })
-export class VideoCardVerticalComponent implements AfterViewInit {
+export class VideoCardVerticalComponent implements AfterViewInit, OnInit {
   @Input() video!: VideoModel;
   readonly dialog = inject(MatDialog);
+  subscriptions: Subscription[] = [];
+  user!: UserModel;
 
   constructor(
     private router: Router,
     private renderer: Renderer2,
     private el: ElementRef,
+    private store: Store<{ user: UserState; playlist: PlaylistState }>,
+    private alertService: AlertService,
   ) {}
+
+  ngOnInit() {
+    this.subscriptions.push(
+      this.store
+        .select('playlist', 'isUpdateWatchLaterPlaylistSuccess')
+        .subscribe((isUpdateWatchLaterSuccess) => {
+          if (isUpdateWatchLaterSuccess) {
+            this.alertService.showAlert(
+              'Added to Watch Later',
+              'Close',
+              3000,
+              'end',
+              'top',
+            );
+          }
+        }),
+
+      this.store.select('user', 'user').subscribe((user) => {
+        if (user) {
+          this.user = user;
+        }
+      }),
+    );
+  }
 
   ngAfterViewInit(): void {
     if (this.router.url.includes('/watch?')) {
@@ -61,5 +97,16 @@ export class VideoCardVerticalComponent implements AfterViewInit {
       minHeight: 400,
       data: this.video.id,
     });
+  }
+
+  addToWatchLater() {
+    if (this.user) {
+      this.store.dispatch(
+        PlaylistActions.updateWatchLaterPlaylist({
+          videoId: this.video.id,
+          userId: this.user.id,
+        }),
+      );
+    }
   }
 }
