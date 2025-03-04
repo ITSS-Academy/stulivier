@@ -10,12 +10,6 @@
         @for (video of videos$ | async; track $index) {
           <app-video-card-vertical [video]="video"></app-video-card-vertical>
         }
-        @for (video of videos$ | async; track $index) {
-          <app-video-card-vertical [video]="video"></app-video-card-vertical>
-        }
-        @for (video of videos$ | async; track $index) {
-          <app-video-card-vertical [video]="video"></app-video-card-vertical>
-        }
       </div>
       <div class="button">
         <button mat-mini-fab aria-label="Scroll to left" class="button-left" >

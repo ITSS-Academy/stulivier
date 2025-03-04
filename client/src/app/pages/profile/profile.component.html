@@ -22,7 +22,7 @@
         <div (click)="triggerCoverInput()" class="background-linear">
           @if (self) {
             <button mat-fab aria-label="Example icon button with a delete icon" class="avatar-button"
-                    (click)="openEditProfileDialog()">
+                    (click)="openEditProfileDialog(); $event.stopPropagation()">
               <mat-icon class="material-symbols-rounded">edit</mat-icon>
             </button>
           }
