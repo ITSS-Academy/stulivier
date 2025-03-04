@@ -254,9 +254,6 @@ export class WatchComponent implements OnInit, OnDestroy {
   }
 
   createComment(): void {
-    console.log('Creating comment:', this.comment);
-    console.log('Video id', this.videoId);
-    console.log('User id', this.user?.id);
     this.store.dispatch(
       CommentActions.createComment({
         comment: {

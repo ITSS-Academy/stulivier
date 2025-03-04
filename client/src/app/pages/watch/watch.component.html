@@ -90,6 +90,13 @@
         <mat-label>Comment</mat-label>
         <input [(ngModel)]="comment" matInput />
       </mat-form-field>
+      <button
+        (click)="createComment()"
+        [disabled]="comment == ''"
+        mat-flat-button
+      >
+        Post
+      </button>
     </div>
   </div>
 </div>

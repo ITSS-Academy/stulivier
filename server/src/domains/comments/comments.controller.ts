@@ -8,7 +8,6 @@ export class CommentsController {
 
   @Post()
   async create(@Body() comment: CommentModel) {
-    console.log(comment);
     return this.commentsService.createComment(comment);
   }
 
