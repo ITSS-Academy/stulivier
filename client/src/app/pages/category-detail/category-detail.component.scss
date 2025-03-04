@@ -1,0 +1,42 @@
+#container {
+  width: 100%;
+  height: 100%;
+  padding: 30px 20px;
+
+  #header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+
+    #title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--md-sys-color-primary);
+    }
+  }
+
+  #scroll {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    #video-list {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: start;
+      align-items: start;
+      gap: 10px;
+    }
+  }
+}
+
+mat-icon::ng-deep {
+  color: var(--md-sys-color-primary);
+}

@@ -326,7 +326,7 @@ export class VideosService {
   async getVideosByCategoryId(categoryId: string) {
     try {
       const { data, error } = await this.supabase.rpc(
-        'get_videos_by_category_id',
+        'get_videos_by_category',
         {
           p_category_id: categoryId,
         },
