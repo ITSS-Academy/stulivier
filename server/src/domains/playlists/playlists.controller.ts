@@ -1,5 +1,5 @@
 import { PlaylistsService } from './playlists.service';
-import { Body, Controller, Post, Request, Get } from '@nestjs/common';
+import { Body, Controller, Post, Request, Get, Delete } from '@nestjs/common';
 import { CreatePlaylistModel } from '../../models/playlist.model';
 import { Public } from '../../utils/custom_decorators';
 
@@ -46,6 +46,15 @@ export class PlaylistsController {
   async upsertWatchLaterPlaylist(@Request() req: any) {
     const { userId, videoId } = req.query;
     return await this.playlistsService.upsertWatchLaterPlaylist(
+      userId,
+      videoId,
+    );
+  }
+
+  @Delete('watch-later')
+  async removeVideoInWatchLaterPlaylist(@Request() req: any) {
+    const { userId, videoId } = req.query;
+    return await this.playlistsService.removeVideoInWatchLaterPlaylist(
       userId,
       videoId,
     );

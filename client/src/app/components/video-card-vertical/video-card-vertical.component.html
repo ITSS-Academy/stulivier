@@ -1,4 +1,8 @@
-<mat-card appearance="outlined" class="video-card">
+<mat-card
+  (click)="onVideoClick($event)"
+  appearance="outlined"
+  class="video-card"
+>
   <div class="video-container">
     <img
       alt="thumbnail"
@@ -35,8 +39,8 @@
         </div>
         <div class="actions">
           <button
+            (click)="openDialog($event)"
             [matMenuTriggerFor]="menu"
-            aria-label="Example icon-button with a menu"
             mat-icon-button
           >
             <mat-icon class="material-symbols-rounded">more_vert</mat-icon>
@@ -46,7 +50,7 @@
               <mat-icon class="material-symbols-rounded">schedule</mat-icon>
               <span>Save to Watch later</span>
             </button>
-            <button mat-menu-item>
+            <button (click)="openPlaylistDialog()" mat-menu-item>
               <mat-icon class="material-symbols-rounded">bookmark</mat-icon>
               <span>Save to playlist</span>
             </button>

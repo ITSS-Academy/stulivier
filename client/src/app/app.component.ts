@@ -70,7 +70,7 @@ export class AppComponent implements OnInit {
   }
 
   onMenuClick(): void {
-    if (this.currentUrl.includes('/watch/')) {
+    if (this.currentUrl.includes('/watch?')) {
       this.isHiddenSidebar = !this.isHiddenSidebar;
     } else {
       this.isSlideBarVisible = !this.isSlideBarVisible;
@@ -82,7 +82,7 @@ export class AppComponent implements OnInit {
       if (event instanceof NavigationEnd) {
         this.currentUrl = event.url;
         // Kiểm tra nếu URL là '/watch'
-        if (event.url.includes('/watch/')) {
+        if (event.url.includes('/watch?')) {
           this.isHiddenSidebar = false;
           this.isSlideBarVisible = true;
         }
@@ -104,5 +104,9 @@ export class AppComponent implements OnInit {
         this.store.dispatch(UserActions.getUserById());
       }
     });
+  }
+
+  onOverlayClick() {
+    this.isHiddenSidebar = false;
   }
 }

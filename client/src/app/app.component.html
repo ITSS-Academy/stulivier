@@ -8,7 +8,7 @@
       [ngClass]="{
         visible: !isSlideBarVisible,
         hidden: isHiddenSidebar,
-        watch: currentUrl.includes('/watch/'),
+        watch: currentUrl.includes('/watch?'),
       }"
       class="side-bar"
     >
@@ -18,11 +18,14 @@
       [ngClass]="{
         visible: !isSlideBarVisible,
         hidden: isHiddenSidebar,
-        watch: currentUrl.includes('/watch/'),
+        watch: currentUrl.includes('/watch?'),
       }"
       class="content"
     >
       <router-outlet></router-outlet>
     </div>
+    @if (isHiddenSidebar) {
+      <div class="overlay" (click)="onOverlayClick()"></div>
+    }
   </div>
 </div>

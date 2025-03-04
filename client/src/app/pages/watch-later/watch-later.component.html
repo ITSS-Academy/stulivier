@@ -43,35 +43,11 @@
   <div id="content-container">
     <cdk-virtual-scroll-viewport id="main-content" itemSize="50">
       <div id="content">
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
+        @for (playlistDetail of (PlaylistDetail$| async); track playlistDetail.playlist.id) {
+          @for (video of playlistDetail.videos; track video.id) {
+            <app-video-card-vertical [video]="video"></app-video-card-vertical>
+          }
+        }
       </div>
     </cdk-virtual-scroll-viewport>
   </div>

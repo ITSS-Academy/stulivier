@@ -50,8 +50,6 @@ export class VideosController {
   @Get()
   async getVideoById(@Request() req: any) {
     const { userId, videoId } = req.query;
-    console.log(videoId);
-    console.log(userId);
     return await this.videosService.getVideoById(videoId, userId);
   }
 
