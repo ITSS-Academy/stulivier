@@ -7,9 +7,9 @@
     </div>
     <div class="data-container">
       <div class="data" #dataContainer>
-        @for (video of videos$ | async; track $index) {
+        @for (video of (videos$ | async)?.slice(0, 15); track $index) {
           <app-video-card-vertical [video]="video"></app-video-card-vertical>
-        }
+        } <!--max = 15 or no max: videos$ | async-->
       </div>
       <div class="button">
         <button mat-mini-fab aria-label="Scroll to left" class="button-left" >
@@ -46,48 +46,48 @@
     </div>
   </div>
 
-  <div class="content-container">
-    <div class="content-header">
-      <h3>Subscribed person</h3>
-    </div>
-    <div class="data-container">
-      <div class="data" #dataContainer>
-        <div class="subscribed">
-          <img src="/image/2_c8a974f56e58406eb867b6acfae04172.webp" alt="avatar" />
-          <p>Username</p> //chỗ để tên
-          <span>50 subscribed</span> //chỗ để số người đã subscribe
-        </div>
-        <div class="subscribed">
-          <img src="/image/2_c8a974f56e58406eb867b6acfae04172.webp" alt="avatar" />
-          <p>Username</p> //chỗ để tên
-          <span>50 subscribed</span> //chỗ để số người đã subscribe
-        </div>
-        <div class="subscribed">
-          <img src="/image/2_c8a974f56e58406eb867b6acfae04172.webp" alt="avatar" />
-          <p>Username</p> //chỗ để tên
-          <span>50 subscribed</span> //chỗ để số người đã subscribe
-        </div>
-        <div class="subscribed">
-          <img src="/image/2_c8a974f56e58406eb867b6acfae04172.webp" alt="avatar" />
-          <p>Username</p> //chỗ để tên
-          <span>50 subscribed</span> //chỗ để số người đã subscribe
-        </div>
-        <div class="subscribed">
-          <img src="/image/2_c8a974f56e58406eb867b6acfae04172.webp" alt="avatar" />
-          <p>Username</p> //chỗ để tên
-          <span>50 subscribed</span> //chỗ để số người đã subscribe
-        </div>
-      </div>
-      <div class="button">
-        <button mat-mini-fab aria-label="Scroll to left" class="button-left" >
-          <mat-icon class="material-symbols-rounded">chevron_left</mat-icon>
-        </button>
-        <button mat-mini-fab aria-label="Scroll to right" class="button-right" >
-          <mat-icon class="material-symbols-rounded">chevron_right</mat-icon>
-        </button>
-      </div>
-    </div>
-  </div>
+<!--  <div class="content-container">-->
+<!--    <div class="content-header">-->
+<!--      <h3>Subscribed person</h3>-->
+<!--    </div>-->
+<!--    <div class="data-container">-->
+<!--      <div class="data" #dataContainer>-->
+<!--        <div class="subscribed">-->
+<!--          <img src="/image/2_c8a974f56e58406eb867b6acfae04172.webp" alt="avatar" />-->
+<!--          <p>Username</p> //chỗ để tên-->
+<!--          <span>50 subscribed</span> //chỗ để số người đã subscribe-->
+<!--        </div>-->
+<!--        <div class="subscribed">-->
+<!--          <img src="/image/2_c8a974f56e58406eb867b6acfae04172.webp" alt="avatar" />-->
+<!--          <p>Username</p> //chỗ để tên-->
+<!--          <span>50 subscribed</span> //chỗ để số người đã subscribe-->
+<!--        </div>-->
+<!--        <div class="subscribed">-->
+<!--          <img src="/image/2_c8a974f56e58406eb867b6acfae04172.webp" alt="avatar" />-->
+<!--          <p>Username</p> //chỗ để tên-->
+<!--          <span>50 subscribed</span> //chỗ để số người đã subscribe-->
+<!--        </div>-->
+<!--        <div class="subscribed">-->
+<!--          <img src="/image/2_c8a974f56e58406eb867b6acfae04172.webp" alt="avatar" />-->
+<!--          <p>Username</p> //chỗ để tên-->
+<!--          <span>50 subscribed</span> //chỗ để số người đã subscribe-->
+<!--        </div>-->
+<!--        <div class="subscribed">-->
+<!--          <img src="/image/2_c8a974f56e58406eb867b6acfae04172.webp" alt="avatar" />-->
+<!--          <p>Username</p> //chỗ để tên-->
+<!--          <span>50 subscribed</span> //chỗ để số người đã subscribe-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="button">-->
+<!--        <button mat-mini-fab aria-label="Scroll to left" class="button-left" >-->
+<!--          <mat-icon class="material-symbols-rounded">chevron_left</mat-icon>-->
+<!--        </button>-->
+<!--        <button mat-mini-fab aria-label="Scroll to right" class="button-right" >-->
+<!--          <mat-icon class="material-symbols-rounded">chevron_right</mat-icon>-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
 
   <div class="content-container">
     <div class="content-header">
