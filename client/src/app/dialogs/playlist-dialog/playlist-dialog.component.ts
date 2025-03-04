@@ -2,7 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  inject,
+  inject, Input,
   model,
   OnDestroy,
   OnInit,
@@ -24,23 +24,23 @@ import { PlaylistModel } from '../../../models/playlist.model';
 import { SharedModule } from '../../../shared/modules/shared.module';
 import { MaterialModule } from '../../../shared/modules/material.module';
 import { AlertService } from '../../../services/alert.service';
+import {VideoModel} from '../../../models/video.model';
 
 @Component({
   selector: 'app-playlist-dialog',
   standalone: true,
-  imports: [SharedModule, MaterialModule],
+  imports: [SharedModule, MaterialModule,],
   templateUrl: './playlist-dialog.component.html',
   styleUrl: './playlist-dialog.component.scss',
 })
-export class PlaylistDialogComponent {
+export class PlaylistDialogComponent{
+  @Input() video!: VideoModel;
   readonly dialog = inject(MatDialog);
 
-  constructor(
-    private dialogRef: MatDialogRef<PlaylistDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { videoId: string },
-  ) {}
-
-  closeDialog() {
-    this.dialogRef.close();
+  openCreatePlaylistDialog() {
+    const dialogRef = this.dialog.open(CreatePlaylistDialogComponent, {
+      minWidth: 400,
+      minHeight: 410,
+    });
   }
 }

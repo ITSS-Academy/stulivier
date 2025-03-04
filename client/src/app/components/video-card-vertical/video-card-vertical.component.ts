@@ -20,8 +20,8 @@ export class VideoCardVerticalComponent {
 
   openPlaylistDialog() {
     const dialogRef = this.dialog.open(PlaylistDialogComponent, {
-      minWidth: 600,
-      minHeight: 400,
+      minWidth: 400,
+      minHeight: 410,
       data: this.video.id,
     });
   }
