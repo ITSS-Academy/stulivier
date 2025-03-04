@@ -112,3 +112,107 @@ export const getPlaylistById$ = createEffect(
   },
   { functional: true },
 );
+
+export const getWatchLaterPlaylistByUserId$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const playlistService = inject(PlaylistService);
+    return actions$.pipe(
+      ofType(PlaylistActions.getWatchLaterPlaylistByUserId),
+      exhaustMap((action) => {
+        return playlistService
+          .getWatchLaterPlaylistByUserId(action.userId)
+          .pipe(
+            map((response) =>
+              PlaylistActions.getWatchLaterPlaylistByUserIdSuccess({
+                playlist: response,
+              }),
+            ),
+            catchError((obj) => {
+              return of(
+                PlaylistActions.getWatchLaterPlaylistByUserIdFailure({
+                  error: obj.error.message,
+                }),
+              );
+            }),
+          );
+      }),
+    );
+  },
+  { functional: true },
+);
+
+export const upsertPlaylist$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const playlistService = inject(PlaylistService);
+    return actions$.pipe(
+      ofType(PlaylistActions.updatePlaylist),
+      exhaustMap((action) => {
+        return playlistService
+          .upsertPlaylist(action.playlistId, action.videoId)
+          .pipe(
+            map(() => PlaylistActions.updatePlaylistSuccess()),
+            catchError((obj) => {
+              return of(
+                PlaylistActions.updatePlaylistFailure({
+                  error: obj.error.message,
+                }),
+              );
+            }),
+          );
+      }),
+    );
+  },
+  { functional: true },
+);
+
+export const upsertWatchLaterPlaylist$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const playlistService = inject(PlaylistService);
+    return actions$.pipe(
+      ofType(PlaylistActions.updateWatchLaterPlaylist),
+      exhaustMap((action) => {
+        return playlistService
+          .upsertWatchLaterPlaylist(action.userId, action.videoId)
+          .pipe(
+            map(() => PlaylistActions.updateWatchLaterPlaylistSuccess()),
+            catchError((obj) => {
+              return of(
+                PlaylistActions.updateWatchLaterPlaylistFailure({
+                  error: obj.error.message,
+                }),
+              );
+            }),
+          );
+      }),
+    );
+  },
+  { functional: true },
+);
+
+export const removeVideoInWatchLaterPlaylist$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const playlistService = inject(PlaylistService);
+    return actions$.pipe(
+      ofType(PlaylistActions.deleteWatchLaterPlaylist),
+      exhaustMap((action) => {
+        return playlistService
+          .removeVideoInWatchLaterPlaylist(action.userId, action.videoId)
+          .pipe(
+            map(() => PlaylistActions.deleteWatchLaterPlaylistSuccess()),
+            catchError((obj) => {
+              return of(
+                PlaylistActions.deleteWatchLaterPlaylistFailure({
+                  error: obj.error.message,
+                }),
+              );
+            }),
+          );
+      }),
+    );
+  },
+  { functional: true },
+);

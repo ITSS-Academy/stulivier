@@ -8,7 +8,6 @@
 .header {
   width: 100%;
   height: 50px;
-  //border-radius: 12px 12px 0 0;
 }
 
 .main-content {
@@ -25,12 +24,14 @@
   border-radius: 12px;
   background: var(--md-sys-color-surface);
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+}
+
+.content.watch {
+  width: 100%;
 }
 
 .content.visible {
-  width: 100%;
+  width: calc(100% - 75px);
 }
 
 .side-bar {
@@ -43,12 +44,23 @@
   width: 75px;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
 .side-bar.watch {
   height: calc(100vh - 100px);
   position: absolute;
   left: -200px;
   top: 70px;
   z-index: 1000;
+  background-color: var(--md-sys-color-surface);
 }
 
 .side-bar.watch.hidden {

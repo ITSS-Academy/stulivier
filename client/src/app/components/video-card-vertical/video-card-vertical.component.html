@@ -1,4 +1,8 @@
-<mat-card appearance="outlined" class="video-card">
+<mat-card
+  (click)="onVideoClick($event)"
+  appearance="outlined"
+  class="video-card"
+>
   <div class="video-container">
     <img
       alt="thumbnail"
@@ -35,8 +39,8 @@
         </div>
         <div class="actions">
           <button
+            (click)="openDialog($event)"
             [matMenuTriggerFor]="menu"
-            aria-label="Example icon-button with a menu"
             mat-icon-button
           >
             <mat-icon class="material-symbols-rounded">more_vert</mat-icon>

@@ -17,7 +17,7 @@ export class PlaylistService {
   }
 
   getPlaylistByUserId(userId: string) {
-    return this.http.get('playlists', { params: { userId } });
+    return this.http.get('playlists/user', { params: { userId } });
   }
 
   getPlaylistById(id: string) {
@@ -36,6 +36,12 @@ export class PlaylistService {
 
   upsertWatchLaterPlaylist(userId: string, videoId: string) {
     return this.http.post('playlists/watch-later', null, {
+      params: { userId, videoId },
+    });
+  }
+
+  removeVideoInWatchLaterPlaylist(userId: string, videoId: string) {
+    return this.http.delete('playlists/watch-later', {
       params: { userId, videoId },
     });
   }

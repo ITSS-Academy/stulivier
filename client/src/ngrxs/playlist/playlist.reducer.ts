@@ -26,6 +26,22 @@ const initialState: PlaylistState = {
   isGettingPlaylistById: false,
   isGetPlaylistByIdSuccess: false,
   getPlaylistByIdErrorMessage: '',
+
+  isGettingWatchLaterPlaylistByUserId: false,
+  isGetWatchLaterPlaylistByUserIdSuccess: false,
+  getWatchLaterPlaylistByUserIdErrorMessage: '',
+
+  isUpdatingPlaylist: false,
+  isUpdatePlaylistSuccess: false,
+  updatePlaylistErrorMessage: '',
+
+  isUpdatingWatchLaterPlaylist: false,
+  isUpdateWatchLaterPlaylistSuccess: false,
+  updateWatchLaterPlaylistErrorMessage: '',
+
+  isDeletingWatchLaterPlaylist: false,
+  isDeleteWatchLaterPlaylistSuccess: false,
+  deleteWatchLaterPlaylistErrorMessage: '',
 };
 
 export const playlistReducer = createReducer(
@@ -96,6 +112,7 @@ export const playlistReducer = createReducer(
     console.log(action.type);
     return <PlaylistState>{
       ...state,
+      playlists: action.playlists,
       isGettingPlaylistByUserId: false,
       isGetPlaylistByUserIdSuccess: true,
     };
@@ -133,6 +150,153 @@ export const playlistReducer = createReducer(
       ...state,
       isGettingPlaylistById: false,
       getPlaylistByIdErrorMessage: action.error,
+    };
+  }),
+
+  on(PlaylistActions.getWatchLaterPlaylistByUserId, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isGettingWatchLaterPlaylistByUserId: true,
+      isGetWatchLaterPlaylistByUserIdSuccess: false,
+    };
+  }),
+
+  on(PlaylistActions.getWatchLaterPlaylistByUserIdSuccess, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      playlistDetail: action.playlist,
+      isGettingWatchLaterPlaylistByUserId: false,
+      isGetWatchLaterPlaylistByUserIdSuccess: true,
+    };
+  }),
+
+  on(PlaylistActions.getWatchLaterPlaylistByUserIdFailure, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isGettingWatchLaterPlaylistByUserId: false,
+      getWatchLaterPlaylistByUserIdErrorMessage: action.error,
+    };
+  }),
+
+  on(PlaylistActions.updatePlaylist, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isUpdatingPlaylist: true,
+      isUpdatePlaylistSuccess: false,
+    };
+  }),
+
+  on(PlaylistActions.updatePlaylistSuccess, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isUpdatingPlaylist: false,
+      isUpdatePlaylistSuccess: true,
+    };
+  }),
+
+  on(PlaylistActions.updatePlaylistFailure, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isUpdatingPlaylist: false,
+      updatePlaylistErrorMessage: action.error,
+    };
+  }),
+
+  on(PlaylistActions.updateWatchLaterPlaylist, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isUpdatingWatchLaterPlaylist: true,
+      isUpdateWatchLaterPlaylistSuccess: false,
+    };
+  }),
+
+  on(PlaylistActions.updateWatchLaterPlaylistSuccess, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isUpdatingWatchLaterPlaylist: false,
+      isUpdateWatchLaterPlaylistSuccess: true,
+    };
+  }),
+
+  on(PlaylistActions.updateWatchLaterPlaylistFailure, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isUpdatingWatchLaterPlaylist: false,
+      updateWatchLaterPlaylistErrorMessage: action.error,
+    };
+  }),
+
+  on(PlaylistActions.deleteWatchLaterPlaylist, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isDeletingWatchLaterPlaylist: true,
+      isDeleteWatchLaterPlaylistSuccess: false,
+    };
+  }),
+
+  on(PlaylistActions.deleteWatchLaterPlaylistSuccess, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isDeletingWatchLaterPlaylist: false,
+      isDeleteWatchLaterPlaylistSuccess: true,
+    };
+  }),
+
+  on(PlaylistActions.deleteWatchLaterPlaylistFailure, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isDeletingWatchLaterPlaylist: false,
+      deleteWatchLaterPlaylistErrorMessage: action.error,
+    };
+  }),
+
+  on(PlaylistActions.clearPlaylistState, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isGettingAllPlaylists: false,
+      isGetAllPlaylistsSuccess: false,
+      getAllPlaylistsErrorMessages: '',
+
+      isCreatingPlaylist: false,
+      isCreatePlaylistSuccess: false,
+      createPlaylistErrorMessage: '',
+
+      isGettingPlaylistByUserId: false,
+      isGetPlaylistByUserIdSuccess: false,
+      getPlaylistByUserIdErrorMessage: '',
+
+      isGettingPlaylistById: false,
+      isGetPlaylistByIdSuccess: false,
+      getPlaylistByIdErrorMessage: '',
+
+      isGettingWatchLaterPlaylistByUserId: false,
+      isGetWatchLaterPlaylistByUserIdSuccess: false,
+      getWatchLaterPlaylistByUserIdErrorMessage: '',
+
+      isUpdatingPlaylist: false,
+      isUpdatePlaylistSuccess: false,
+      updatePlaylistErrorMessage: '',
+
+      isUpdatingWatchLaterPlaylist: false,
+      isUpdateWatchLaterPlaylistSuccess: false,
+      updateWatchLaterPlaylistErrorMessage: '',
+
+      isDeletingWatchLaterPlaylist: false,
+      isDeleteWatchLaterPlaylistSuccess: false,
+      deleteWatchLaterPlaylistErrorMessage: '',
     };
   }),
 );
