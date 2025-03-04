@@ -37,7 +37,7 @@ export class VideoCardVerticalComponent implements AfterViewInit {
       this.renderer.setStyle(
         this.el.nativeElement.querySelector('.video-card'),
         'width',
-        '280px',
+        '330px',
       );
     }
   }
