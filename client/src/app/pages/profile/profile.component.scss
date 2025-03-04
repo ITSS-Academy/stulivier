@@ -44,7 +44,7 @@
         padding: 15px 30px;
         flex-direction: column;
         justify-content: flex-end;
-        align-items: flex-start;
+        align-items: flex-end;
         position: absolute;
         top: 0;
         left: 0;
@@ -56,6 +56,16 @@
           rgba(0, 0, 0, 0.4) 46.39%,
           rgba(0, 0, 0, 0.5) 100%
         );
+
+        .avatar-button {
+          display: flex;
+          width: 40px;
+          height: 40px;
+          justify-content: center;
+          align-items: center;
+          border-radius: 16px;
+          background: var(--md-sys-color-on-primary 90%);
+        }
       }
     }
 

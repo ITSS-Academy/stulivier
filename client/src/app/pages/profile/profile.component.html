@@ -19,7 +19,14 @@
           }
         </div>
 
-        <div (click)="triggerCoverInput()" class="background-linear"></div>
+        <div (click)="triggerCoverInput()" class="background-linear">
+          @if (self) {
+            <button mat-fab aria-label="Example icon button with a delete icon" class="avatar-button"
+                    (click)="openEditProfileDialog()">
+              <mat-icon class="material-symbols-rounded">edit</mat-icon>
+            </button>
+          }
+        </div>
       </div>
 
       <div class="user-data-controller">
@@ -42,7 +49,7 @@
 
         <div class="user-controller">
           @if (self) {
-            <button mat-flat-button (click)="openEditProfileDialog()">
+            <button mat-flat-button (click)="openCreateVideoDialog()">
               <mat-icon class="material-symbols-rounded">outbox</mat-icon>
               UPLOAD NEW VIDEO
             </button>
@@ -53,6 +60,7 @@
       </div>
     </div>
     <mat-tab-group
+      [(selectedIndex)]="activeTab"
       (selectedTabChange)="onTabChange($event)"
       class="sticky-tab-group"
       mat-align-tabs="start"

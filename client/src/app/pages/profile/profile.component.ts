@@ -2,7 +2,7 @@ import { Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
 import { MaterialModule } from '../../../shared/modules/material.module';
 import { VideoModule } from '../../../shared/modules/video.module';
-import { Router } from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
 import { Store } from '@ngrx/store';
 import { UserState } from '../../../ngrxs/user/user.state';
 import { Observable } from 'rxjs';
@@ -82,6 +82,51 @@ export class ProfileComponent {
         route = 'profile/playlists';
         break;
     }
+    localStorage.setItem('activeTab', tabIndex.toString());
     this.router.navigate([route]);
   }
+
+  activeTab = 0;
+
+  ngOnInit() {
+    const savedTab = localStorage.getItem('activeTab');
+    if (savedTab !== null) {
+      this.activeTab = parseInt(savedTab, 10);
+      this.navigateToTab(this.activeTab);
+    }
+
+    // Lắng nghe sự kiện thay đổi route để cập nhật tab khi chuyển trang
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        if (event.url.includes('/profile/featured')) {
+          this.activeTab = 0;
+        } else if (event.url.includes('/profile/videos')) {
+          this.activeTab = 1;
+        } else if (event.url.includes('/profile/playlists')) {
+          this.activeTab = 2;
+        }
+        localStorage.setItem('activeTab', this.activeTab.toString());
+      }
+    });
+  }
+
+
+  navigateToTab(index: number) {
+    let route = '';
+
+    switch (index) {
+      case 0:
+        route = 'profile/featured';
+        break;
+      case 1:
+        route = 'profile/videos';
+        break;
+      case 2:
+        route = 'profile/playlists';
+        break;
+    }
+
+    this.router.navigate([route]);
+  }
+
 }
