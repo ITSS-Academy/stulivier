@@ -1,1 +1,12 @@
-<p>category-detail works!</p>
+<div id="container">
+  <div id="header">
+    <span id="title">{{ (category$ | async)?.name }}</span>
+  </div>
+  <cdk-virtual-scroll-viewport id="scroll" itemSize="50">
+    <div id="video-list">
+      @for (video of videos$ | async; track $index) {
+        <app-video-card-vertical [video]="video"></app-video-card-vertical>
+      }
+    </div>
+  </cdk-virtual-scroll-viewport>
+</div>

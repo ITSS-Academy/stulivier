@@ -305,7 +305,7 @@ export class VideosService {
         throw new HttpException(error, HttpStatus.BAD_REQUEST);
       }
 
-      if (userId == null) {
+      if (userId != null) {
         // Update video history
         const { error } = await this.supabase.rpc('upsert_watch_history', {
           p_video_id: videoId,
@@ -326,7 +326,7 @@ export class VideosService {
   async getVideosByCategoryId(categoryId: string) {
     try {
       const { data, error } = await this.supabase.rpc(
-        'get_videos_by_category_id',
+        'get_videos_by_category',
         {
           p_category_id: categoryId,
         },

@@ -1,28 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
+import { CommentModel } from '../../models/comment.model';
 
 @Injectable()
-export class CategoriesService {
+export class CommentsService {
   private supabase = createClient(
     process.env.SUPABASE_URL,
     process.env.SUPABASE_KEY,
   );
 
-  async getAllCategories() {
-    const { data, error } = await this.supabase.rpc('get_all_categories');
-
-    if (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
-    return data;
-  }
-
-  async getCategoryById(id: string) {
+  async createComment(comment: CommentModel) {
     const { data, error } = await this.supabase
-      .from('categories')
-      .select('*')
-      .eq('id', id)
-      .single();
+      .from('comments')
+      .insert(comment);
 
     if (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
@@ -30,15 +20,15 @@ export class CategoriesService {
     return data;
   }
 
-  async getTopCategories() {
-    const { data, error } = await this.supabase.rpc(
-      'get_top_categories_with_videos',
-    );
+  async getCommentsByVideoId(videoId: string) {
+    const { data, error } = await this.supabase
+      .from('comments')
+      .select('*')
+      .eq('video_id', videoId);
 
     if (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
-
     return data;
   }
 }

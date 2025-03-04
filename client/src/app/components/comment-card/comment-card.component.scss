@@ -1,0 +1,41 @@
+.tweet-container {
+    max-width: 600px;
+    margin: 20px auto;
+    color: var(--md-sys-color-on-surface);
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+  }
+
+  .tweet-header {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+
+  .username {
+    font-weight: bold;
+    color: #1d9bf0;
+    margin-right: 5px;
+  }
+
+  .header-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .tweet-content-in-header {
+    font-size: 14px;
+    word-wrap: break-word;
+    max-width: 100%;
+  }
+
+

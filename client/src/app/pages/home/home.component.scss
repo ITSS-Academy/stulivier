@@ -14,10 +14,18 @@
     }
   }
 
-  #video-container {
+  .title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--md-sys-color-on-surface);
+  }
+
+  .video-container {
     width: 100%;
     height: 100%;
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
   }
 }

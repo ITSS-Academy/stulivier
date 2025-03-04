@@ -1,9 +1,12 @@
 <div id="container">
   <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
-    <div class="video-container">
-      @for (video of videos$ | async; track $index) {
-        <app-video-card-vertical [video]="video"></app-video-card-vertical>
-      }
-    </div>
+    @for (item of topCategory$ | async; track $index) {
+      <p class="title">{{ item.name }}</p>
+      <div class="video-container">
+        @for (video of item.videos; track $index) {
+          <app-video-card-vertical [video]="video"></app-video-card-vertical>
+        }
+      </div>
+    }
   </cdk-virtual-scroll-viewport>
 </div>

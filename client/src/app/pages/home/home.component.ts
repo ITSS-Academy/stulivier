@@ -3,11 +3,12 @@ import { SharedModule } from '../../../shared/modules/shared.module';
 import { MaterialModule } from '../../../shared/modules/material.module';
 import { VideoModule } from '../../../shared/modules/video.module';
 import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
-import { VideoModel } from '../../../models/video.model';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { VideoState } from '../../../ngrxs/video/video.state';
-import * as VideoActions from '../../../ngrxs/video/video.actions';
+import { CategoryState } from '../../../ngrxs/category/category.state';
+import { CategoryDetailModel } from '../../../models/category.model';
+import * as CategoryActions from '../../../ngrxs/category/category.actions';
 
 @Component({
   selector: 'app-home',
@@ -23,18 +24,25 @@ import * as VideoActions from '../../../ngrxs/video/video.actions';
 })
 export class HomeComponent implements OnInit {
   subscription: Subscription[] = [];
-  videos$: Observable<VideoModel[]>;
+  topCategory$: Observable<CategoryDetailModel[]>;
 
-  constructor(private store: Store<{ video: VideoState }>) {
-    this.videos$ = this.store.select('video', 'videos');
-    this.store.dispatch(VideoActions.getAllVideos());
+  constructor(
+    private store: Store<{ video: VideoState; category: CategoryState }>,
+  ) {
+    this.topCategory$ = this.store.select('category', 'topCategories');
+    this.store.dispatch(CategoryActions.getTopCategories());
   }
 
   ngOnInit() {
     this.subscription.push(
-      this.store.select('video', 'videos').subscribe((videos) => {
-        console.log(videos);
-      }),
+      this.topCategory$.subscribe(
+        (topCategories) => {
+          console.log(topCategories);
+        },
+        (error) => {
+          console.log(error);
+        },
+      ),
     );
   }
 }

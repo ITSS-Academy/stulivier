@@ -12,7 +12,6 @@ export class PlaylistsService {
   async createPlaylist(createPlaylistModel: CreatePlaylistModel) {
     const { error } = await this.supabase.from('playlists').insert({
       title: createPlaylistModel.title,
-      description: createPlaylistModel.description,
       is_public: createPlaylistModel.is_public,
       user_id: createPlaylistModel.user_id,
     });
@@ -89,6 +88,24 @@ export class PlaylistsService {
         p_user_id: userId,
         p_video_id: videoId,
       });
+
+      if (error) {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async removeVideoInWatchLaterPlaylist(userId: string, videoId: string) {
+    try {
+      const { error } = await this.supabase.rpc(
+        'remove_video_in_watch_later_playlist',
+        {
+          p_user_id: userId,
+          p_video_id: videoId,
+        },
+      );
 
       if (error) {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

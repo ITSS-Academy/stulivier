@@ -1,1 +1,106 @@
-<p>watch works!</p>
+<div class="container">
+  <div class="left">
+    <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
+      <mat-card appearance="outlined" class="video-card">
+        <div class="video-container">
+          <vg-player (onPlayerReady)="onPlayerReady($event)">
+            <vg-overlay-play></vg-overlay-play>
+            <vg-buffering></vg-buffering>
+
+            <vg-scrub-bar>
+              <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+              <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+            </vg-scrub-bar>
+
+            <vg-controls>
+              <vg-play-pause></vg-play-pause>
+              <vg-playback-button></vg-playback-button>
+
+              <vg-time-display
+                vgFormat="mm:ss"
+                vgProperty="current"
+              ></vg-time-display>
+              <vg-scrub-bar style="pointer-events: none"></vg-scrub-bar>
+              <vg-time-display
+                vgFormat="mm:ss"
+                vgProperty="total"
+              ></vg-time-display>
+
+              <vg-mute></vg-mute>
+              <vg-volume></vg-volume>
+
+              <vg-fullscreen></vg-fullscreen>
+            </vg-controls>
+
+            <video
+              #media
+              [vgHls]="(video$ | async)?.video_url ?? ''"
+              [vgMedia]="$any(media)"
+              autoplay
+              crossorigin
+              id="hls-video"
+              preload="auto"
+            ></video>
+          </vg-player>
+        </div>
+
+        <mat-card-content class="content-container">
+          <p class="title">{{ (video$ | async)?.title }}</p>
+        </mat-card-content>
+      </mat-card>
+      <div class="video-list">
+        @for (video of filteredVideos$ | async; track $index) {
+          <app-video-card-vertical [video]="video"></app-video-card-vertical>
+        }
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </div>
+
+  <div class="right">
+    <div class="info">
+      <div class="avatar">
+        <img alt="" src="{{ (video$ | async)?.user_data?.avatar_url }}" />
+      </div>
+      <div class="user-info">
+        <span class="username">
+          {{ (video$ | async)?.user_data?.username }}
+        </span>
+        <!--                <span class="sub">0 subscribers</span>-->
+      </div>
+      <!--              <button mat-flat-button>Subscribe</button>-->
+    </div>
+    <div class="line"></div>
+    <div class="content">
+      <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
+        <app-comment-card></app-comment-card>
+        <app-comment-card></app-comment-card>
+        <app-comment-card></app-comment-card>
+
+      </cdk-virtual-scroll-viewport>
+    </div>
+    <div class="line"></div>
+    <div class="reaction-btn">
+      <mat-icon
+        class="material-symbols-rounded icon"
+        fontIcon="favorite"
+      ></mat-icon>
+      <mat-icon
+        class="material-symbols-rounded icon"
+        fontIcon="mode_comment"
+      ></mat-icon>
+    </div>
+    <div class="comment-forms">
+      <mat-form-field appearance="fill" class="comment-field">
+        <mat-label>Comment</mat-label>
+        <input [(ngModel)]="comment" matInput />
+      </mat-form-field>
+      <button
+        (click)="createComment()"
+        [disabled]="comment == ''"
+        mat-flat-button
+      >
+        Post
+      </button>
+    </div>
+  </div>
+</div>
