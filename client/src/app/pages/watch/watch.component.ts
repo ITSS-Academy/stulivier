@@ -5,27 +5,27 @@ import {
   OnInit, Renderer2,
   ViewChild,
 } from '@angular/core';
-import { SharedModule } from '../../../shared/modules/shared.module';
-import { MaterialModule } from '../../../shared/modules/material.module';
-import { VideoModule } from '../../../shared/modules/video.module';
-import { VideoModel } from '../../../models/video.model';
-import { PlaylistDetailModel } from '../../../models/playlist.model';
-import { UserModel } from '../../../models/user.model';
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PlaylistState } from '../../../ngrxs/playlist/playlist.state';
-import { UserState } from '../../../ngrxs/user/user.state';
-import { VideoState } from '../../../ngrxs/video/video.state';
-import { VgApiService } from '@videogular/ngx-videogular/core';
-import { Store } from '@ngrx/store';
+import {SharedModule} from '../../../shared/modules/shared.module';
+import {MaterialModule} from '../../../shared/modules/material.module';
+import {VideoModule} from '../../../shared/modules/video.module';
+import {VideoModel} from '../../../models/video.model';
+import {PlaylistDetailModel} from '../../../models/playlist.model';
+import {UserModel} from '../../../models/user.model';
+import {combineLatest, Observable, Subscription} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {PlaylistState} from '../../../ngrxs/playlist/playlist.state';
+import {UserState} from '../../../ngrxs/user/user.state';
+import {VideoState} from '../../../ngrxs/video/video.state';
+import {VgApiService} from '@videogular/ngx-videogular/core';
+import {Store} from '@ngrx/store';
 import * as VideoActions from '../../../ngrxs/video/video.actions';
 import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
 import * as CommentActions from '../../../ngrxs/comment/comment.actions';
-import { filter, map, take } from 'rxjs/operators';
-import { CommentState } from '../../../ngrxs/comment/comment.state';
-import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
-import { CommentCardComponent } from '../../components/comment-card/comment-card.component';
-import { CommentModel } from '../../../models/comment.model';
+import {filter, map, take} from 'rxjs/operators';
+import {CommentState} from '../../../ngrxs/comment/comment.state';
+import {VideoCardVerticalComponent} from '../../components/video-card-vertical/video-card-vertical.component';
+import {CommentCardComponent} from '../../components/comment-card/comment-card.component';
+import {CommentModel} from '../../../models/comment.model';
 
 @Component({
   selector: 'app-watch',
@@ -41,7 +41,7 @@ import { CommentModel } from '../../../models/comment.model';
   styleUrl: './watch.component.scss',
 })
 export class WatchComponent implements OnInit, OnDestroy {
-  @ViewChild('media', { static: true }) media!: ElementRef;
+  @ViewChild('media', {static: true}) media!: ElementRef;
   isDescriptionExpanded = false;
   videoId!: string;
   listId!: string;
@@ -129,7 +129,7 @@ export class WatchComponent implements OnInit, OnDestroy {
             this.startRadio = Number(params.get('index') || 0);
             this.store.dispatch(VideoActions.getAllVideos());
             this.store.dispatch(
-              CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
+              CommentActions.getCommentsByVideoId({videoId: this.videoId}),
             );
 
             if (isGetSuccess && !isGetting) {
@@ -143,7 +143,7 @@ export class WatchComponent implements OnInit, OnDestroy {
               }
               if (this.listId) {
                 this.store.dispatch(
-                  PlaylistActions.getPlaylistById({ id: this.listId }),
+                  PlaylistActions.getPlaylistById({id: this.listId}),
                 );
               }
             } else {
@@ -154,7 +154,7 @@ export class WatchComponent implements OnInit, OnDestroy {
                 }),
               );
               this.store.dispatch(
-                PlaylistActions.getPlaylistById({ id: this.listId as string }),
+                PlaylistActions.getPlaylistById({id: this.listId as string}),
               );
             }
           });
@@ -174,10 +174,18 @@ export class WatchComponent implements OnInit, OnDestroy {
         .subscribe((isCreateCommentSuccess) => {
           if (isCreateCommentSuccess) {
             this.store.dispatch(
-              CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
+              CommentActions.getCommentsByVideoId({videoId: this.videoId}),
             );
           }
         }),
+      this.isGetPlaylistByIdSuccess$.subscribe((isGetPlaylistByIdSuccess) => {
+          if (isGetPlaylistByIdSuccess) {
+            setTimeout(() => {
+              this.updateButtonsVisibility();
+            }, 500);
+          }
+        }
+      )
     );
   }
 
@@ -264,7 +272,7 @@ export class WatchComponent implements OnInit, OnDestroy {
           const nextVideo = videos[currentIndex + 1];
           if (nextVideo) {
             this.router.navigate(['/watch'], {
-              queryParams: { v: nextVideo.id },
+              queryParams: {v: nextVideo.id},
             });
           } else {
             console.log('No more videos to play.');
@@ -296,7 +304,7 @@ export class WatchComponent implements OnInit, OnDestroy {
       );
 
       // Gửi lên server cập nhật lượt xem
-      this.store.dispatch(VideoActions.increaseViewCount({ id: this.videoId }));
+      this.store.dispatch(VideoActions.increaseViewCount({id: this.videoId}));
     } else {
       console.log('Phát hiện spam, không tính thêm lượt xem!');
     }
@@ -350,7 +358,8 @@ export class WatchComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngAfterViewInit() {
+
+  updateButtonsVisibility() {
     const containers = this.el.nativeElement.querySelectorAll('.data-container');
 
     containers.forEach((container: HTMLElement) => {
@@ -372,19 +381,19 @@ export class WatchComponent implements OnInit, OnDestroy {
           updateButtonsVisibility();
         });
 
-        observer.observe(data, { childList: true, subtree: true });
+        observer.observe(data, {childList: true, subtree: true});
 
         // Lắng nghe sự kiện cuộn
         this.renderer.listen(data, 'scroll', updateButtonsVisibility);
 
         // Lắng nghe click để cập nhật nút sau khi cuộn
         this.renderer.listen(btnLeft, 'click', () => {
-          data.scrollBy({ left: -340, behavior: 'smooth' });
+          data.scrollBy({left: -340, behavior: 'smooth'});
           setTimeout(updateButtonsVisibility, 340);
         });
 
         this.renderer.listen(btnRight, 'click', () => {
-          data.scrollBy({ left: 340, behavior: 'smooth' });
+          data.scrollBy({left: 340, behavior: 'smooth'});
           setTimeout(updateButtonsVisibility, 340);
         });
 
@@ -393,4 +402,5 @@ export class WatchComponent implements OnInit, OnDestroy {
       }
     });
   }
+
 }
