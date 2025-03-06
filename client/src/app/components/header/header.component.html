@@ -5,7 +5,9 @@
       class="menu-icon material-symbols-rounded"
       fontIcon="menu"
     ></mat-icon>
-    <img alt="logo" src="" />
+    <div class="logo">
+    <img alt="logo" [src]="themeService.isDarkMode ? '/assets/logo_stulivier_dark_theme.png': '/assets/logo_stulivier_light_theme.png'" />
+    </div>
   </div>
   <div class="search-container">
     <div class="search-input">
