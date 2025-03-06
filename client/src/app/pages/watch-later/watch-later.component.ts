@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {SharedModule} from '../../../shared/modules/shared.module';
 import {MaterialModule} from '../../../shared/modules/material.module';
 import {VideoModule} from '../../../shared/modules/video.module';
@@ -15,6 +15,7 @@ import {user} from '@angular/fire/auth';
 import {PlaylistState} from '../../../ngrxs/playlist/playlist.state';
 import {PlaylistDetailModel} from '../../../models/playlist.model';
 import {map} from 'rxjs/operators';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-watch-later',
@@ -29,19 +30,20 @@ import {map} from 'rxjs/operators';
   templateUrl: './watch-later.component.html',
   styleUrl: './watch-later.component.scss',
 })
-export class WatchLaterComponent implements OnInit {
+export class WatchLaterComponent implements OnInit, OnDestroy {
   @ViewChild('coverInput') coverInput!: ElementRef<HTMLInputElement>;
   subscription: Subscription[] = [];
   user$!: Observable<UserModel>;
-  PlaylistDetail$!: Observable<PlaylistDetailModel | null>;
+  playlistDetail$!: Observable<PlaylistDetailModel>;
+  playlistDetail!: PlaylistDetailModel
   videos$!: Observable<VideoModel[]>;
   coverImage: string | ArrayBuffer | null =
     'https://hybsmigdaummopabuqki.supabase.co/storage/v1/object/public/cover_img//nasa_earth_grid.jpg';
 
-  constructor(private store: Store<{ video: VideoState; playlist: PlaylistState; user: UserState }>) {
+  constructor(private store: Store<{ video: VideoState; playlist: PlaylistState; user: UserState }>, private router: Router) {
     this.user$ = this.store.select('user', 'user');
-    this.PlaylistDetail$ = this.store.select('playlist', 'playlistDetail');
-    this.videos$ = this.PlaylistDetail$.pipe(
+    this.playlistDetail$ = this.store.select('playlist', 'playlistDetail');
+    this.videos$ = this.playlistDetail$.pipe(
       map((playlistDetail) => playlistDetail?.videos ?? [])
     );
 
@@ -52,17 +54,14 @@ export class WatchLaterComponent implements OnInit {
       }
     });
 
-    //debug
-    // this.PlaylistDetail$.subscribe((playlist) => {
-    //   console.log('Playlist Detail:', playlist);
-    // });
-    // this.videos$.subscribe((videos) => {
-    //   console.log('Videos from Playlist:', videos);
-    // });
-    //debug
   }
 
   ngOnInit(): void {
+    this.subscription.push(
+      this.playlistDetail$.subscribe((playlistDetail) => {
+        this.playlistDetail = playlistDetail;
+      })
+    );
   }
 
   triggerCoverInput(): void {
@@ -81,12 +80,16 @@ export class WatchLaterComponent implements OnInit {
 
   playAll(event: Event): void {
     event.stopPropagation();
-    // Add your play all logic here
+    this.router.navigate(['/watch'], {queryParams: {v: this.playlistDetail.videos[0].id, list: this.playlistDetail.playlist.id, index: 0}});
   }
 
   shuffle(event: Event): void {
     event.stopPropagation();
     // Add your shuffle logic here
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.forEach((sub) => sub.unsubscribe());
   }
 
 }
