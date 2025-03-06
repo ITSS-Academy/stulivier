@@ -1,26 +1,21 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { SharedModule } from '../../../shared/modules/shared.module';
-import { MaterialModule } from '../../../shared/modules/material.module';
-import { VideoModule } from '../../../shared/modules/video.module';
-import { VideoCardHorizontalComponent } from '../../components/video-card-horizontal/video-card-horizontal.component';
-import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
-import { Observable, Subscription } from 'rxjs';
-import { VideoModel } from '../../../models/video.model';
-import { Store } from '@ngrx/store';
-import { VideoState } from '../../../ngrxs/video/video.state';
-import { UserState } from '../../../ngrxs/user/user.state';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {SharedModule} from '../../../shared/modules/shared.module';
+import {MaterialModule} from '../../../shared/modules/material.module';
+import {VideoModule} from '../../../shared/modules/video.module';
+import {VideoCardHorizontalComponent} from '../../components/video-card-horizontal/video-card-horizontal.component';
+import {VideoCardVerticalComponent} from "../../components/video-card-vertical/video-card-vertical.component";
+import {Observable, Subscription} from 'rxjs';
+import {VideoModel} from '../../../models/video.model';
+import {Store} from '@ngrx/store';
+import {VideoState} from '../../../ngrxs/video/video.state';
+import {UserState} from '../../../ngrxs/user/user.state';
 import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
-import { UserModel } from '../../../models/user.model';
-import { user } from '@angular/fire/auth';
-import { PlaylistState } from '../../../ngrxs/playlist/playlist.state';
-import { PlaylistDetailModel } from '../../../models/playlist.model';
-import { map } from 'rxjs/operators';
+import {UserModel} from '../../../models/user.model';
+import {user} from '@angular/fire/auth';
+import {PlaylistState} from '../../../ngrxs/playlist/playlist.state';
+import {PlaylistDetailModel} from '../../../models/playlist.model';
+import {map} from 'rxjs/operators';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-watch-later',
@@ -39,34 +34,35 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
   @ViewChild('coverInput') coverInput!: ElementRef<HTMLInputElement>;
   subscription: Subscription[] = [];
   user$!: Observable<UserModel>;
-  PlaylistDetail$!: Observable<PlaylistDetailModel | null>;
+  playlistDetail$!: Observable<PlaylistDetailModel>;
+  playlistDetail!: PlaylistDetailModel
   videos$!: Observable<VideoModel[]>;
   coverImage: string | ArrayBuffer | null =
     'https://hybsmigdaummopabuqki.supabase.co/storage/v1/object/public/cover_img//nasa_earth_grid.jpg';
 
-  constructor(
-    private store: Store<{
-      video: VideoState;
-      playlist: PlaylistState;
-      user: UserState;
-    }>,
-  ) {
+  constructor(private store: Store<{ video: VideoState; playlist: PlaylistState; user: UserState }>, private router: Router) {
     this.user$ = this.store.select('user', 'user');
-    this.PlaylistDetail$ = this.store.select('playlist', 'playlistDetail');
-    this.videos$ = this.PlaylistDetail$.pipe(
-      map((playlistDetail) => playlistDetail?.videos ?? []),
+    this.playlistDetail$ = this.store.select('playlist', 'playlistDetail');
+    this.videos$ = this.playlistDetail$.pipe(
+      map((playlistDetail) => playlistDetail?.videos ?? [])
     );
+
 
     this.user$.subscribe((user) => {
       if (user?.id) {
-        this.store.dispatch(
-          PlaylistActions.getWatchLaterPlaylistByUserId({ userId: user.id }),
-        );
+        this.store.dispatch(PlaylistActions.getWatchLaterPlaylistByUserId({userId: user.id}));
       }
     });
+
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.subscription.push(
+      this.playlistDetail$.subscribe((playlistDetail) => {
+        this.playlistDetail = playlistDetail;
+      })
+    );
+  }
 
   triggerCoverInput(): void {
     this.coverInput.nativeElement.click();
@@ -84,7 +80,7 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
 
   playAll(event: Event): void {
     event.stopPropagation();
-    // Add your play all logic here
+    this.router.navigate(['/watch'], {queryParams: {v: this.playlistDetail.videos[0].id, list: this.playlistDetail.playlist.id, index: 0}});
   }
 
   shuffle(event: Event): void {
@@ -94,6 +90,6 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.forEach((sub) => sub.unsubscribe());
-    this.store.dispatch(PlaylistActions.clearPlaylistState());
   }
+
 }
