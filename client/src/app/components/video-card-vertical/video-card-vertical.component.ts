@@ -144,6 +144,7 @@ export class VideoCardVerticalComponent
       minWidth: 400,
       minHeight: 410,
       data: this.video.id,
+      disableClose: true,
     });
   }
 

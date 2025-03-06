@@ -14,7 +14,7 @@ export interface PlaylistState {
 
   isGettingAllPlaylists: boolean;
   isGetAllPlaylistsSuccess: boolean;
-  getAllPlaylistsErrorMessages: '';
+  getAllPlaylistsErrorMessages: string;
 
   isGettingPlaylistByUserId: boolean;
   isGetPlaylistByUserIdSuccess: boolean;
