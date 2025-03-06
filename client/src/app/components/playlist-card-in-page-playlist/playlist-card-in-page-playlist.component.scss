@@ -1,5 +1,4 @@
-.playlist-card{
-  background-color: var(--md-sys-color-secondary-container);
+.playlist-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,8 +6,13 @@
   border-radius: 8px;
   margin-bottom: 30px;
 
+  &.highlight {
+    background-color: var(--md-sys-color-secondary-container);
+  }
+
   .video-image {
     padding: 20px 20px 10px 20px;
+
     img {
       width: 100%;
       object-fit: cover;
@@ -16,21 +20,25 @@
       border-radius: 8px;
     }
   }
-  .content{
+
+  .content {
     width: 100%;
     display: flex;
     justify-content: space-between;
     padding: 0 20px 20px 20px;
-    .main-content{
-      p{
+
+    .main-content {
+      p {
         margin: 0;
         color: var(--md-sys-color-on-background);
       }
     }
-    .playlist-button{
+
+    .playlist-button {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
+
       .actions {
         width: 10%;
         margin: 0 15px 10px 0;
@@ -38,12 +46,13 @@
     }
   }
 }
+
 .playlist-card:hover {
   color: var(--md-sys-color-on-secondary-container);
   background-color: var(--md-sys-color-secondary-container);
   cursor: pointer;
 }
 
-mat-card{
+mat-card {
   width: 90%;
 }

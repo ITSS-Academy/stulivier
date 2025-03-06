@@ -3,6 +3,10 @@
     @for (playlist of playlists$ | async; track $index) {
       <app-playlist-card-in-page-playlist
         [playlist]="playlist"
+        [highlight]="$index === index"
+        (click)="onClickPlaylist(playlist.id, $index)"
+        (playAll)="onPlayAll(playlist.id)"
+        (playShuffle)="onPlayShuffle(playlist.id)"
       ></app-playlist-card-in-page-playlist>
     }
   </div>

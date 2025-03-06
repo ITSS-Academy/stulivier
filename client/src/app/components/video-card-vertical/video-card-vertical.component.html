@@ -1,5 +1,6 @@
 <mat-card
   (click)="onVideoClick($event)"
+  [ngClass]="highlight ? 'highlight' : ''"
   appearance="outlined"
   class="video-card"
 >
