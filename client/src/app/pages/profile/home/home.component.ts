@@ -22,9 +22,7 @@ import {filter, take} from 'rxjs/operators';
   selector: 'app-home',
   standalone: true,
   imports: [
-    VideoCardHorizontalComponent,
     MatButton,
-    MatFabButton,
     MatIconModule,
     MatMiniFabButton,
     AsyncPipe,
@@ -66,17 +64,27 @@ export class HomeComponent implements OnInit{
     this.subscription.push(
       this.store.select('video', 'videos').subscribe((videos) => {
         console.log(videos);
+        this.updateButtonsVisibility();
       }),
       this.store.select('playlist', 'playlists').subscribe((playlists) => {
         console.log(playlists);
+        this.updateButtonsVisibility();
     }),
     );
+    // this.isGetPlaylistByIdSuccess$.subscribe((isGetPlaylistByIdSuccess) => {
+    //     if (isGetPlaylistByIdSuccess) {
+          setTimeout(() => {
+            this.updateButtonsVisibility();
+          }, 5000);
+    //     }
+    //   }
+    // )
     // this.user$.subscribe(user => {
     //   console.log('User from store:', user); // Kiểm tra dữ liệu user
     // });
   }
 
-  ngAfterViewInit() {
+  updateButtonsVisibility() {
     const containers = this.el.nativeElement.querySelectorAll('.data-container');
 
     containers.forEach((container: HTMLElement) => {
@@ -98,20 +106,20 @@ export class HomeComponent implements OnInit{
           updateButtonsVisibility();
         });
 
-        observer.observe(data, { childList: true, subtree: true });
+        observer.observe(data, {childList: true, subtree: true});
 
         // Lắng nghe sự kiện cuộn
         this.renderer.listen(data, 'scroll', updateButtonsVisibility);
 
         // Lắng nghe click để cập nhật nút sau khi cuộn
         this.renderer.listen(btnLeft, 'click', () => {
-          data.scrollBy({ left: -430, behavior: 'smooth' });
-          setTimeout(updateButtonsVisibility, 430);
+          data.scrollBy({left: -340, behavior: 'smooth'});
+          setTimeout(updateButtonsVisibility, 340);
         });
 
         this.renderer.listen(btnRight, 'click', () => {
-          data.scrollBy({ left: 430, behavior: 'smooth' });
-          setTimeout(updateButtonsVisibility, 430);
+          data.scrollBy({left: 340, behavior: 'smooth'});
+          setTimeout(updateButtonsVisibility, 340);
         });
 
         // Kiểm tra lại sau 500ms nếu dữ liệu load chậm
@@ -119,4 +127,6 @@ export class HomeComponent implements OnInit{
       }
     });
   }
+
+
 }
