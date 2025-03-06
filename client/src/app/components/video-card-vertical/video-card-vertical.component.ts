@@ -19,10 +19,11 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { UserState } from '../../../ngrxs/user/user.state';
 import { UserModel } from '../../../models/user.model';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AlertService } from '../../../services/alert.service';
 import { PlaylistState } from '../../../ngrxs/playlist/playlist.state';
 import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
+import { SidebarState } from '../../../ngrxs/sidebar/sidebar.state';
 
 @Component({
   selector: 'app-video-card-vertical',
@@ -38,14 +39,21 @@ export class VideoCardVerticalComponent
   readonly dialog = inject(MatDialog);
   subscriptions: Subscription[] = [];
   user!: UserModel;
+  isSidebarOpen$!: Observable<boolean>;
 
   constructor(
     private router: Router,
     private renderer: Renderer2,
     private el: ElementRef,
-    private store: Store<{ user: UserState; playlist: PlaylistState }>,
+    private store: Store<{
+      user: UserState;
+      playlist: PlaylistState;
+      sidebar: SidebarState;
+    }>,
     private alertService: AlertService,
-  ) {}
+  ) {
+    this.isSidebarOpen$ = this.store.select('sidebar', 'isSidebarOpen');
+  }
 
   ngOnInit() {
     this.subscriptions.push(
@@ -68,30 +76,55 @@ export class VideoCardVerticalComponent
           this.user = user;
         }
       }),
+
+      this.isSidebarOpen$.subscribe((isSidebarOpen) => {
+        if (isSidebarOpen) {
+          console.log('isSidebarOpen', isSidebarOpen);
+          if (this.router.url.includes('/watch?')) {
+            this.renderer.setStyle(
+              this.el.nativeElement.querySelector('.video-card'),
+              'width',
+              '300px',
+            );
+          } else if (this.router.url.includes('/history')) {
+            this.renderer.setStyle(
+              this.el.nativeElement.querySelector('.video-card'),
+              'width',
+              '310px',
+            );
+          } else if (this.router.url.includes('/watch-later')) {
+            this.renderer.setStyle(
+              this.el.nativeElement.querySelector('.video-card'),
+              'width',
+              '310px',
+            );
+          }
+        } else {
+          if (this.router.url.includes('/watch?')) {
+            this.renderer.setStyle(
+              this.el.nativeElement.querySelector('.video-card'),
+              'width',
+              '330px',
+            );
+          } else if (this.router.url.includes('/history')) {
+            this.renderer.setStyle(
+              this.el.nativeElement.querySelector('.video-card'),
+              'width',
+              '340px',
+            );
+          } else if (this.router.url.includes('/watch-later')) {
+            this.renderer.setStyle(
+              this.el.nativeElement.querySelector('.video-card'),
+              'width',
+              '340px',
+            );
+          }
+        }
+      }),
     );
   }
 
-  ngAfterViewInit(): void {
-    if (this.router.url.includes('/watch?')) {
-      this.renderer.setStyle(
-        this.el.nativeElement.querySelector('.video-card'),
-        'width',
-        '330px',
-      );
-    } else if (this.router.url.includes('/history')) {
-      this.renderer.setStyle(
-        this.el.nativeElement.querySelector('.video-card'),
-        'width',
-        '330px',
-      );
-    } else if (this.router.url.includes('/watch-later')) {
-      this.renderer.setStyle(
-        this.el.nativeElement.querySelector('.video-card'),
-        'width',
-        '330px',
-      );
-    }
-  }
+  ngAfterViewInit(): void {}
 
   onVideoClick(event: Event): void {
     event.preventDefault();

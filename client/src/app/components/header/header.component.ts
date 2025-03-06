@@ -12,8 +12,10 @@ import { AuthState } from '../../../ngrxs/auth/auth.state';
 import { UserState } from '../../../ngrxs/user/user.state';
 import * as AuthActions from '../../../ngrxs/auth/auth.actions';
 import * as UserActions from '../../../ngrxs/user/user.actions';
+import * as SidebarActions from '../../../ngrxs/sidebar/sidebar.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateVideoDialogComponent } from '../../dialogs/create-video-dialog/create-video-dialog.component';
+import { SidebarState } from '../../../ngrxs/sidebar/sidebar.state';
 
 @Component({
   selector: 'app-header',
@@ -35,11 +37,18 @@ export class HeaderComponent {
 
   @Output() menuClick = new EventEmitter<void>();
 
-  constructor(private store: Store<{ auth: AuthState; user: UserState }>) {
+  constructor(
+    private store: Store<{
+      auth: AuthState;
+      user: UserState;
+      sidebar: SidebarState;
+    }>,
+  ) {
     this.user$ = this.store.select('user', 'user');
   }
 
   onMenuClick(): void {
+    this.store.dispatch(SidebarActions.toggleSidebar());
     this.menuClick.emit();
   }
 

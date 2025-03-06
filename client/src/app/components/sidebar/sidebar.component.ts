@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { filter } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { MaterialModule } from '../../../shared/modules/material.module';
 import { SharedModule } from '../../../shared/modules/shared.module';
 import { ThemeService } from '../../../services/theme.service';

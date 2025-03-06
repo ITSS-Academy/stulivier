@@ -29,6 +29,7 @@ import { playlistReducer } from '../ngrxs/playlist/playlist.reducer';
 import { categoryReducer } from '../ngrxs/category/category.reducer';
 import { commentReducer } from '../ngrxs/comment/comment.reducer';
 import { historyReducer } from '../ngrxs/history/history.reducer';
+import { sidebarReducer } from '../ngrxs/sidebar/sidebar.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -44,6 +45,7 @@ export const appConfig: ApplicationConfig = {
       category: categoryReducer,
       comment: commentReducer,
       history: historyReducer,
+      sidebar: sidebarReducer,
     }),
     provideEffects(
       AuthEffects,
