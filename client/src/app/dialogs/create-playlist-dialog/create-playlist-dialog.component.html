@@ -2,34 +2,45 @@
   <div class="header">
     <span class="container-ribbon">
       <p>New</p>
-      <mat-icon style="font-size: 2.5rem; width: 100%; height: 100%">bookmark</mat-icon>
+      <mat-icon class="material-symbols-rounded" style="font-size: 2.5rem; width: 100%; height: 100%">bookmark</mat-icon>
     </span>
     <div class="title">
       <p>New Playlist</p>
     </div>
   </div>
   <div class="main-content">
-    <mat-form-field
-      appearance="outline"
-      style="width: 100%; margin-top: 10px"
-    >
-      <mat-label>Title</mat-label>
-      <input
-        matInput
-        placeholder="Choose a title"
-      />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Visibility</mat-label>
-      <mat-select>
-        @for (visibility of visibilitys; track visibility) {
-          <mat-option [value]="visibility.value">{{visibility.viewValue}}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+    <div class="input">
+      <form [formGroup]="playlistForm">
+        <mat-form-field appearance="fill" class="full-width" style="width: 100%">
+          <mat-label>Title</mat-label>
+          <input
+            formControlName="title"
+            matInput
+            maxlength="100"
+            placeholder="Choose a title"
+          />
+        </mat-form-field>
+        <div class="create-bottom">
+          <div class="create-bottom-content">
+            <div class="visibility">
+              <mat-form-field appearance="fill" class="full-width" style="width: 100%">
+                <mat-label>Visibility</mat-label>
+                <mat-select formControlName="visibility">
+                  @for (option of options; track option) {
+                    <mat-option [value]="option.value"
+                    >{{ option.viewValue }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
     <div class="button">
-      <button mat-stroked-button>Cancel</button>
-      <button mat-flat-button>Create</button>
+      <button mat-stroked-button (click)="closeDialog()">Cancel</button>
+      <button mat-flat-button [disabled]="playlistForm.invalid" (click)="createPlaylist()">Create</button>
     </div>
   </div>
 </div>

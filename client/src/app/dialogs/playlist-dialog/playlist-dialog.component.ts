@@ -1,30 +1,24 @@
 import {
   ChangeDetectorRef,
-  Component,
-  Inject,
-  inject, Input,
-  model,
-  OnDestroy,
-  OnInit,
+  Component, Inject,
+  inject, model, OnDestroy, OnInit
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogRef,
+  MatDialog, MatDialogRef,
 } from '@angular/material/dialog';
 import { CreatePlaylistDialogComponent } from '../create-playlist-dialog/create-playlist-dialog.component';
 import { Store } from '@ngrx/store';
 import { PlaylistState } from '../../../ngrxs/playlist/playlist.state';
 import { UserState } from '../../../ngrxs/user/user.state';
-import { Observable, Subscription } from 'rxjs';
-import { UserModel } from '../../../models/user.model';
-import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
-import { PlaylistModel } from '../../../models/playlist.model';
+import {Observable, Subscription} from 'rxjs';
 import { SharedModule } from '../../../shared/modules/shared.module';
 import { MaterialModule } from '../../../shared/modules/material.module';
-import { AlertService } from '../../../services/alert.service';
-import {VideoModel} from '../../../models/video.model';
+import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
+import {UserModel} from '../../../models/user.model';
+import {AlertService} from '../../../services/alert.service';
+import {PlaylistModel} from '../../../models/playlist.model';
 
 @Component({
   selector: 'app-playlist-dialog',
@@ -33,14 +27,133 @@ import {VideoModel} from '../../../models/video.model';
   templateUrl: './playlist-dialog.component.html',
   styleUrl: './playlist-dialog.component.scss',
 })
-export class PlaylistDialogComponent{
-  @Input() video!: VideoModel;
+export class PlaylistDialogComponent implements OnInit, OnDestroy {
+  subscriptions: Subscription[] = [];
+  user$: Observable<UserModel>;
+  user!: UserModel;
+  playlists$!: Observable<PlaylistModel[]>;
+  playlist!: PlaylistModel[];
+  playlistForm: FormGroup;
+
+  readonly checked = model(false);
+  readonly labelPosition = model<'before' | 'after'>('after');
+  readonly disabled = model(false);
   readonly dialog = inject(MatDialog);
 
-  openCreatePlaylistDialog() {
+  constructor(
+    private dialogRef: MatDialogRef<PlaylistDialogComponent>,
+    private store: Store<{
+      user: UserState;
+      playlist: PlaylistState;
+    }>,
+    @Inject(MAT_DIALOG_DATA) public data: { videoId: string },
+    private fb: FormBuilder,
+    private alertService: AlertService,
+    private cdr: ChangeDetectorRef, // Add this line
+  ) {
+    this.user$ = this.store.select('user', 'user');
+    this.playlists$ = this.store.select('playlist', 'playlists');
+    this.playlistForm = this.fb.group({
+      playlists: this.fb.array([]),
+    });
+    console.log(data);
+  }
+
+  get playlistsFormArray() {
+    return this.playlistForm.get('playlists') as FormArray;
+  }
+
+  ngOnInit() {
+    this.subscriptions.push(
+      this.user$.subscribe((user: UserModel) => {
+        if (user.id) {
+          this.user = user;
+        }
+      }),
+      this.store
+        .select('user', 'isGetUserSuccess')
+        .subscribe((isGetUserSuccess) => {
+          if (isGetUserSuccess) {
+            this.store.dispatch(
+              PlaylistActions.getPlaylistByUserId({
+                id: this.user.id,
+              }),
+            );
+          }
+        }),
+      this.playlists$.subscribe((playlist: PlaylistModel[]) => {
+        this.playlist = playlist;
+      }),
+      this.store
+        .select('playlist', 'isGetPlaylistByUserIdSuccess')
+        .subscribe((isGetPlaylistByUserIdSuccess) => {
+          if (isGetPlaylistByUserIdSuccess) {
+            this.updatePlaylistsFormArray();
+          }
+        }),
+    );
+  }
+
+  updatePlaylistsFormArray() {
+    const playlistFormArray = this.playlistForm.get('playlists') as FormArray;
+    playlistFormArray.clear();
+    this.playlist.forEach((playlist: PlaylistModel) => {
+      const isVideoIncluded =
+        playlist.video_id?.includes(this.data as any) || false;
+      playlistFormArray.push(this.fb.control(isVideoIncluded));
+    });
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
+  }
+
+  createPlaylist() {
     const dialogRef = this.dialog.open(CreatePlaylistDialogComponent, {
       minWidth: 400,
-      minHeight: 410,
+      minHeight: 430,
     });
+  }
+
+  updatePlaylist(playlist: PlaylistModel, index: number) {
+    if (playlist.title == 'Watch later') {
+      this.store.dispatch(
+        PlaylistActions.updateWatchLaterPlaylist({
+          userId: this.user.id,
+          videoId: this.data as any,
+        }),
+      );
+    } else {
+      this.store.dispatch(
+        PlaylistActions.updatePlaylist({
+          playlistId: playlist.id,
+          videoId: this.data as any,
+        }),
+      );
+    }
+    if (this.playlistsFormArray.at(index).value) {
+      this.alertService.showAlert(
+        `Added to ${playlist.title}`,
+        'Close',
+        3000,
+        'end',
+        'top',
+      );
+    } else {
+      this.alertService.showAlert(
+        `Removed from ${playlist.title}`,
+        'Close',
+        3000,
+        'end',
+        'top',
+      );
+    }
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((subscription) => {
+      subscription.unsubscribe();
+    });
+    this.store.dispatch(PlaylistActions.clearPlaylistState());
   }
 }
