@@ -17,7 +17,6 @@ export interface PlaylistDetailModel {
 
 export interface CreatePlaylistDto {
   title: string;
-  description: string;
   is_public: boolean;
   user_id: string;
 }
