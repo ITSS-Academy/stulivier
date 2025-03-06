@@ -1,7 +1,20 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
 import { MaterialModule } from '../../../shared/modules/material.module';
 import { VideoModule } from '../../../shared/modules/video.module';
+import { UserModel } from '../../../models/user.model';
+import { Observable, Subscription } from 'rxjs';
+import { HistoryModel } from '../../../models/history.model';
+import { Store } from '@ngrx/store';
+import { HistoryState } from '../../../ngrxs/history/history.state';
+import { UserState } from '../../../ngrxs/user/user.state';
+import * as HistoryActions from '../../../ngrxs/history/history.actions';
 
 @Component({
   selector: 'app-history',
@@ -10,14 +23,42 @@ import { VideoModule } from '../../../shared/modules/video.module';
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss',
 })
-export class HistoryComponent implements OnInit {
+export class HistoryComponent implements OnInit, OnDestroy {
   @ViewChild('coverInput') coverInput!: ElementRef<HTMLInputElement>;
+  subscriptions: Subscription[] = [];
+  videos$: Observable<HistoryModel[]>;
+  user!: UserModel | null;
+
   coverImage: string | ArrayBuffer | null =
     'https://hybsmigdaummopabuqki.supabase.co/storage/v1/object/public/cover_img//nasa_earth_grid.jpg';
 
-  constructor() {}
+  constructor(
+    private store: Store<{
+      history: HistoryState;
+      user: UserState;
+    }>,
+  ) {
+    this.videos$ = this.store.select((state) => state.history.history);
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.subscriptions.push(
+      this.store
+        .select((state) => state.user.user)
+        .subscribe((user) => {
+          this.user = user;
+          if (user.id) {
+            this.store.dispatch(
+              HistoryActions.getHistoryByUserId({ userId: user.id }),
+            );
+          }
+        }),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
 
   triggerCoverInput(): void {
     this.coverInput.nativeElement.click();

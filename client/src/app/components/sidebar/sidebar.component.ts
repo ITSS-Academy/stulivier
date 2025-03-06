@@ -38,11 +38,6 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       icon: 'home',
     },
     {
-      name: 'Subscriptions',
-      route: '/subscriptions',
-      icon: 'subscriptions',
-    },
-    {
       name: 'Categories',
       route: '/categories',
       icon: 'category',
@@ -78,18 +73,16 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     this.checked = this.themeService.darkModeEnabled;
     if (this.router.url.includes('home')) {
       this.activeLink = this.navLinks[0];
-    } else if (this.router.url.includes('subscriptions')) {
-      this.activeLink = this.navLinks[1];
     } else if (this.router.url.includes('categories')) {
-      this.activeLink = this.navLinks[2];
+      this.activeLink = this.navLinks[1];
     } else if (this.router.url.includes('history')) {
-      this.activeLink = this.navLinks[3];
+      this.activeLink = this.navLinks[2];
     } else if (this.router.url.includes('playlists')) {
-      this.activeLink = this.navLinks[4];
+      this.activeLink = this.navLinks[3];
     } else if (this.router.url.includes('watch-later')) {
-      this.activeLink = this.navLinks[5];
+      this.activeLink = this.navLinks[4];
     } else if (this.router.url.includes('liked-videos')) {
-      this.activeLink = this.navLinks[6];
+      this.activeLink = this.navLinks[5];
     } else {
       this.activeLink = this.navLinks[-1];
     }
@@ -124,18 +117,16 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   setActiveLinkBasedOnUrl() {
     if (this.router.url.includes('home')) {
       this.activeLink = this.navLinks[0];
-    } else if (this.router.url.includes('subscriptions')) {
-      this.activeLink = this.navLinks[1];
     } else if (this.router.url.includes('categories')) {
-      this.activeLink = this.navLinks[2];
+      this.activeLink = this.navLinks[1];
     } else if (this.router.url.includes('history')) {
-      this.activeLink = this.navLinks[3];
+      this.activeLink = this.navLinks[2];
     } else if (this.router.url.includes('playlists')) {
-      this.activeLink = this.navLinks[4];
+      this.activeLink = this.navLinks[3];
     } else if (this.router.url.includes('watch-later')) {
-      this.activeLink = this.navLinks[5];
+      this.activeLink = this.navLinks[4];
     } else if (this.router.url.includes('liked-videos')) {
-      this.activeLink = this.navLinks[6];
+      this.activeLink = this.navLinks[5];
     } else {
       this.activeLink = this.navLinks[-1];
     }

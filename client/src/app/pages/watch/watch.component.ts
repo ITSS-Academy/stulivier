@@ -24,7 +24,8 @@ import * as CommentActions from '../../../ngrxs/comment/comment.actions';
 import { filter, map, take } from 'rxjs/operators';
 import { CommentState } from '../../../ngrxs/comment/comment.state';
 import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
-import {CommentCardComponent} from '../../components/comment-card/comment-card.component';
+import { CommentCardComponent } from '../../components/comment-card/comment-card.component';
+import { CommentModel } from '../../../models/comment.model';
 
 @Component({
   selector: 'app-watch',
@@ -43,10 +44,11 @@ export class WatchComponent implements OnInit, OnDestroy {
   @ViewChild('media', { static: true }) media!: ElementRef;
   isDescriptionExpanded = false;
   videoId!: string;
-  listId: string | null = null;
-  startRadio: string | null = null;
+  listId!: string;
+  startRadio!: number;
   video$: Observable<VideoModel>;
   playlistDetail$: Observable<PlaylistDetailModel>;
+  isGetPlaylistByIdSuccess$: Observable<boolean>;
   user!: UserModel | null;
   isGetVideoSuccess$: Observable<boolean>;
   subscription: Subscription[] = [];
@@ -60,6 +62,7 @@ export class WatchComponent implements OnInit, OnDestroy {
   filteredVideos$!: Observable<VideoModel[]>;
   comment: string = '';
   createCommentFailure: Observable<string>;
+  comments$!: Observable<CommentModel[]>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -80,9 +83,13 @@ export class WatchComponent implements OnInit, OnDestroy {
       (state) => state.playlist.playlistDetail,
     );
     this.videos$ = this.store.select((state) => state.video.videos);
-    this.store.dispatch(VideoActions.getAllVideos());
     this.createCommentFailure = this.store.select(
       (state) => state.comment.createCommentErrorMessage,
+    );
+    this.comments$ = this.store.select((state) => state.comment.comments);
+    this.store.dispatch(VideoActions.getAllVideos());
+    this.isGetPlaylistByIdSuccess$ = this.store.select(
+      (state) => state.playlist.isGetPlaylistByIdSuccess,
     );
   }
 
@@ -116,9 +123,12 @@ export class WatchComponent implements OnInit, OnDestroy {
             this.store.select('user', 'isGettingUser'),
           ]).subscribe(([params, isGetSuccess, isGetting]) => {
             this.videoId = params.get('v') || '';
-            this.listId = params.get('list');
-            this.startRadio = params.get('start_radio');
+            this.listId = params.get('list') || '';
+            this.startRadio = Number(params.get('index') || 0);
             this.store.dispatch(VideoActions.getAllVideos());
+            this.store.dispatch(
+              CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
+            );
 
             if (isGetSuccess && !isGetting) {
               if (this.user) {
@@ -141,6 +151,9 @@ export class WatchComponent implements OnInit, OnDestroy {
                   userId: null,
                 }),
               );
+              this.store.dispatch(
+                PlaylistActions.getPlaylistById({ id: this.listId as string }),
+              );
             }
           });
         }),
@@ -154,6 +167,15 @@ export class WatchComponent implements OnInit, OnDestroy {
           }
         }
       }),
+      this.store
+        .select('comment', 'isCreateCommentSuccess')
+        .subscribe((isCreateCommentSuccess) => {
+          if (isCreateCommentSuccess) {
+            this.store.dispatch(
+              CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
+            );
+          }
+        }),
     );
   }
 
@@ -211,15 +233,42 @@ export class WatchComponent implements OnInit, OnDestroy {
   }
 
   playNextVideo(): void {
-    this.filteredVideos$.pipe(take(1)).subscribe((videos) => {
-      const currentIndex = videos.findIndex(
-        (video) => video.id === this.videoId,
-      );
-      const nextVideo = videos[currentIndex + 1];
-      if (nextVideo) {
-        this.router.navigate(['/watch'], { queryParams: { v: nextVideo.id } });
+    this.playlistDetail$.pipe(take(1)).subscribe((playlistDetail) => {
+      if (
+        playlistDetail &&
+        playlistDetail.videos &&
+        playlistDetail.videos.length > 0
+      ) {
+        const currentIndex = playlistDetail.videos.findIndex(
+          (video) => video.id === this.videoId,
+        );
+        const nextVideo = playlistDetail.videos[currentIndex + 1];
+        if (nextVideo) {
+          this.router.navigate(['/watch'], {
+            queryParams: {
+              v: nextVideo.id,
+              list: this.listId,
+              index: currentIndex,
+            },
+          });
+        } else {
+          console.log('No more videos in the playlist.');
+        }
       } else {
-        console.log('No more videos to play.');
+        this.filteredVideos$.pipe(take(1)).subscribe((videos) => {
+          const currentIndex = videos.findIndex(
+            (video) => video.id === this.videoId,
+          );
+          const nextVideo = videos[currentIndex + 1];
+          if (nextVideo) {
+            this.router.navigate(['/watch'], {
+              queryParams: { v: nextVideo.id },
+            });
+          } else {
+            console.log('No more videos to play.');
+          }
+          this.store.dispatch(PlaylistActions.clearPlaylistState());
+        });
       }
     });
   }

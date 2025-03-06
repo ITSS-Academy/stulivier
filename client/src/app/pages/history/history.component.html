@@ -43,35 +43,23 @@
   <div id="content-container">
     <cdk-virtual-scroll-viewport id="main-content" itemSize="50">
       <div id="content">
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
-        <p>list here</p>
+        <div class="video-list">
+          @for (video of videos$ | async; track $index) {
+            <div class="history-group">
+              <h3 class="watch-date">
+                {{ video.watched_at }}
+              </h3>
+
+              <div class="video-items">
+                @for (videoDetail of video.videos; track $index) {
+                  <app-video-card-horizontal
+                    [video]="videoDetail.video_details"
+                  ></app-video-card-horizontal>
+                }
+              </div>
+            </div>
+          }
+        </div>
       </div>
     </cdk-virtual-scroll-viewport>
   </div>

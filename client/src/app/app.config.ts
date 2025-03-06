@@ -21,12 +21,14 @@ import * as VideoEffects from '../ngrxs/video/video.effects';
 import * as PlaylistEffects from '../ngrxs/playlist/playlist.effects';
 import * as CategoryEffects from '../ngrxs/category/category.effects';
 import * as CommentEffects from '../ngrxs/comment/comment.effects';
+import * as HistoryEffects from '../ngrxs/history/history.effects';
 import { HttpClientAuth } from '../utils/http-client-auth';
 import { userReducer } from '../ngrxs/user/user.reducer';
 import { videoReducer } from '../ngrxs/video/video.reducer';
 import { playlistReducer } from '../ngrxs/playlist/playlist.reducer';
 import { categoryReducer } from '../ngrxs/category/category.reducer';
 import { commentReducer } from '../ngrxs/comment/comment.reducer';
+import { historyReducer } from '../ngrxs/history/history.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -41,6 +43,7 @@ export const appConfig: ApplicationConfig = {
       playlist: playlistReducer,
       category: categoryReducer,
       comment: commentReducer,
+      history: historyReducer,
     }),
     provideEffects(
       AuthEffects,
@@ -49,6 +52,7 @@ export const appConfig: ApplicationConfig = {
       PlaylistEffects,
       CategoryEffects,
       CommentEffects,
+      HistoryEffects,
     ),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
