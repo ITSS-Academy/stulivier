@@ -61,7 +61,7 @@
           .title {
             font-size: 2rem;
             font-weight: 700;
-            color: var(--md-sys-color-on-surface);
+            color: white;
           }
 
           .actions {
@@ -77,6 +77,17 @@
     width: 100%;
     height: 100%;
     padding: 0;
+
+    #content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      gap: 10px;
+      padding-top: 20px;
+      //justify-content: center;
+      flex-wrap: wrap;
+      padding-left: 25px;
+    }
 
     #main-content {
       width: 100%;

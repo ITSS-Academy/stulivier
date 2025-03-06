@@ -22,7 +22,7 @@
     //max-width: 1300px;
     display: flex;
     flex-direction: column;
-    border-top: 1px solid var(--md-sys-color-on-surface);
+    border-top: 1px solid var(--md-sys-color-outline);
 
     .content-header {
       width: 100%;
@@ -51,6 +51,7 @@
       flex-direction: column;
       justify-content: center;
 
+
       .button {
         z-index: 1;
         position: absolute;
@@ -64,8 +65,13 @@
           height: 50px;
           border-radius: 100%;
           background: rgba(23, 23, 23, 0.50);
-          color: var(--md-sys-color-on-surface);
+          color: white;
           pointer-events: all;
+          transition: opacity 0.3s;
+
+          [style*="opacity: 0"] {
+            pointer-events: none;
+          }
         }
       }
 
@@ -78,7 +84,8 @@
         z-index: 0;
         padding: 0 20px;
         white-space: nowrap;
-        overflow-x: auto;
+        overflow-x: hidden;
+        overflow-y: hidden;
         scroll-behavior: smooth;
       }
     }
@@ -89,7 +96,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 10px 20px;
+    padding: 10px 0;
 
     img {
       width: 180px;

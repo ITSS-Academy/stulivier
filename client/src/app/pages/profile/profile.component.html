@@ -22,7 +22,7 @@
         <div (click)="triggerCoverInput()" class="background-linear">
           @if (self) {
             <button mat-fab aria-label="Example icon button with a delete icon" class="avatar-button"
-                    (click)="openEditProfileDialog()">
+                    (click)="openEditProfileDialog(); $event.stopPropagation()">
               <mat-icon class="material-symbols-rounded">edit</mat-icon>
             </button>
           }
@@ -39,7 +39,7 @@
             />
           </div>
           <div class="user-data">
-            <span class="username">Ivako Talavadze</span>
+            <span class="username">{{(user$ | async)?.username}}</span>
             <span class="views">123,354 Views</span>
             <span class="describe">
               Art Direction UX/UI DESIGNER Founder of AdzeDesign
@@ -59,7 +59,7 @@
         </div>
       </div>
     </div>
-    <mat-tab-group
+    <mat-tab-group style="background-color: var(--md-sys-color-surface)"
       [(selectedIndex)]="activeTab"
       (selectedTabChange)="onTabChange($event)"
       class="sticky-tab-group"

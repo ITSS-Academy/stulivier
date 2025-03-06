@@ -56,13 +56,37 @@ export class HomeComponent implements OnInit{
       const btnRight = container.querySelector('.button-right') as HTMLElement;
 
       if (data && btnLeft && btnRight) {
+        const updateButtonsVisibility = () => {
+          if (!data.scrollWidth) return; // Chưa có nội dung thì không làm gì
+
+          btnLeft.style.visibility = data.scrollLeft > 0 ? 'visible' : 'hidden';
+          btnRight.style.visibility =
+            data.scrollLeft + data.clientWidth >= data.scrollWidth ? 'hidden' : 'visible';
+        };
+
+        // Lắng nghe sự thay đổi của nội dung bên trong data
+        const observer = new MutationObserver(() => {
+          updateButtonsVisibility();
+        });
+
+        observer.observe(data, { childList: true, subtree: true });
+
+        // Lắng nghe sự kiện cuộn
+        this.renderer.listen(data, 'scroll', updateButtonsVisibility);
+
+        // Lắng nghe click để cập nhật nút sau khi cuộn
         this.renderer.listen(btnLeft, 'click', () => {
-          data.scrollBy({ left: -300, behavior: 'smooth' });
+          data.scrollBy({ left: -430, behavior: 'smooth' });
+          setTimeout(updateButtonsVisibility, 430);
         });
 
         this.renderer.listen(btnRight, 'click', () => {
-          data.scrollBy({ left: 300, behavior: 'smooth' });
+          data.scrollBy({ left: 430, behavior: 'smooth' });
+          setTimeout(updateButtonsVisibility, 430);
         });
+
+        // Kiểm tra lại sau 500ms nếu dữ liệu load chậm
+        setTimeout(updateButtonsVisibility, 500);
       }
     });
   }
