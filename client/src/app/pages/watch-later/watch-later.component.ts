@@ -90,6 +90,7 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.forEach((sub) => sub.unsubscribe());
+    this.store.dispatch(PlaylistActions.clearPlaylistState())
   }
 
 }
