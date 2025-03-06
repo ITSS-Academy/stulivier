@@ -54,6 +54,13 @@ export class VideosController {
   }
 
   @Public()
+  @Get('user')
+  async getVideosByUserId(@Request() req: any) {
+    const { userId } = req.query;
+    return await this.videosService.getVideoByUserId(userId);
+  }
+
+  @Public()
   @Get('category')
   async getVideosByCategoryId(@Request() req: any) {
     const { categoryId } = req.query;

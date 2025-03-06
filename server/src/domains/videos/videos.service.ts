@@ -369,4 +369,29 @@ export class VideosService {
       throw new HttpException(e, HttpStatus.BAD_REQUEST);
     }
   }
+
+  async getVideoByUserId(userId: string) {
+    try {
+      const { data, error } = await this.supabase
+        .from('videos')
+        .select(
+          `
+    *,
+    user_data:users (
+      username,
+      avatar_url
+    )
+  `,
+        )
+        .eq('user_id', userId);
+
+      if (error) {
+        throw new HttpException(error, HttpStatus.BAD_REQUEST);
+      }
+
+      return data;
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
+  }
 }

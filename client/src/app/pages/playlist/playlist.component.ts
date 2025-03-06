@@ -20,6 +20,7 @@ import {
 } from '../../../models/playlist.model';
 import { UserState } from '../../../ngrxs/user/user.state';
 import { UserModel } from '../../../models/user.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-playlist',
@@ -41,9 +42,11 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   user!: UserModel;
   subscriptions: Subscription[] = [];
   isGetPlaylistByUserIdSuccess$!: Observable<boolean>;
+  index = 0;
 
   constructor(
     private store: Store<{ playlist: PlaylistState; user: UserState }>,
+    private router: Router,
   ) {
     this.playlists$ = this.store.select('playlist', 'playlists');
     this.isGetPlaylistByUserIdSuccess$ = this.store.select(
@@ -83,6 +86,41 @@ export class PlaylistComponent implements OnInit, OnDestroy {
         }
       },
     );
+  }
+
+  onClickPlaylist(playlistId: string, index: number) {
+    this.store.dispatch(PlaylistActions.getPlaylistById({ id: playlistId }));
+    this.index = index;
+  }
+
+  onPlayAll(playlistId: string) {
+    const videoId = this.playlists.find(
+      (playlist) => playlist.id === playlistId,
+    )?.video_id[0];
+    this.router.navigate(['watch'], {
+      queryParams: {
+        v: videoId,
+        list: playlistId,
+        index: 0,
+      },
+    });
+  }
+
+  onPlayShuffle(playlistId: string) {
+    const playlist = this.playlists.find(
+      (playlist) => playlist.id === playlistId,
+    );
+    if (playlist && playlist.video_id && playlist.video_id.length > 0) {
+      const randomIndex = Math.floor(Math.random() * playlist.video_id.length);
+      const videoId = playlist.video_id[randomIndex];
+      this.router.navigate(['watch'], {
+        queryParams: {
+          v: videoId,
+          list: playlistId,
+          index: randomIndex,
+        },
+      });
+    }
   }
 
   ngOnDestroy() {

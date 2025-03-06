@@ -265,39 +265,6 @@ export const playlistReducer = createReducer(
 
   on(PlaylistActions.clearPlaylistState, (state, action) => {
     console.log(action.type);
-    return <PlaylistState>{
-      ...state,
-      isGettingAllPlaylists: false,
-      isGetAllPlaylistsSuccess: false,
-      getAllPlaylistsErrorMessages: '',
-
-      isCreatingPlaylist: false,
-      isCreatePlaylistSuccess: false,
-      createPlaylistErrorMessage: '',
-
-      isGettingPlaylistByUserId: false,
-      isGetPlaylistByUserIdSuccess: false,
-      getPlaylistByUserIdErrorMessage: '',
-
-      isGettingPlaylistById: false,
-      isGetPlaylistByIdSuccess: false,
-      getPlaylistByIdErrorMessage: '',
-
-      isGettingWatchLaterPlaylistByUserId: false,
-      isGetWatchLaterPlaylistByUserIdSuccess: false,
-      getWatchLaterPlaylistByUserIdErrorMessage: '',
-
-      isUpdatingPlaylist: false,
-      isUpdatePlaylistSuccess: false,
-      updatePlaylistErrorMessage: '',
-
-      isUpdatingWatchLaterPlaylist: false,
-      isUpdateWatchLaterPlaylistSuccess: false,
-      updateWatchLaterPlaylistErrorMessage: '',
-
-      isDeletingWatchLaterPlaylist: false,
-      isDeleteWatchLaterPlaylistSuccess: false,
-      deleteWatchLaterPlaylistErrorMessage: '',
-    };
+    return initialState;
   }),
 );

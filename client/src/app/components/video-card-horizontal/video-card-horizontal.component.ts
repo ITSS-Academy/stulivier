@@ -34,9 +34,6 @@ export class VideoCardHorizontalComponent
   user$: Observable<UserModel>;
   user!: UserModel;
   @Input() video!: VideoModel;
-  @Input() playlistId: string | undefined;
-  @Input() index!: number;
-  @Input() highlight = false;
 
   constructor(
     private router: Router,
@@ -108,17 +105,10 @@ export class VideoCardHorizontalComponent
   }
 
   onVideoClick(video: VideoModel) {
-    if (this.playlistId !== undefined) {
-      this.router.navigate(['/watch'], {
-        queryParams: { v: video.id, list: this.playlistId, index: this.index },
-      });
-      return;
-    } else {
-      this.router.navigate(['/watch'], {
-        queryParams: { v: video.id },
-      });
-      this.store.dispatch(PlaylistActions.clearPlaylistState());
-    }
+    this.router.navigate(['/watch'], {
+      queryParams: { v: video.id },
+    });
+    this.store.dispatch(PlaylistActions.clearPlaylistState());
   }
 
   removeVideoInWatchLaterPlaylist() {

@@ -1,9 +1,6 @@
-<div class="playlist-card">
+<div [ngClass]="highlight ? 'highlight' : ''" class="playlist-card">
   <div class="video-image">
-    <img
-      alt="video-image"
-      src="https://i.ytimg.com/vi/FVF6ld2PaTs/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLC9ZYmI5q_xC64YZALE6bvZKjn_AQ"
-    />
+    <img alt="video-image" src="{{ playlist.thumbnail_url }}" />
   </div>
   <div class="content">
     <div class="main-content">
@@ -13,7 +10,9 @@
       <p style="font-size: 0.9rem">
         {{ playlist.is_public ? "Public" : "Private" }}
       </p>
-      <p style="font-size: 0.9rem">{{ playlist.video_id.length }} videos</p>
+      <p style="font-size: 0.9rem">
+        {{ playlist.video_id?.length ?? 0 }} videos
+      </p>
     </div>
     <div class="playlist-button">
       <div class="actions">
@@ -36,21 +35,25 @@
         </mat-menu>
       </div>
       <mat-card-actions>
-        <button mat-stroked-button>
-          <mat-icon
-            class="material-symbols-rounded"
-            fontIcon="shuffle"
-            style="font-size: 19px"
-          ></mat-icon>
-          Shuffle
-        </button>
-        <button mat-flat-button style="margin-left: 10px">
+        <button (click)="onPlayAll()" mat-flat-button>
           <mat-icon
             class="material-symbols-rounded"
             fontIcon="play_arrow"
             style="font-size: 19px"
           ></mat-icon>
           Play all
+        </button>
+        <button
+          (click)="onPlayShuffle()"
+          mat-stroked-button
+          style="margin-left: 10px"
+        >
+          <mat-icon
+            class="material-symbols-rounded"
+            fontIcon="shuffle"
+            style="font-size: 19px"
+          ></mat-icon>
+          Shuffle
         </button>
       </mat-card-actions>
     </div>

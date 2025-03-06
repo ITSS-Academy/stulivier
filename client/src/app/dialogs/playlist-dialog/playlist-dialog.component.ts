@@ -1,29 +1,34 @@
 import {
   ChangeDetectorRef,
-  Component, Inject,
-  inject, model, OnDestroy, OnInit
+  Component,
+  Inject,
+  inject,
+  model,
+  OnDestroy,
+  OnInit,
 } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
-  MatDialog, MatDialogRef,
+  MatDialog,
+  MatDialogRef,
 } from '@angular/material/dialog';
 import { CreatePlaylistDialogComponent } from '../create-playlist-dialog/create-playlist-dialog.component';
 import { Store } from '@ngrx/store';
 import { PlaylistState } from '../../../ngrxs/playlist/playlist.state';
 import { UserState } from '../../../ngrxs/user/user.state';
-import {Observable, Subscription} from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { SharedModule } from '../../../shared/modules/shared.module';
 import { MaterialModule } from '../../../shared/modules/material.module';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
-import {UserModel} from '../../../models/user.model';
-import {AlertService} from '../../../services/alert.service';
-import {PlaylistModel} from '../../../models/playlist.model';
+import { UserModel } from '../../../models/user.model';
+import { AlertService } from '../../../services/alert.service';
+import { PlaylistModel } from '../../../models/playlist.model';
 
 @Component({
   selector: 'app-playlist-dialog',
   standalone: true,
-  imports: [SharedModule, MaterialModule,],
+  imports: [SharedModule, MaterialModule],
   templateUrl: './playlist-dialog.component.html',
   styleUrl: './playlist-dialog.component.scss',
 })
@@ -102,6 +107,7 @@ export class PlaylistDialogComponent implements OnInit, OnDestroy {
         playlist.video_id?.includes(this.data as any) || false;
       playlistFormArray.push(this.fb.control(isVideoIncluded));
     });
+    console.log('playlistFormArray', playlistFormArray.value);
   }
 
   closeDialog() {
@@ -151,9 +157,11 @@ export class PlaylistDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.store.dispatch(PlaylistActions.clearPlaylistState());
+
     this.subscriptions.forEach((subscription) => {
       subscription.unsubscribe();
     });
-    this.store.dispatch(PlaylistActions.clearPlaylistState());
+    console.log('cleared');
   }
 }
