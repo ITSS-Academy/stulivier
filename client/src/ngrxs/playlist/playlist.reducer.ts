@@ -42,6 +42,10 @@ const initialState: PlaylistState = {
   isDeletingWatchLaterPlaylist: false,
   isDeleteWatchLaterPlaylistSuccess: false,
   deleteWatchLaterPlaylistErrorMessage: '',
+
+  isDeletingPlaylist: false,
+  isDeletePlaylistSuccess: false,
+  deletePlaylistErrorMessage: '',
 };
 
 export const playlistReducer = createReducer(
@@ -260,6 +264,33 @@ export const playlistReducer = createReducer(
       ...state,
       isDeletingWatchLaterPlaylist: false,
       deleteWatchLaterPlaylistErrorMessage: action.error,
+    };
+  }),
+
+  on(PlaylistActions.deletePlaylist, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isDeletingPlaylist: true,
+      isDeletePlaylistSuccess: false,
+    };
+  }),
+
+  on(PlaylistActions.deletePlaylistSuccess, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isDeletingPlaylist: false,
+      isDeletePlaylistSuccess: true,
+    };
+  }),
+
+  on(PlaylistActions.deletePlaylistFailure, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isDeletingPlaylist: false,
+      deletePlaylistErrorMessage: action.error,
     };
   }),
 

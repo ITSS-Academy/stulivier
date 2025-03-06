@@ -39,4 +39,8 @@ export interface PlaylistState {
   isDeletingWatchLaterPlaylist: boolean;
   isDeleteWatchLaterPlaylistSuccess: boolean;
   deleteWatchLaterPlaylistErrorMessage: string;
+
+  isDeletingPlaylist: boolean;
+  isDeletePlaylistSuccess: boolean;
+  deletePlaylistErrorMessage: string;
 }

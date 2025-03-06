@@ -113,4 +113,16 @@ export const deleteWatchLaterPlaylistFailure = createAction(
   '[Playlist] Delete Watch Later Playlist Failure',
   props<{ error: string }>(),
 );
+
+export const deletePlaylist = createAction(
+  '[Playlist] Delete',
+  props<{ playlistId: string }>(),
+);
+
+export const deletePlaylistSuccess = createAction('[Playlist] Delete Success');
+
+export const deletePlaylistFailure = createAction(
+  '[Playlist] Delete Failure',
+  props<{ error: string }>(),
+);
 export const clearPlaylistState = createAction('[Playlist] Clear State');
