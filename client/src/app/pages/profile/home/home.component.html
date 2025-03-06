@@ -1,5 +1,5 @@
 <div id="container">
-  <app-video-card-horizontal></app-video-card-horizontal>
+<!--  <app-video-card-horizontal></app-video-card-horizontal>-->
   <div class="content-container">
     <div class="content-header">
       <h3>Video</h3>
@@ -29,11 +29,7 @@
     </div>
     <div class="data-container">
       <div class="data" #dataContainer>
-        <app-playlist-card></app-playlist-card>
-        <app-playlist-card></app-playlist-card>
-        <app-playlist-card></app-playlist-card>
-        <app-playlist-card></app-playlist-card>
-        <app-playlist-card></app-playlist-card>
+        <app-playlist-card play></app-playlist-card>
       </div>
       <div class="button">
         <button mat-mini-fab aria-label="Scroll to left" class="button-left" >
@@ -96,11 +92,9 @@
     </div>
     <div class="data-container">
       <div class="data" #dataContainer>
-        <app-playlist-card></app-playlist-card>
-        <app-playlist-card></app-playlist-card>
-        <app-playlist-card></app-playlist-card>
-        <app-playlist-card></app-playlist-card>
-        <app-playlist-card></app-playlist-card>
+        @for (video of (playlists$ | async).; track $index) {
+          <app-video-card-vertical [video]="video"></app-video-card-vertical>
+        }
       </div>
       <div class="button">
         <button mat-mini-fab aria-label="Scroll to left" class="button-left" >
