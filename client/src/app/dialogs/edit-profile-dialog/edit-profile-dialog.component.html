@@ -10,14 +10,15 @@
       <div class="upload-video">
         <div
           #dropZone
-          (click)="fileInput.click()"
-          (dragleave)="onDragLeave($event)"
-          (dragover)="onDragOver($event)"
-          (drop)="onDrop($event)"
+          (click)="fileInputBackground.click()"
+          (dragleave)="onDragLeave($event, 'background')"
+          (dragover)="onDragOver($event, 'background')"
+          (drop)="onDrop($event, 'background')"
+          [style.border]="previewBackground ? 'none' : 'block'"
           class="upload-video-ouline-ouside"
         >
           <div
-            [style.display]="previewImage ? 'none' : 'flex'"
+            [style.display]="previewBackground ? 'none' : 'flex'"
             class="upload-video-ouline-inside"
           >
             <div class="safety-zone">
@@ -32,26 +33,29 @@
             <div class="or-click-this">Or click this box to select a photo</div>
           </div>
           <input
-            #fileInput
-            (change)="onFileSelectedAvatar($event)"
+            #fileInputBackground
+            (change)="onFileSelectedBackGround($event)"
             accept="image/*"
             hidden
             type="file"
           />
           <img
-            [src]="previewImage"
-            [style.display]="previewImage ? 'block' : 'none'"
+            [src]="previewBackground"
+            [style.display]="previewBackground ? 'block' : 'none'"
             alt="Preview"
             class="preview-image"
           />
         </div>
+        <div class="form-container">
+        <div class="form-left">
         <mat-form-field
           appearance="outline"
           style="width: 100%; margin-top: 10px"
         >
+
           <mat-label>Channel name</mat-label>
           <input
-            [value]="current.username"
+            [value]="(user$ | async)?.username"
             matInput
             placeholder="Input channel name"
           />
@@ -59,39 +63,57 @@
           <!--      <mat-hint>Hint</mat-hint>-->
         </mat-form-field>
 
-        <!--61c7da-->
         <mat-form-field appearance="outline" style="width: 100%">
           <mat-label>Describe</mat-label>
           <textarea
             #textarea
-            [value]="current.joined_date"
+            [value]="(user$ | async)?.describe"
             matInput
             maxlength="1000"
             placeholder="Input describe"
+            (input)="autoResize()"
           ></textarea>
           <!--      <mat-hint>Hint</mat-hint>-->
         </mat-form-field>
-        <!--61c7da-->
 
         <div class="input-data-item">
-          <span>Avatar image</span>
+<!--          <span>Change your avatar image</span>-->
           <input
-            #fileInput
-            (change)="onFileSelected($event)"
+            #fileInputAvatar
+            (change)="onFileSelectedAvatar($event)"
             accept="image/*"
             style="display: none"
             type="file"
           />
-          <button
-            (click)="fileInput.click()"
-            extended
-            mat-fab
-            style="height: 40px"
-          >
-            <mat-icon class="material-symbols-rounded">smb_share</mat-icon>
-            Upload photo
-          </button>
+<!--          <button-->
+<!--            (click)="fileInputAvatar.click()"-->
+<!--            extended-->
+<!--            mat-fab-->
+<!--            style="height: 40px"-->
+<!--          >-->
+<!--            <mat-icon class="material-symbols-rounded">smb_share</mat-icon>-->
+<!--            Upload photo-->
+<!--          </button>-->
         </div>
+        </div>
+          <div class="form-right">
+            <p>Avatar preview</p>
+            <div class="avatar-preview"
+                #dropZoneAvatar
+                 (click)="fileInputAvatar.click()"
+                 (dragleave)="onDragLeave($event, 'avatar')"
+                 (dragover)="onDragOver($event, 'avatar')"
+                 (drop)="onDrop($event, 'avatar')"
+                 [style.border]="previewAvatar ? 'none' : 'block'">
+              <p [style.display]="previewAvatar ? 'none' : 'block'">Choose to change your avatar image</p>
+            <img
+              [src]="previewAvatar"
+              class="preview-image"
+              alt="Preview"
+              [style.display]="previewAvatar ? 'block' : 'none'">
+            </div>
+          </div>
+      </div>
 
         <div class="button-group">
           <button color="primary" mat-flat-button>Save</button>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {
   CdkFixedSizeVirtualScroll,
   CdkVirtualScrollViewport,
@@ -8,12 +8,16 @@ import {
   MatFabButton,
   MatIconButton,
 } from '@angular/material/button';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { UserModel } from '../../../models/user.model';
-import { DialogRef } from '@angular/cdk/dialog';
+import {MatFormField, MatLabel} from '@angular/material/form-field';
+import {MatIcon} from '@angular/material/icon';
+import {MatInput} from '@angular/material/input';
+import {FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {UserModel} from '../../../models/user.model';
+import {DialogRef} from '@angular/cdk/dialog';
+import {Observable} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {UserState} from '../../../ngrxs/user/user.state';
+import {AsyncPipe} from '@angular/common';
 
 @Component({
   selector: 'app-edit-profile-dialog',
@@ -29,65 +33,108 @@ import { DialogRef } from '@angular/cdk/dialog';
     MatInput,
     MatLabel,
     ReactiveFormsModule,
+    AsyncPipe,
   ],
   templateUrl: './edit-profile-dialog.component.html',
   styleUrl: './edit-profile-dialog.component.scss',
 })
 export class EditProfileDialogComponent {
-  @ViewChild('textarea', { static: false })
+  @ViewChild('textarea', {static: false})
   textarea!: ElementRef<HTMLTextAreaElement>;
   @Input() Progress!: number;
   value = 90;
   editProfile = new FormGroup({});
-  current: UserModel = {
-    id: 'string',
-    username: 'Nguyen Van A',
-    email: 'string',
-    avatar_url: 'string',
-    joined_date:
-      'Gemini hiện được trang bị sức mạnh của 2.0 Flash, \n mô hình mới nhất của chúng tôi cho kỷ nguyên trợ lý AI.\n Mô hình này có tốc độ phản hồi nhanh hơn và hiệu suất vượt trội theo một số thang đo quan trọng đánh giá khả năng trợ giúp các nhiệm vụ hằng ngày, như lên ý tưởng, học tập hay viết lách.\n ',
-  }; //data mẫu để test
-  @ViewChild('dropZone', { static: false }) dropZone!: ElementRef;
-  previewImage: string | null = null;
+  user$!: Observable<UserModel>;
+  @ViewChild('dropZone', {static: false}) dropZone!: ElementRef;
+  @ViewChild('dropZoneAvatar', {static: false}) dropZoneAvatar!: ElementRef;
+  previewBackground: string | null = null;
 
-  constructor(private dialogRef: DialogRef<EditProfileDialogComponent>) {}
+  constructor(
+    private dialogRef: DialogRef<EditProfileDialogComponent>,
+    private store: Store<{ user: UserState }>
+  ) {
+    this.user$ = this.store.select('user', 'user');
+  }
 
   closeDialog() {
     this.dialogRef.close();
   }
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      // Handle the selected file
-      console.log(file);
-    }
-  }
+  // onFileSelected(event: Event): void {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files && input.files.length > 0) {
+  //     const file = input.files[0];
+  //     // Handle the selected file
+  //     console.log(file);
+  //   }
+  // }
 
-  onFileSelectedAvatar(event: any) {
-    const file = event.target.files[0];
+  onFileSelectedBackGround(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
-      this.previewImage = URL.createObjectURL(file);
+      this.previewBackground = URL.createObjectURL(file);
     }
   }
 
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    this.dropZone.nativeElement.classList.add('drag-over');
+  ngAfterViewInit() {
+    this.autoResize(); // Gọi ngay khi component render
   }
 
-  onDragLeave(event: DragEvent) {
-    this.dropZone.nativeElement.classList.remove('drag-over');
+  autoResize() {
+    if (this.textarea) {
+      const el = this.textarea.nativeElement;
+      el.style.height = 'auto';
+      el.style.height = el.scrollHeight + 'px';
+    }
   }
 
-  onDrop(event: DragEvent) {
+
+  onDragOver(event: DragEvent, type: 'background' | 'avatar') {
     event.preventDefault();
-    this.dropZone.nativeElement.classList.remove('drag-over');
+    if (type === 'background') {
+      this.dropZone.nativeElement.classList.add('drag-over');
+    } else {
+      this.dropZoneAvatar.nativeElement.classList.add('drag-over');
+    }
+  }
+
+  onDragLeave(event: DragEvent, type: 'background' | 'avatar') {
+    if (type === 'background') {
+      this.dropZone.nativeElement.classList.remove('drag-over');
+    } else {
+      this.dropZoneAvatar.nativeElement.classList.remove('drag-over');
+    }
+  }
+
+  onDrop(event: DragEvent, type: 'background' | 'avatar') {
+    event.preventDefault();
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
       const file = files[0];
-      this.previewImage = URL.createObjectURL(file);
+      if (type === 'background') {
+        this.dropZone.nativeElement.classList.remove('drag-over');
+        this.previewBackground = URL.createObjectURL(file);
+      } else {
+        this.dropZoneAvatar.nativeElement.classList.remove('drag-over');
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.previewAvatar = e.target?.result ?? null;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  }
+
+  previewAvatar: string | ArrayBuffer | null | undefined = null;
+
+  onFileSelectedAvatar(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.previewAvatar = e.target?.result ?? null;
+      };
+      reader.readAsDataURL(file);
     }
   }
 }

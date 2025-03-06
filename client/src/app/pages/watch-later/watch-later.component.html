@@ -43,35 +43,9 @@
   <div id="content-container">
     <cdk-virtual-scroll-viewport id="main-content" itemSize="50">
       <div id="content">
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
+        @for (video of (videos$ | async); track $index) {
+          <app-video-card-vertical [video]="video"></app-video-card-vertical>
+        }
       </div>
     </cdk-virtual-scroll-viewport>
   </div>

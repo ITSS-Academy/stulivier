@@ -6,6 +6,8 @@ import {VideoModel} from '../../../../models/video.model';
 import {Store} from '@ngrx/store';
 import {VideoState} from '../../../../ngrxs/video/video.state';
 import * as VideoActions from '../../../../ngrxs/video/video.actions';
+import {UserModel} from '../../../../models/user.model';
+import {UserState} from '../../../../ngrxs/user/user.state';
 
 
 @Component({
@@ -18,10 +20,15 @@ import * as VideoActions from '../../../../ngrxs/video/video.actions';
 export class VideosComponent implements OnInit{
 subscription: Subscription[] = [];
 videos$: Observable<VideoModel[]>;
+  user$!: Observable<UserModel>; //test only
 
-constructor(private store: Store<{ video: VideoState }>) {
+constructor(private store: Store<{
+  video: VideoState,
+  user: UserState //test only
+}>,) {
   this.videos$ = this.store.select('video', 'videos');
   this.store.dispatch(VideoActions.getAllVideos());
+  this.user$ = this.store.select('user', 'user'); //test only
 }
 
 ngOnInit() {
