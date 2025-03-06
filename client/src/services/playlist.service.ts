@@ -45,4 +45,8 @@ export class PlaylistService {
       params: { userId, videoId },
     });
   }
+
+  removePlaylist(playlistId: string) {
+    return this.http.delete('playlists', { params: { playlistId } });
+  }
 }

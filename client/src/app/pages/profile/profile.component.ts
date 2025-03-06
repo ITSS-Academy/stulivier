@@ -24,8 +24,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   user$!: Observable<UserModel>;
   @ViewChild('coverInput') coverInput!: ElementRef<HTMLInputElement>;
 
-  coverImage: string | ArrayBuffer | null =
-    'https://hybsmigdaummopabuqki.supabase.co/storage/v1/object/public/cover_img//nasa_earth_grid.jpg';
+
   @Input() username!: string;
   @Input() avatar_url!: string;
   @Input() view!: number;
@@ -34,6 +33,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   @Input() background_url!: string;
   self = true;
   private routerSubscription!: Subscription;
+
+  coverImage: string | ArrayBuffer | null = this.background_url || 'https://hybsmigdaummopabuqki.supabase.co/storage/v1/object/public/cover_img//nasa_earth_grid.jpg';
 
   constructor(
     private router: Router,

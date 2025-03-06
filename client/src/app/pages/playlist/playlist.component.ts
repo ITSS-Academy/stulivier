@@ -21,6 +21,7 @@ import {
 import { UserState } from '../../../ngrxs/user/user.state';
 import { UserModel } from '../../../models/user.model';
 import { Router } from '@angular/router';
+import { AlertService } from '../../../services/alert.service';
 
 @Component({
   selector: 'app-playlist',
@@ -47,6 +48,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store<{ playlist: PlaylistState; user: UserState }>,
     private router: Router,
+    private alertService: AlertService,
   ) {
     this.playlists$ = this.store.select('playlist', 'playlists');
     this.isGetPlaylistByUserIdSuccess$ = this.store.select(
@@ -86,6 +88,23 @@ export class PlaylistComponent implements OnInit, OnDestroy {
         }
       },
     );
+
+    this.store
+      .select('playlist', 'isDeletePlaylistSuccess')
+      .subscribe((isDeletePlaylistSuccess) => {
+        if (isDeletePlaylistSuccess) {
+          this.alertService.showAlert(
+            `Playlist deleted successfully`,
+            'Close',
+            3000,
+            'end',
+            'top',
+          );
+          this.store.dispatch(
+            PlaylistActions.getPlaylistByUserId({ id: this.user.id }),
+          );
+        }
+      });
   }
 
   onClickPlaylist(playlistId: string, index: number) {

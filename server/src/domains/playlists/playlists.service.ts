@@ -115,4 +115,19 @@ export class PlaylistsService {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
+
+  async removePlaylistById(playlistId: string) {
+    try {
+      const { error } = await this.supabase
+        .from('playlists')
+        .delete()
+        .eq('id', playlistId);
+
+      if (error) {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 }

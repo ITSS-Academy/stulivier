@@ -59,4 +59,10 @@ export class PlaylistsController {
       videoId,
     );
   }
+
+  @Delete()
+  async removePlaylistById(@Request() req: any) {
+    const { playlistId } = req.query;
+    return await this.playlistsService.removePlaylistById(playlistId);
+  }
 }
