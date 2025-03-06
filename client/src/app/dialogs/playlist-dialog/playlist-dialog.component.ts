@@ -88,14 +88,15 @@ export class PlaylistDialogComponent implements OnInit, OnDestroy {
         }),
       this.playlists$.subscribe((playlist: PlaylistModel[]) => {
         this.playlist = playlist;
+        this.updatePlaylistsFormArray();
       }),
-      this.store
-        .select('playlist', 'isGetPlaylistByUserIdSuccess')
-        .subscribe((isGetPlaylistByUserIdSuccess) => {
-          if (isGetPlaylistByUserIdSuccess) {
-            this.updatePlaylistsFormArray();
-          }
-        }),
+      // this.store
+      //   .select('playlist', 'isGetPlaylistByUserIdSuccess')
+      //   .subscribe((isGetPlaylistByUserIdSuccess) => {
+      //     if (isGetPlaylistByUserIdSuccess) {
+      //       this.updatePlaylistsFormArray();
+      //     }
+      //   }),
     );
   }
 
@@ -157,11 +158,8 @@ export class PlaylistDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.store.dispatch(PlaylistActions.clearPlaylistState());
-
     this.subscriptions.forEach((subscription) => {
       subscription.unsubscribe();
     });
-    console.log('cleared');
   }
 }
