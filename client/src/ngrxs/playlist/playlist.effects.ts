@@ -216,3 +216,26 @@ export const removeVideoInWatchLaterPlaylist$ = createEffect(
   },
   { functional: true },
 );
+
+export const removePlaylistById$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const playlistService = inject(PlaylistService);
+    return actions$.pipe(
+      ofType(PlaylistActions.deletePlaylist),
+      exhaustMap((action) => {
+        return playlistService.removePlaylist(action.playlistId).pipe(
+          map(() => PlaylistActions.deletePlaylistSuccess()),
+          catchError((obj) => {
+            return of(
+              PlaylistActions.deletePlaylistFailure({
+                error: obj.error.message,
+              }),
+            );
+          }),
+        );
+      }),
+    );
+  },
+  { functional: true },
+);
