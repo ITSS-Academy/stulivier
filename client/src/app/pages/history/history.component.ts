@@ -15,11 +15,19 @@ import { Store } from '@ngrx/store';
 import { HistoryState } from '../../../ngrxs/history/history.state';
 import { UserState } from '../../../ngrxs/user/user.state';
 import * as HistoryActions from '../../../ngrxs/history/history.actions';
+import { VideoCardHorizontalComponent } from '../../components/video-card-horizontal/video-card-horizontal.component';
+import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
 
 @Component({
   selector: 'app-history',
   standalone: true,
-  imports: [SharedModule, MaterialModule, VideoModule],
+  imports: [
+    SharedModule,
+    MaterialModule,
+    VideoModule,
+    VideoCardHorizontalComponent,
+    VideoCardVerticalComponent,
+  ],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss',
 })
