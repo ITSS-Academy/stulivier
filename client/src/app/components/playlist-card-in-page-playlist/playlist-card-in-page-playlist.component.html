@@ -1,12 +1,19 @@
 <div class="playlist-card">
   <div class="video-image">
-    <img src="https://i.ytimg.com/vi/FVF6ld2PaTs/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLC9ZYmI5q_xC64YZALE6bvZKjn_AQ" alt="video-image">
+    <img
+      alt="video-image"
+      src="https://i.ytimg.com/vi/FVF6ld2PaTs/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLC9ZYmI5q_xC64YZALE6bvZKjn_AQ"
+    />
   </div>
   <div class="content">
     <div class="main-content">
-      <p style="margin-top: 10px; font-size: 1.25rem; font-weight: bold">SKY</p>
-      <p style="font-size: 0.9rem">Private</p>
-      <p style="font-size: 0.9rem">15 videos</p>
+      <p style="margin-top: 10px; font-size: 1.25rem; font-weight: bold">
+        {{ playlist.title }}
+      </p>
+      <p style="font-size: 0.9rem">
+        {{ playlist.is_public ? "Public" : "Private" }}
+      </p>
+      <p style="font-size: 0.9rem">{{ playlist.video_id.length }} videos</p>
     </div>
     <div class="playlist-button">
       <div class="actions">
@@ -30,15 +37,22 @@
       </div>
       <mat-card-actions>
         <button mat-stroked-button>
-          <mat-icon class="material-symbols-rounded" fontIcon="shuffle" style="font-size: 19px"></mat-icon>
+          <mat-icon
+            class="material-symbols-rounded"
+            fontIcon="shuffle"
+            style="font-size: 19px"
+          ></mat-icon>
           Shuffle
         </button>
-        <button mat-flat-button style="margin-left: 10px;">
-          <mat-icon class="material-symbols-rounded" fontIcon="play_arrow" style="font-size: 19px"></mat-icon>
+        <button mat-flat-button style="margin-left: 10px">
+          <mat-icon
+            class="material-symbols-rounded"
+            fontIcon="play_arrow"
+            style="font-size: 19px"
+          ></mat-icon>
           Play all
         </button>
       </mat-card-actions>
     </div>
   </div>
 </div>
-

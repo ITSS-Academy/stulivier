@@ -23,7 +23,15 @@ export class CommentsService {
   async getCommentsByVideoId(videoId: string) {
     const { data, error } = await this.supabase
       .from('comments')
-      .select('*')
+      .select(
+        `
+      *,
+      user:users (
+        username,
+        avatar_url
+      )
+    `,
+      )
       .eq('video_id', videoId);
 
     if (error) {

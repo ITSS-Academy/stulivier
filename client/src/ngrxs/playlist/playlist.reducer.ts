@@ -139,6 +139,7 @@ export const playlistReducer = createReducer(
     console.log(action.type);
     return <PlaylistState>{
       ...state,
+      playlistDetail: action.playlist,
       isGettingPlaylistById: false,
       isGetPlaylistByIdSuccess: true,
     };

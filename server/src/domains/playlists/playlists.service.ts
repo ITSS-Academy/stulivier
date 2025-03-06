@@ -63,7 +63,8 @@ export class PlaylistsService {
     const { data, error } = await this.supabase
       .from('playlists')
       .select('*')
-      .eq('user_id', id);
+      .eq('user_id', id)
+      .neq('title', 'Watch later');
 
     if (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

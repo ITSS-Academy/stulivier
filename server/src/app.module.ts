@@ -12,6 +12,7 @@ import { PlaylistsModule } from './domains/playlists/playlists.module';
 import { HistoryModule } from './domains/history/history.module';
 import { CategoriesController } from './domains/categories/categories.controller';
 import { CategoriesModule } from './domains/categories/categories.module';
+import { CommentsModule } from './domains/comments/comments.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CategoriesModule } from './domains/categories/categories.module';
     PlaylistsModule,
     HistoryModule,
     CategoriesModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService, VideoGateway],

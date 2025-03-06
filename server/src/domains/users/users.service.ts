@@ -57,4 +57,38 @@ export class UsersService {
       throw new HttpException(e, HttpStatus.BAD_REQUEST);
     }
   }
+
+  async update(userId: string, updateData: any) {
+    try {
+      if (!userId) {
+        throw new HttpException('User ID is missing', HttpStatus.BAD_REQUEST);
+      }
+
+      // Chỉ lấy các trường cần update, tránh gửi undefined lên Supabase
+      const updateFields: any = {};
+      if (updateData.username) updateFields.username = updateData.username;
+      if (updateData.describe) updateFields.describe = updateData.describe;
+      if (updateData.avatar_url) updateFields.avatar_url = updateData.avatar_url;
+      if (updateData.background_url) updateFields.background_url = updateData.background_url;
+
+      if (Object.keys(updateFields).length === 0) {
+        throw new HttpException('No valid fields to update', HttpStatus.BAD_REQUEST);
+      }
+
+      const { error } = await this.supabase
+        .from('users')
+        .update(updateFields)
+        .eq('id', userId);
+
+      if (error) {
+        throw new HttpException(error, HttpStatus.BAD_REQUEST);
+      }
+
+      return { message: 'User updated successfully' };
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+
 }

@@ -2,7 +2,7 @@ import {
   Component,
   ElementRef,
   OnDestroy,
-  OnInit,
+  OnInit, Renderer2,
   ViewChild,
 } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
@@ -24,7 +24,8 @@ import * as CommentActions from '../../../ngrxs/comment/comment.actions';
 import { filter, map, take } from 'rxjs/operators';
 import { CommentState } from '../../../ngrxs/comment/comment.state';
 import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
-import {CommentCardComponent} from '../../components/comment-card/comment-card.component';
+import { CommentCardComponent } from '../../components/comment-card/comment-card.component';
+import { CommentModel } from '../../../models/comment.model';
 
 @Component({
   selector: 'app-watch',
@@ -43,10 +44,11 @@ export class WatchComponent implements OnInit, OnDestroy {
   @ViewChild('media', { static: true }) media!: ElementRef;
   isDescriptionExpanded = false;
   videoId!: string;
-  listId: string | null = null;
-  startRadio: string | null = null;
+  listId!: string;
+  startRadio!: number;
   video$: Observable<VideoModel>;
   playlistDetail$: Observable<PlaylistDetailModel>;
+  isGetPlaylistByIdSuccess$: Observable<boolean>;
   user!: UserModel | null;
   isGetVideoSuccess$: Observable<boolean>;
   subscription: Subscription[] = [];
@@ -60,6 +62,7 @@ export class WatchComponent implements OnInit, OnDestroy {
   filteredVideos$!: Observable<VideoModel[]>;
   comment: string = '';
   createCommentFailure: Observable<string>;
+  comments$!: Observable<CommentModel[]>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -71,6 +74,8 @@ export class WatchComponent implements OnInit, OnDestroy {
     }>,
     private vgApi: VgApiService,
     private router: Router,
+    private renderer: Renderer2,
+    private el: ElementRef,
   ) {
     this.video$ = this.store.select((state) => state.video.video);
     this.isGetVideoSuccess$ = this.store.select(
@@ -80,9 +85,13 @@ export class WatchComponent implements OnInit, OnDestroy {
       (state) => state.playlist.playlistDetail,
     );
     this.videos$ = this.store.select((state) => state.video.videos);
-    this.store.dispatch(VideoActions.getAllVideos());
     this.createCommentFailure = this.store.select(
       (state) => state.comment.createCommentErrorMessage,
+    );
+    this.comments$ = this.store.select((state) => state.comment.comments);
+    this.store.dispatch(VideoActions.getAllVideos());
+    this.isGetPlaylistByIdSuccess$ = this.store.select(
+      (state) => state.playlist.isGetPlaylistByIdSuccess,
     );
   }
 
@@ -116,9 +125,12 @@ export class WatchComponent implements OnInit, OnDestroy {
             this.store.select('user', 'isGettingUser'),
           ]).subscribe(([params, isGetSuccess, isGetting]) => {
             this.videoId = params.get('v') || '';
-            this.listId = params.get('list');
-            this.startRadio = params.get('start_radio');
+            this.listId = params.get('list') || '';
+            this.startRadio = Number(params.get('index') || 0);
             this.store.dispatch(VideoActions.getAllVideos());
+            this.store.dispatch(
+              CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
+            );
 
             if (isGetSuccess && !isGetting) {
               if (this.user) {
@@ -141,6 +153,9 @@ export class WatchComponent implements OnInit, OnDestroy {
                   userId: null,
                 }),
               );
+              this.store.dispatch(
+                PlaylistActions.getPlaylistById({ id: this.listId as string }),
+              );
             }
           });
         }),
@@ -154,6 +169,15 @@ export class WatchComponent implements OnInit, OnDestroy {
           }
         }
       }),
+      this.store
+        .select('comment', 'isCreateCommentSuccess')
+        .subscribe((isCreateCommentSuccess) => {
+          if (isCreateCommentSuccess) {
+            this.store.dispatch(
+              CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
+            );
+          }
+        }),
     );
   }
 
@@ -211,15 +235,42 @@ export class WatchComponent implements OnInit, OnDestroy {
   }
 
   playNextVideo(): void {
-    this.filteredVideos$.pipe(take(1)).subscribe((videos) => {
-      const currentIndex = videos.findIndex(
-        (video) => video.id === this.videoId,
-      );
-      const nextVideo = videos[currentIndex + 1];
-      if (nextVideo) {
-        this.router.navigate(['/watch'], { queryParams: { v: nextVideo.id } });
+    this.playlistDetail$.pipe(take(1)).subscribe((playlistDetail) => {
+      if (
+        playlistDetail &&
+        playlistDetail.videos &&
+        playlistDetail.videos.length > 0
+      ) {
+        const currentIndex = playlistDetail.videos.findIndex(
+          (video) => video.id === this.videoId,
+        );
+        const nextVideo = playlistDetail.videos[currentIndex + 1];
+        if (nextVideo) {
+          this.router.navigate(['/watch'], {
+            queryParams: {
+              v: nextVideo.id,
+              list: this.listId,
+              index: currentIndex,
+            },
+          });
+        } else {
+          console.log('No more videos in the playlist.');
+        }
       } else {
-        console.log('No more videos to play.');
+        this.filteredVideos$.pipe(take(1)).subscribe((videos) => {
+          const currentIndex = videos.findIndex(
+            (video) => video.id === this.videoId,
+          );
+          const nextVideo = videos[currentIndex + 1];
+          if (nextVideo) {
+            this.router.navigate(['/watch'], {
+              queryParams: { v: nextVideo.id },
+            });
+          } else {
+            console.log('No more videos to play.');
+          }
+          this.store.dispatch(PlaylistActions.clearPlaylistState());
+        });
       }
     });
   }
@@ -297,5 +348,49 @@ export class WatchComponent implements OnInit, OnDestroy {
       this.store.dispatch(VideoActions.clearState());
       this.subscription.forEach((sub) => sub.unsubscribe());
     }
+  }
+
+  ngAfterViewInit() {
+    const containers = this.el.nativeElement.querySelectorAll('.data-container');
+
+    containers.forEach((container: HTMLElement) => {
+      const data = container.querySelector('.data') as HTMLElement;
+      const btnLeft = container.querySelector('.button-left') as HTMLElement;
+      const btnRight = container.querySelector('.button-right') as HTMLElement;
+
+      if (data && btnLeft && btnRight) {
+        const updateButtonsVisibility = () => {
+          if (!data.scrollWidth) return; // Chưa có nội dung thì không làm gì
+
+          btnLeft.style.visibility = data.scrollLeft > 0 ? 'visible' : 'hidden';
+          btnRight.style.visibility =
+            data.scrollLeft + data.clientWidth >= data.scrollWidth ? 'hidden' : 'visible';
+        };
+
+        // Lắng nghe sự thay đổi của nội dung bên trong data
+        const observer = new MutationObserver(() => {
+          updateButtonsVisibility();
+        });
+
+        observer.observe(data, { childList: true, subtree: true });
+
+        // Lắng nghe sự kiện cuộn
+        this.renderer.listen(data, 'scroll', updateButtonsVisibility);
+
+        // Lắng nghe click để cập nhật nút sau khi cuộn
+        this.renderer.listen(btnLeft, 'click', () => {
+          data.scrollBy({ left: -340, behavior: 'smooth' });
+          setTimeout(updateButtonsVisibility, 340);
+        });
+
+        this.renderer.listen(btnRight, 'click', () => {
+          data.scrollBy({ left: 340, behavior: 'smooth' });
+          setTimeout(updateButtonsVisibility, 340);
+        });
+
+        // Kiểm tra lại sau 500ms nếu dữ liệu load chậm
+        setTimeout(updateButtonsVisibility, 500);
+      }
+    });
   }
 }

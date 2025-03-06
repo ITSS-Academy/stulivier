@@ -1,27 +1,19 @@
 <div class="container">
   <div class="container-playlist">
-    <app-playlist-card-in-page-playlist></app-playlist-card-in-page-playlist>
-    <app-playlist-card-in-page-playlist></app-playlist-card-in-page-playlist>
-    <app-playlist-card-in-page-playlist></app-playlist-card-in-page-playlist>
-    <app-playlist-card-in-page-playlist></app-playlist-card-in-page-playlist>
+    @for (playlist of playlists$ | async; track $index) {
+      <app-playlist-card-in-page-playlist
+        [playlist]="playlist"
+      ></app-playlist-card-in-page-playlist>
+    }
   </div>
-  <div class ="container-video-card-horizontal">
+  <div class="container-video-card-horizontal">
     <cdk-virtual-scroll-viewport class="main-content" itemSize="50">
       <div id="content">
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
-        <app-video-card-horizontal></app-video-card-horizontal>
+        @for (video of (playlistDetail$ | async)?.videos; track $index) {
+          <app-video-card-horizontal
+            [video]="video"
+          ></app-video-card-horizontal>
+        }
       </div>
     </cdk-virtual-scroll-viewport>
   </div>

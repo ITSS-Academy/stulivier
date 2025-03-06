@@ -78,6 +78,18 @@ export class VideoCardVerticalComponent
         'width',
         '330px',
       );
+    } else if (this.router.url.includes('/history')) {
+      this.renderer.setStyle(
+        this.el.nativeElement.querySelector('.video-card'),
+        'width',
+        '330px',
+      );
+    } else if (this.router.url.includes('/watch-later')) {
+      this.renderer.setStyle(
+        this.el.nativeElement.querySelector('.video-card'),
+        'width',
+        '330px',
+      );
     }
   }
 

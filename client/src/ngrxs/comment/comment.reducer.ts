@@ -1,7 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { CommentState } from './comment.state';
 import * as CommentActions from './comment.actions';
-import { CommentModel } from '../../models/comment.model';
 
 const initialState: CommentState = {
   comments: [],

@@ -1,1 +1,17 @@
-<div id="container"></div>
+<div id="container">
+  <!--undo test only-->
+  @for (video of videos$ | async; track $index) {
+    <app-video-card-vertical [video]="video"></app-video-card-vertical>
+  }
+  <!--undo test only-->
+
+  <!--test only-->
+<!--  <p style="width: 100%">Test only</p>-->
+<!--  @for (video of (videos$ | async) ?? []; track $index) {-->
+<!--    @if (video.user_id === (user$ | async)?.id) {-->
+<!--      <app-video-card-vertical [video]="video"></app-video-card-vertical>-->
+<!--    }-->
+<!--  }-->
+  <!--test only-->
+</div>
+
