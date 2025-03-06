@@ -1,10 +1,5 @@
 @if (video) {
-  <mat-card
-    (click)="onVideoClick(video)"
-    appearance="outlined"
-    class="card"
-    [ngClass]="highlight ? 'highlight' : ''"
-  >
+  <mat-card (click)="onVideoClick(video)" appearance="outlined" class="card">
     <mat-card-header id="header-container">
       <div id="img-container">
         <img alt="" mat-card-md-image src="{{ video.thumbnail_url }}" />

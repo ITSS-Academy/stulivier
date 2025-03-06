@@ -48,25 +48,49 @@
           <p class="title">{{ (video$ | async)?.title }}</p>
         </mat-card-content>
       </mat-card>
-      @if (isGetPlaylistByIdSuccess$ | async)
-      {
+      @if (isGetPlaylistByIdSuccess$ | async) {
         <div class="content-container-playlist">
           <div class="content-header">
             <h3>Playlist</h3>
-            <button mat-stroked-button [routerLink]="['/playlists', (playlistDetail$ | async)?.playlist?.id]">View more</button>
+            <button
+              mat-stroked-button
+              [routerLink]="[
+                '/playlists',
+                (playlistDetail$ | async)?.playlist?.id,
+              ]"
+            >
+              View more
+            </button>
           </div>
           <div class="data-container">
             <div class="data" #dataContainer>
               @for (items of (playlistDetail$ | async)?.videos; track $index) {
-                <app-video-card-vertical [video]="items"></app-video-card-vertical>
+                <app-video-card-vertical
+                  [video]="items"
+                  [highlight]="+startRadio === $index"
+                  [playlistId]="(playlistDetail$ | async)?.playlist?.id"
+                  [index]="$index"
+                ></app-video-card-vertical>
               }
             </div>
             <div class="button">
-              <button mat-mini-fab aria-label="Scroll to left" class="button-left">
-                <mat-icon class="material-symbols-rounded">chevron_left</mat-icon>
+              <button
+                mat-mini-fab
+                aria-label="Scroll to left"
+                class="button-left"
+              >
+                <mat-icon class="material-symbols-rounded"
+                  >chevron_left
+                </mat-icon>
               </button>
-              <button mat-mini-fab aria-label="Scroll to right" class="button-right">
-                <mat-icon class="material-symbols-rounded">chevron_right</mat-icon>
+              <button
+                mat-mini-fab
+                aria-label="Scroll to right"
+                class="button-right"
+              >
+                <mat-icon class="material-symbols-rounded"
+                  >chevron_right
+                </mat-icon>
               </button>
             </div>
           </div>
@@ -87,7 +111,7 @@
   <div class="right">
     <div class="info">
       <div class="avatar">
-        <img alt="" src="{{ (video$ | async)?.user_data?.avatar_url }}"/>
+        <img alt="" src="{{ (video$ | async)?.user_data?.avatar_url }}" />
       </div>
       <div class="user-info">
         <span class="username">
@@ -119,7 +143,7 @@
     <div class="comment-forms">
       <mat-form-field appearance="fill" class="comment-field">
         <mat-label>Comment</mat-label>
-        <input [(ngModel)]="comment" matInput/>
+        <input [(ngModel)]="comment" matInput />
       </mat-form-field>
       <button
         (click)="createComment()"

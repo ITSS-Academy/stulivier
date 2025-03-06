@@ -36,6 +36,10 @@ export class VideoCardVerticalComponent
   implements AfterViewInit, OnInit, OnDestroy
 {
   @Input() video!: VideoModel;
+  @Input() playlistId: string | undefined;
+  @Input() index!: number;
+  @Input() highlight = false;
+
   readonly dialog = inject(MatDialog);
   subscriptions: Subscription[] = [];
   user!: UserModel;
@@ -79,20 +83,25 @@ export class VideoCardVerticalComponent
 
       this.isSidebarOpen$.subscribe((isSidebarOpen) => {
         if (isSidebarOpen) {
-          console.log('isSidebarOpen', isSidebarOpen);
-          if (this.router.url.includes('/watch?')) {
-            this.renderer.setStyle(
-              this.el.nativeElement.querySelector('.video-card'),
-              'width',
-              '300px',
-            );
-          } else if (this.router.url.includes('/history')) {
+          if (this.router.url.includes('/history')) {
             this.renderer.setStyle(
               this.el.nativeElement.querySelector('.video-card'),
               'width',
               '310px',
             );
           } else if (this.router.url.includes('/watch-later')) {
+            this.renderer.setStyle(
+              this.el.nativeElement.querySelector('.video-card'),
+              'width',
+              '310px',
+            );
+          } else if (this.router.url.includes('/home')) {
+            this.renderer.setStyle(
+              this.el.nativeElement.querySelector('.video-card'),
+              'width',
+              '310px',
+            );
+          } else if (this.router.url.includes('/category')) {
             this.renderer.setStyle(
               this.el.nativeElement.querySelector('.video-card'),
               'width',
@@ -100,19 +109,25 @@ export class VideoCardVerticalComponent
             );
           }
         } else {
-          if (this.router.url.includes('/watch?')) {
-            this.renderer.setStyle(
-              this.el.nativeElement.querySelector('.video-card'),
-              'width',
-              '330px',
-            );
-          } else if (this.router.url.includes('/history')) {
+          if (this.router.url.includes('/history')) {
             this.renderer.setStyle(
               this.el.nativeElement.querySelector('.video-card'),
               'width',
               '340px',
             );
           } else if (this.router.url.includes('/watch-later')) {
+            this.renderer.setStyle(
+              this.el.nativeElement.querySelector('.video-card'),
+              'width',
+              '340px',
+            );
+          } else if (this.router.url.includes('/home')) {
+            this.renderer.setStyle(
+              this.el.nativeElement.querySelector('.video-card'),
+              'width',
+              '330px',
+            );
+          } else if (this.router.url.includes('/category')) {
             this.renderer.setStyle(
               this.el.nativeElement.querySelector('.video-card'),
               'width',
@@ -124,15 +139,33 @@ export class VideoCardVerticalComponent
     );
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    // if (this.router.url.includes('/watch?')) {
+    //   this.renderer.setStyle(
+    //     this.el.nativeElement.querySelector('.video-card'),
+    //     'width',
+    //     '320px',
+    //   );
+    // }
+  }
 
   onVideoClick(event: Event): void {
     event.preventDefault();
-    this.router
-      .navigate(['/watch'], {
+    if (this.playlistId !== undefined) {
+      this.router.navigate(['/watch'], {
+        queryParams: {
+          v: this.video.id,
+          list: this.playlistId,
+          index: this.index,
+        },
+      });
+      return;
+    } else {
+      this.router.navigate(['/watch'], {
         queryParams: { v: this.video.id },
-      })
-      .then((r) => r);
+      });
+      this.store.dispatch(PlaylistActions.clearPlaylistState());
+    }
   }
 
   openDialog(event: MouseEvent) {

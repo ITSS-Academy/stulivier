@@ -1,6 +1,12 @@
 .video-card {
-  width: 420px;
+  width: 320px;
   cursor: pointer;
+  padding: 5px;
+
+  &.highlight {
+    background-color: var(--md-sys-color-surface-container-highest);
+    border-radius: 12px;
+  }
 }
 
 .video-container {
@@ -29,7 +35,7 @@
   justify-content: space-between;
 
   .avatar-container {
-    padding-top: 5px;
+    padding-top: 10px;
   }
 
   .main-content {
