@@ -2,7 +2,7 @@ import {
   Component,
   ElementRef,
   OnDestroy,
-  OnInit,
+  OnInit, Renderer2,
   ViewChild,
 } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
@@ -74,6 +74,8 @@ export class WatchComponent implements OnInit, OnDestroy {
     }>,
     private vgApi: VgApiService,
     private router: Router,
+    private renderer: Renderer2,
+    private el: ElementRef,
   ) {
     this.video$ = this.store.select((state) => state.video.video);
     this.isGetVideoSuccess$ = this.store.select(
@@ -346,5 +348,49 @@ export class WatchComponent implements OnInit, OnDestroy {
       this.store.dispatch(VideoActions.clearState());
       this.subscription.forEach((sub) => sub.unsubscribe());
     }
+  }
+
+  ngAfterViewInit() {
+    const containers = this.el.nativeElement.querySelectorAll('.data-container');
+
+    containers.forEach((container: HTMLElement) => {
+      const data = container.querySelector('.data') as HTMLElement;
+      const btnLeft = container.querySelector('.button-left') as HTMLElement;
+      const btnRight = container.querySelector('.button-right') as HTMLElement;
+
+      if (data && btnLeft && btnRight) {
+        const updateButtonsVisibility = () => {
+          if (!data.scrollWidth) return; // Chưa có nội dung thì không làm gì
+
+          btnLeft.style.visibility = data.scrollLeft > 0 ? 'visible' : 'hidden';
+          btnRight.style.visibility =
+            data.scrollLeft + data.clientWidth >= data.scrollWidth ? 'hidden' : 'visible';
+        };
+
+        // Lắng nghe sự thay đổi của nội dung bên trong data
+        const observer = new MutationObserver(() => {
+          updateButtonsVisibility();
+        });
+
+        observer.observe(data, { childList: true, subtree: true });
+
+        // Lắng nghe sự kiện cuộn
+        this.renderer.listen(data, 'scroll', updateButtonsVisibility);
+
+        // Lắng nghe click để cập nhật nút sau khi cuộn
+        this.renderer.listen(btnLeft, 'click', () => {
+          data.scrollBy({ left: -340, behavior: 'smooth' });
+          setTimeout(updateButtonsVisibility, 340);
+        });
+
+        this.renderer.listen(btnRight, 'click', () => {
+          data.scrollBy({ left: 340, behavior: 'smooth' });
+          setTimeout(updateButtonsVisibility, 340);
+        });
+
+        // Kiểm tra lại sau 500ms nếu dữ liệu load chậm
+        setTimeout(updateButtonsVisibility, 500);
+      }
+    });
   }
 }
