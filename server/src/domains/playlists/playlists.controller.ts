@@ -1,6 +1,17 @@
 import { PlaylistsService } from './playlists.service';
-import { Body, Controller, Post, Request, Get, Delete } from '@nestjs/common';
-import { CreatePlaylistModel } from '../../models/playlist.model';
+import {
+  Body,
+  Controller,
+  Post,
+  Request,
+  Get,
+  Delete,
+  Put,
+} from '@nestjs/common';
+import {
+  CreatePlaylistModel,
+  UpdatePlaylistModel,
+} from '../../models/playlist.model';
 import { Public } from '../../utils/custom_decorators';
 
 @Controller('playlists')
@@ -61,8 +72,17 @@ export class PlaylistsController {
   }
 
   @Delete()
-  async removePlaylistById(@Request() req: any) {
+  async deletePlaylistById(@Request() req: any) {
     const { playlistId } = req.query;
-    return await this.playlistsService.removePlaylistById(playlistId);
+    return await this.playlistsService.deletePlaylistById(playlistId);
+  }
+
+  @Put()
+  async updatePlaylistById(
+    @Request() req: any,
+    @Body() body: UpdatePlaylistModel,
+  ) {
+    const { playlistId } = req.query;
+    return await this.playlistsService.updatePlaylistById(playlistId, body);
   }
 }
