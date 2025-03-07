@@ -16,6 +16,7 @@ import * as SidebarActions from '../../../ngrxs/sidebar/sidebar.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateVideoDialogComponent } from '../../dialogs/create-video-dialog/create-video-dialog.component';
 import { SidebarState } from '../../../ngrxs/sidebar/sidebar.state';
+import {ThemeService} from '../../../services/theme.service';
 
 @Component({
   selector: 'app-header',
@@ -43,6 +44,7 @@ export class HeaderComponent {
       user: UserState;
       sidebar: SidebarState;
     }>,
+    public themeService: ThemeService,
   ) {
     this.user$ = this.store.select('user', 'user');
   }

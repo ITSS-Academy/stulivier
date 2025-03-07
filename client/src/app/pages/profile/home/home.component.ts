@@ -4,21 +4,25 @@ import {MatButton, MatFabButton, MatMiniFabButton} from '@angular/material/butto
 import { MatIconModule } from '@angular/material/icon';
 import {AsyncPipe} from '@angular/common';
 import {VideoCardVerticalComponent} from '../../../components/video-card-vertical/video-card-vertical.component';
-import {Observable, Subscription} from 'rxjs';
+import {Observable, Subscription, switchMap, tap} from 'rxjs';
 import {VideoModel} from '../../../../models/video.model';
 import {Store} from '@ngrx/store';
 import {VideoState} from '../../../../ngrxs/video/video.state';
 import * as VideoActions from '../../../../ngrxs/video/video.actions';
+import * as PlaylistActions from '../../../../ngrxs/playlist/playlist.actions';
 import {PlaylistCardComponent} from '../../../components/playlist-card/playlist-card.component';
 import {RouterLink} from '@angular/router';
+import {PlaylistState} from '../../../../ngrxs/playlist/playlist.state';
+import {PlaylistModel} from '../../../../models/playlist.model';
+import {UserModel} from '../../../../models/user.model';
+import {UserState} from '../../../../ngrxs/user/user.state';
+import {filter, take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
-    VideoCardHorizontalComponent,
     MatButton,
-    MatFabButton,
     MatIconModule,
     MatMiniFabButton,
     AsyncPipe,
@@ -32,22 +36,55 @@ import {RouterLink} from '@angular/router';
 export class HomeComponent implements OnInit{
   subscription: Subscription[] = [];
   videos$: Observable<VideoModel[]>;
+  playlists$: Observable<PlaylistModel[]>;
+  user$!: Observable<UserModel>;
 
-  constructor(private store: Store<{ video: VideoState }>,
+  constructor(private store: Store<{ video: VideoState, playlist: PlaylistState, user: UserState }>,
               private renderer: Renderer2, private el: ElementRef) {
+    this.user$ = this.store.select('user', 'user');
     this.videos$ = this.store.select('video', 'videos');
+    this.user$.pipe(
+      filter(user => !!user?.id), // Chỉ lấy khi user có id
+      take(1)
+    ).subscribe(user => {
     this.store.dispatch(VideoActions.getAllVideos());
+    });
+    this.playlists$ = this.store.select('playlist', 'playlists');
+    this.user$.pipe(
+      filter(user => !!user?.id), // Chỉ lấy khi user có id
+      take(1)
+    ).subscribe(user => {
+      this.store.dispatch(PlaylistActions.getPlaylistByUserId({ id: user.id }));
+    });
+
+
   }
 
   ngOnInit() {
     this.subscription.push(
       this.store.select('video', 'videos').subscribe((videos) => {
         console.log(videos);
+        this.updateButtonsVisibility();
       }),
+      this.store.select('playlist', 'playlists').subscribe((playlists) => {
+        console.log(playlists);
+        this.updateButtonsVisibility();
+    }),
     );
+    // this.isGetPlaylistByIdSuccess$.subscribe((isGetPlaylistByIdSuccess) => {
+    //     if (isGetPlaylistByIdSuccess) {
+          setTimeout(() => {
+            this.updateButtonsVisibility();
+          }, 5000);
+    //     }
+    //   }
+    // )
+    // this.user$.subscribe(user => {
+    //   console.log('User from store:', user); // Kiểm tra dữ liệu user
+    // });
   }
 
-  ngAfterViewInit() {
+  updateButtonsVisibility() {
     const containers = this.el.nativeElement.querySelectorAll('.data-container');
 
     containers.forEach((container: HTMLElement) => {
@@ -69,20 +106,20 @@ export class HomeComponent implements OnInit{
           updateButtonsVisibility();
         });
 
-        observer.observe(data, { childList: true, subtree: true });
+        observer.observe(data, {childList: true, subtree: true});
 
         // Lắng nghe sự kiện cuộn
         this.renderer.listen(data, 'scroll', updateButtonsVisibility);
 
         // Lắng nghe click để cập nhật nút sau khi cuộn
         this.renderer.listen(btnLeft, 'click', () => {
-          data.scrollBy({ left: -430, behavior: 'smooth' });
-          setTimeout(updateButtonsVisibility, 430);
+          data.scrollBy({left: -340, behavior: 'smooth'});
+          setTimeout(updateButtonsVisibility, 340);
         });
 
         this.renderer.listen(btnRight, 'click', () => {
-          data.scrollBy({ left: 430, behavior: 'smooth' });
-          setTimeout(updateButtonsVisibility, 430);
+          data.scrollBy({left: 340, behavior: 'smooth'});
+          setTimeout(updateButtonsVisibility, 340);
         });
 
         // Kiểm tra lại sau 500ms nếu dữ liệu load chậm
@@ -90,4 +127,6 @@ export class HomeComponent implements OnInit{
       }
     });
   }
+
+
 }
