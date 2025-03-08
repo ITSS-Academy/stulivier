@@ -129,11 +129,14 @@
 .recommend-video {
   color: var(--md-sys-color-on-surface);
   display: flex;
+  max-height: 234px;
   //flex-direction: column;
   padding: 20px;
   gap: 50px;
   cursor: pointer;
   border-radius: 10px;
+  overflow: hidden; /* Ẩn phần dư */
+
 
   .title {
     font-size: 24px;
@@ -150,7 +153,8 @@
 
       .other-info {
 
-        .username{
+
+        .username {
           font-size: 20px;
         }
       }
@@ -171,4 +175,9 @@
     object-fit: cover;
     border-radius: 12px;
   }
+}
+
+.description {
+  //white-space: pre-line;
+  word-wrap: break-word;
 }
