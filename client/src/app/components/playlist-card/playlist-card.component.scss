@@ -25,13 +25,6 @@
   height: 179px;
   border-radius: 12px;
   background-color: var(--md-sys-color-primary-fixed-dim);
-
-  img {
-    border-radius: 12px;
-    object-fit: cover;
-    width: 100%;
-    visibility: hidden;
-  }
 }
 
 .layer2 {
@@ -41,13 +34,6 @@
   height: 179px;
   border-radius: 12px;
   background-color: var(--md-sys-color-on-primary-fixed-variant);
-
-  img {
-    border-radius: 12px;
-    object-fit: cover;
-    width: 100%;
-    visibility: hidden;
-  }
 }
 
 /* Lớp ảnh chính */
