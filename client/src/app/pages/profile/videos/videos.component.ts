@@ -8,6 +8,8 @@ import {VideoState} from '../../../../ngrxs/video/video.state';
 import * as VideoActions from '../../../../ngrxs/video/video.actions';
 import {UserModel} from '../../../../models/user.model';
 import {UserState} from '../../../../ngrxs/user/user.state';
+import {filter, take} from 'rxjs/operators';
+import * as PlaylistActions from '../../../../ngrxs/playlist/playlist.actions';
 
 
 @Component({
@@ -27,8 +29,13 @@ constructor(private store: Store<{
   user: UserState //test only
 }>,) {
   this.videos$ = this.store.select('video', 'videos');
-  this.store.dispatch(VideoActions.getAllVideos());
   this.user$ = this.store.select('user', 'user'); //test only
+  this.user$.pipe(
+    filter(user => !!user?.id), // Chỉ lấy khi user có id
+    take(1)
+  ).subscribe(user => {
+    this.store.dispatch(VideoActions.getVideosByUserId({ userId: user.id }));
+  });
 }
 
 ngOnInit() {
