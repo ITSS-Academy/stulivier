@@ -1,26 +1,49 @@
 <div id="container">
-  <div id="cover">
-    <div class="cover-background">
-      <div class="background-img">
-        <input
-          #coverInput
-          (change)="onCoverSelected($event)"
-          accept="image/*"
-          style="display: none"
-          type="file"
+  <div id="header-container">
+    <div id="playlist-thumbnail-background">
+      <img
+        [src]="(playlistDetail$ | async)?.playlist?.thumbnail_url"
+        alt="playlist-thumbnail"
+      />
+    </div>
+    <div id="playlist-info">
+      <div id="playlist-thumbnail">
+        <img
+          [src]="(playlistDetail$ | async)?.playlist?.thumbnail_url"
+          alt="playlist-thumbnail"
         />
-        @if (coverImage) {
-          <img
-            [src]="coverImage"
-            alt="Selected Image"
-            class="background-img-preview"
-          />
-        }
-      </div>
-      <div (click)="triggerCoverInput()" class="background-linear">
-        <div class="background-text">
-          <span class="title"> History </span>
-          <div class="actions"></div>
+        <div id="right-playlist-thumbnail">
+          <div class="info">
+            <h2 id="playlist-title">
+              {{ (playlistDetail$ | async)?.playlist?.title }}
+            </h2>
+            <div class="top">
+              <div id="user-avatar">
+                <img [src]="(user$ | async)?.avatar_url" alt="user-avatar" />
+              </div>
+              <span id="user-name">{{ (user$ | async)?.username }}</span>
+            </div>
+            <span id="playlist-count">
+              {{ (playlistDetail$ | async)?.videos?.length }} videos
+              </span>
+            <div id="action">
+              <button mat-flat-button>
+                <mat-icon
+                  class="material-symbols-rounded"
+                  fontIcon="play_arrow"
+                ></mat-icon>
+                Play all
+              </button>
+              <button mat-stroked-button id="shuffle-button">
+                <mat-icon
+                  class="material-symbols-rounded"
+                  fontIcon="shuffle"
+                  style="color: #f4f4f2"
+                ></mat-icon>
+                <p>Shuffle</p>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
