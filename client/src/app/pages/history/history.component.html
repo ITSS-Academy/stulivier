@@ -27,6 +27,8 @@
   </div>
   <div id="content-container">
     <cdk-virtual-scroll-viewport id="main-content" itemSize="50">
+      @if((user$ | async)?.id)
+      {
       @defer (when (videos$ | async)?.length) {
         <div class="video-list">
           @for (video of videos$ | async; track $index) {
@@ -59,6 +61,25 @@
               }
             </div>
           </div>
+        </div>
+      }
+      }
+      @else {
+        <div class = "user-login-require">
+          <mat-icon class="material-symbols-rounded icon">history</mat-icon>
+          <h4>Don't miss out on the videos you've watched!</h4>
+          <p>Sign in to review your history and continue enjoying your favorite content</p>
+          <button
+            mat-stroked-button
+            [routerLink]="['/login']"
+            (click)="signInWithGoogle()"
+          >
+            <mat-icon
+              class="material-symbols-rounded"
+              fontIcon="account_circle"
+            ></mat-icon>
+            Sign in
+          </button>
         </div>
       }
     </cdk-virtual-scroll-viewport>

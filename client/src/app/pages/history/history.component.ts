@@ -19,6 +19,7 @@ import { VideoCardHorizontalComponent } from '../../components/video-card-horizo
 import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
 import { VideoCardVerticalSkeletonComponent } from '../../components/video-card-vertical-skeleton/video-card-vertical-skeleton.component';
 import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
+import * as AuthActions from '../../../ngrxs/auth/auth.actions';
 
 @Component({
   selector: 'app-history',
@@ -39,6 +40,7 @@ export class HistoryComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   videos$: Observable<HistoryModel[]>;
   user!: UserModel | null;
+  user$!: Observable<UserModel>;
 
   coverImage: string | ArrayBuffer | null =
     'https://hybsmigdaummopabuqki.supabase.co/storage/v1/object/public/cover_img//nasa_earth_grid.jpg';
@@ -50,6 +52,7 @@ export class HistoryComponent implements OnInit, OnDestroy {
     }>,
   ) {
     this.videos$ = this.store.select((state) => state.history.history);
+    this.user$ = this.store.select((state) => state.user.user);
   }
 
   ngOnInit(): void {
@@ -83,5 +86,9 @@ export class HistoryComponent implements OnInit, OnDestroy {
       reader.onload = (e) => (this.coverImage = reader.result);
       reader.readAsDataURL(file);
     }
+  }
+
+  signInWithGoogle() {
+    this.store.dispatch(AuthActions.signInWithGoogle());
   }
 }

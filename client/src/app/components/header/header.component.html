@@ -56,8 +56,33 @@
       Create
     </button>
     @if ((user$ | async)?.id) {
-      <div [routerLink]="['/profile']" class="avatar">
-        <img alt="avatar" src="{{ (user$ | async)?.avatar_url }}" />
+      <div class="avatar">
+        <!--        [routerLink]="['/profile']"-->
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+          <img alt="avatar" src="{{ (user$ | async)?.avatar_url }}"/>
+        </button>
+        <mat-menu #menu="matMenu" class="custom-menu">
+          <div mat-menu-item class="menu-item">
+            <div class="menu-item">
+              <div class="avatar">
+                <img alt="avatar" src="{{ (user$ | async)?.avatar_url }}"/>
+              </div>
+              <div>
+                <span>{{ (user$ | async)?.username }}</span>
+                <br>
+                <a [routerLink]="['/profile']">View your profile</a>
+              </div>
+            </div>
+          </div>
+          <button mat-menu-item [routerLink]="['/login']" (click)="signOut()">
+            <mat-icon class="material-symbols-rounded">logout</mat-icon>
+            <span>Logout</span>
+          </button>
+          <!--          <button mat-menu-item>-->
+          <!--            <mat-icon>notifications_off</mat-icon>-->
+          <!--            <span>Disable alerts</span>-->
+          <!--          </button>-->
+        </mat-menu>
       </div>
     } @else {
       <button
