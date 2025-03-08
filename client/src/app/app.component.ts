@@ -56,6 +56,7 @@ export class AppComponent implements OnInit {
         this.store.dispatch(AuthActions.storeIdToken({ idToken: token.token }));
         this.jwtTokenService.setToken(token.token);
       }
+      this.store.dispatch(AuthActions.checkLoggedIn());
     });
     if (this.sessionStorageService.getValueFromSession('idToken') != '') {
       this.jwtTokenService.setToken(

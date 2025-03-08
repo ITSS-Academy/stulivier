@@ -23,6 +23,8 @@ import { UserModel } from '../../../models/user.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../../services/alert.service';
 import { VideoModel } from '../../../models/video.model';
+import * as AuthActions from '../../../ngrxs/auth/auth.actions';
+import { AuthState } from '../../../ngrxs/auth/auth.state';
 
 @Component({
   selector: 'app-playlist',
@@ -42,13 +44,19 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   playlistDetail$!: Observable<PlaylistDetailModel>;
   playlists: PlaylistModel[] = [];
   user!: UserModel;
+  user$: Observable<UserModel>;
   subscriptions: Subscription[] = [];
   isGetPlaylistByUserIdSuccess$!: Observable<boolean>;
   isRemoveVideoInPlaylistSuccess$!: Observable<boolean>;
+  isCheckLogin$!: Observable<boolean>;
   index = 0;
 
   constructor(
-    private store: Store<{ playlist: PlaylistState; user: UserState }>,
+    private store: Store<{
+      playlist: PlaylistState;
+      user: UserState;
+      auth: AuthState;
+    }>,
     private router: Router,
     private alertService: AlertService,
     private activatedRoute: ActivatedRoute,
@@ -63,6 +71,8 @@ export class PlaylistComponent implements OnInit, OnDestroy {
       'playlist',
       'isRemoveVideoInPlaylistSuccess',
     );
+    this.isCheckLogin$ = this.store.select('auth', 'isCheckLoggedIn');
+    this.user$ = this.store.select('user', 'user');
   }
 
   ngOnInit() {
@@ -182,8 +192,12 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     );
   }
 
+  signInWithGoogle() {
+    this.store.dispatch(AuthActions.signInWithGoogle());
+  }
+
   ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
-    this.store.dispatch(PlaylistActions.clearPlaylistState());
+    this.store.dispatch(PlaylistActions.clearAllPlaylistState());
   }
 }

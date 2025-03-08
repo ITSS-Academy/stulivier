@@ -21,6 +21,8 @@ import { PlaylistDetailModel } from '../../../models/playlist.model';
 import { Router } from '@angular/router';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { VideoCardVerticalSkeletonComponent } from '../../components/video-card-vertical-skeleton/video-card-vertical-skeleton.component';
+import { AuthState } from '../../../ngrxs/auth/auth.state';
+import * as AuthActions from '../../../ngrxs/auth/auth.actions';
 
 @Component({
   selector: 'app-watch-later',
@@ -44,6 +46,8 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
   playlistDetail$!: Observable<PlaylistDetailModel>;
   playlistDetail!: PlaylistDetailModel;
   videos$!: Observable<VideoModel[]>;
+  isCheckLogin$!: Observable<boolean>;
+
   coverImage: string | ArrayBuffer | null =
     'https://hybsmigdaummopabuqki.supabase.co/storage/v1/object/public/cover_img//nasa_earth_grid.jpg';
   isGettingWatchLaterPlaylist$!: Observable<boolean>;
@@ -53,6 +57,7 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
       video: VideoState;
       playlist: PlaylistState;
       user: UserState;
+      auth: AuthState;
     }>,
     private router: Router,
   ) {
@@ -62,6 +67,7 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
       'playlist',
       'isGettingWatchLaterPlaylistByUserId',
     );
+    this.isCheckLogin$ = this.store.select('auth', 'isCheckLoggedIn');
   }
 
   ngOnInit(): void {
@@ -98,20 +104,6 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
     );
   }
 
-  triggerCoverInput(): void {
-    this.coverInput.nativeElement.click();
-  }
-
-  onCoverSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => (this.coverImage = reader.result);
-      reader.readAsDataURL(file);
-    }
-  }
-
   playAll(event: Event): void {
     event.stopPropagation();
     this.router.navigate(['/watch'], {
@@ -137,8 +129,12 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
     });
   }
 
+  signInWithGoogle() {
+    this.store.dispatch(AuthActions.signInWithGoogle());
+  }
+
   ngOnDestroy(): void {
     this.subscription.forEach((sub) => sub.unsubscribe());
-    this.store.dispatch(PlaylistActions.clearPlaylistState());
+    this.store.dispatch(PlaylistActions.clearAllPlaylistState());
   }
 }

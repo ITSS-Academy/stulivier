@@ -157,3 +157,5 @@ export const upsertPlaylistByIdFailure = createAction(
   props<{ error: string }>(),
 );
 export const clearPlaylistState = createAction('[Playlist] Clear State');
+
+export const clearAllPlaylistState = createAction('[Playlist] Clear All State');

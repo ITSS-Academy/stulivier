@@ -360,7 +360,6 @@ export const playlistReducer = createReducer(
     console.log(action.type);
     return <PlaylistState>{
       ...state,
-      playlistDetail: <PlaylistDetailModel>{},
 
       isGettingAllPlaylists: false,
       isGetAllPlaylistsSuccess: false,
@@ -406,5 +405,9 @@ export const playlistReducer = createReducer(
       isRemoveVideoInPlaylistSuccess: false,
       removeVideoInPlaylistErrorMessage: '',
     };
+  }),
+
+  on(PlaylistActions.clearAllPlaylistState, (state, action) => {
+    return initialState;
   }),
 );

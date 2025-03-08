@@ -57,4 +57,8 @@ export class VideoService {
   searchVideos(search_query: string) {
     return this.http.get('videos/search', { params: { search_query } });
   }
+
+  getVideoLikedByUserId(userId: string) {
+    return this.http.get('videos/liked', { params: { userId } });
+  }
 }

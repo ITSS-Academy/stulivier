@@ -129,4 +129,19 @@ export const searchVideosFailure = createAction(
   props<{ error: string }>(),
 );
 
+export const getVideosLikedByUser = createAction(
+  '[Video] Get Videos Liked By User',
+  props<{ userId: string }>(),
+);
+
+export const getVideosLikedByUserSuccess = createAction(
+  '[Video] Get Videos Liked By User Success',
+  props<{ videos: VideoModel[] }>(),
+);
+
+export const getVideosLikedByUserFailure = createAction(
+  '[Video] Get Videos Liked By User Failure',
+  props<{ error: string }>(),
+);
+
 export const clearState = createAction('[Video] Clear State');

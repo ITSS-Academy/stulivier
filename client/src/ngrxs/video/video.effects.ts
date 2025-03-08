@@ -199,3 +199,26 @@ export const getVideosByUserId$ = createEffect(
   },
   { functional: true },
 );
+
+export const getVideosLikedByUser$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const videoService = inject(VideoService);
+    return actions$.pipe(
+      ofType(VideoActions.getVideosLikedByUser),
+      exhaustMap((action) => {
+        return videoService.getVideoLikedByUserId(action.userId).pipe(
+          map((videos) => {
+            return VideoActions.getVideosLikedByUserSuccess({ videos });
+          }),
+          catchError((error) => {
+            return of(
+              VideoActions.getVideosLikedByUserFailure({ error: error }),
+            );
+          }),
+        );
+      }),
+    );
+  },
+  { functional: true },
+);

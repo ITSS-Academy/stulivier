@@ -1,25 +1,57 @@
 <div class="container">
-  <div class="container-playlist">
-    @for (playlist of playlists$ | async; track $index) {
-      <app-playlist-card-in-page-playlist
-        [playlist]="playlist"
-        [highlight]="$index === index"
-        (click)="onClickPlaylist(playlist.id, $index)"
-        (playAll)="onPlayAll(playlist.id)"
-        (playShuffle)="onPlayShuffle(playlist.id)"
-      ></app-playlist-card-in-page-playlist>
-    }
-  </div>
-  <div class="container-video-card-horizontal">
-    <cdk-virtual-scroll-viewport class="main-content" itemSize="50">
-      <div id="content">
-        @for (video of (playlistDetail$ | async)?.videos; track $index) {
-          <app-video-card-horizontal
-            [video]="video"
-            (removeVideoInPlaylistEvent)="removeVideoInPlaylist($event)"
-          ></app-video-card-horizontal>
+  @defer (when (isCheckLogin$ | async)) {
+    @if ((user$ | async)?.id) {
+      <div class="container-playlist">
+        @for (playlist of playlists$ | async; track $index) {
+          <app-playlist-card-in-page-playlist
+            [playlist]="playlist"
+            [highlight]="$index === index"
+            (click)="onClickPlaylist(playlist.id, $index)"
+            (playAll)="onPlayAll(playlist.id)"
+            (playShuffle)="onPlayShuffle(playlist.id)"
+          ></app-playlist-card-in-page-playlist>
         }
       </div>
-    </cdk-virtual-scroll-viewport>
-  </div>
+      <div class="container-video-card-horizontal">
+        <cdk-virtual-scroll-viewport class="main-content" itemSize="50">
+          <div id="content">
+            @for (video of (playlistDetail$ | async)?.videos; track $index) {
+              <app-video-card-horizontal
+                [video]="video"
+                (removeVideoInPlaylistEvent)="removeVideoInPlaylist($event)"
+              ></app-video-card-horizontal>
+            }
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </div>
+    } @else {
+      <div class="user-login-require">
+        <mat-icon
+          class="material-symbols-rounded icon"
+          fontIcon="playlist_play"
+        ></mat-icon>
+        <h4>Don't miss out on your favorite playlists!</h4>
+        <p>
+          Sign in to access your saved playlists and keep enjoying your favorite
+          tracks seamlessly.
+        </p>
+
+        <button
+          mat-stroked-button
+          [routerLink]="['/login']"
+          (click)="signInWithGoogle()"
+        >
+          <mat-icon
+            class="material-symbols-rounded"
+            fontIcon="account_circle"
+          ></mat-icon>
+          Sign in
+        </button>
+      </div>
+    }
+  } @placeholder (minimum 500ms) {
+    <div class="loading">
+      <mat-spinner class="circle"></mat-spinner>
+    </div>
+  }
 </div>

@@ -4,6 +4,7 @@ import * as AuthActions from './auth.actions';
 
 export const initialState: AuthState = {
   idToken: '',
+  isCheckLoggedIn: false,
   loading: false,
   error: null,
 };
@@ -63,6 +64,13 @@ export const authReducer = createReducer(
     return <AuthState>{
       ...state,
       idToken: action.idToken,
+    };
+  }),
+  on(AuthActions.checkLoggedIn, (state, action) => {
+    console.log(action.type);
+    return <AuthState>{
+      ...state,
+      isCheckLoggedIn: true,
     };
   }),
 );

@@ -15,11 +15,11 @@ import { Store } from '@ngrx/store';
 import { HistoryState } from '../../../ngrxs/history/history.state';
 import { UserState } from '../../../ngrxs/user/user.state';
 import * as HistoryActions from '../../../ngrxs/history/history.actions';
-import { VideoCardHorizontalComponent } from '../../components/video-card-horizontal/video-card-horizontal.component';
 import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
 import { VideoCardVerticalSkeletonComponent } from '../../components/video-card-vertical-skeleton/video-card-vertical-skeleton.component';
 import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 import * as AuthActions from '../../../ngrxs/auth/auth.actions';
+import { AuthState } from '../../../ngrxs/auth/auth.state';
 
 @Component({
   selector: 'app-history',
@@ -36,23 +36,24 @@ import * as AuthActions from '../../../ngrxs/auth/auth.actions';
   styleUrl: './history.component.scss',
 })
 export class HistoryComponent implements OnInit, OnDestroy {
-  @ViewChild('coverInput') coverInput!: ElementRef<HTMLInputElement>;
   subscriptions: Subscription[] = [];
   videos$: Observable<HistoryModel[]>;
   user!: UserModel | null;
   user$!: Observable<UserModel>;
-
-  coverImage: string | ArrayBuffer | null =
-    'https://hybsmigdaummopabuqki.supabase.co/storage/v1/object/public/cover_img//nasa_earth_grid.jpg';
+  isCheckLogin$!: Observable<boolean>;
 
   constructor(
     private store: Store<{
       history: HistoryState;
       user: UserState;
+      auth: AuthState;
     }>,
   ) {
     this.videos$ = this.store.select((state) => state.history.history);
     this.user$ = this.store.select((state) => state.user.user);
+    this.isCheckLogin$ = this.store.select(
+      (state) => state.auth.isCheckLoggedIn,
+    );
   }
 
   ngOnInit(): void {
@@ -72,20 +73,6 @@ export class HistoryComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
-
-  triggerCoverInput(): void {
-    this.coverInput.nativeElement.click();
-  }
-
-  onCoverSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => (this.coverImage = reader.result);
-      reader.readAsDataURL(file);
-    }
   }
 
   signInWithGoogle() {

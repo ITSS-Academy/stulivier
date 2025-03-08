@@ -1,66 +1,107 @@
 <div id="container">
-
-  <div id="content-container">
-    <cdk-virtual-scroll-viewport id="main-content" itemSize="50">
-      @if((user$ | async)?.id)
-      {
-      @defer (when (videos$ | async)?.length) {
-        <div class="video-list">
-          @for (video of videos$ | async; track $index) {
-            <div class="history-group">
-              <h3 class="watch-date">
-                {{ video.watched_at }}
-              </h3>
-
-              <div class="video-items">
-                @for (videoDetail of video.videos; track $index) {
-                  <app-video-card-vertical
-                    [video]="videoDetail.video_details"
-                  ></app-video-card-vertical>
-                }
-              </div>
-            </div>
-          }
+  @defer (when (isCheckLogin$ | async)) {
+    @if ((user$ | async)?.id) {
+      <div id="header-container">
+        <div id="playlist-thumbnail-background">
+          <img
+            [src]="
+              (videos$ | async)?.[0]?.videos?.[0]?.video_details?.thumbnail_url
+            "
+            alt="playlist-thumbnail"
+          />
         </div>
-      } @placeholder (minimum 1s) {
-        <div class="video-list">
-          <div class="history-group">
-            <ngx-skeleton-loader
-              [theme]="{
-                width: ' 110px',
-                height: '20px',
-                filter: 'brightness(0.5)',
-              }"
-              appearance="line"
-            >
-            </ngx-skeleton-loader>
-            <div class="video-items">
-              @for (_ of [].constructor(8); track $index) {
-                <app-video-card-vertical-skeleton></app-video-card-vertical-skeleton>
-              }
+        <div id="playlist-info">
+          <div id="playlist-thumbnail">
+            <img
+              [src]="
+                (videos$ | async)?.[0]?.videos?.[0]?.video_details
+                  ?.thumbnail_url
+              "
+              alt="playlist-thumbnail"
+            />
+            <div id="right-playlist-thumbnail">
+              <div class="info">
+                <h2 id="playlist-title">History</h2>
+                <div class="top">
+                  <div id="user-avatar">
+                    <img
+                      [src]="(user$ | async)?.avatar_url"
+                      alt="user-avatar"
+                    />
+                  </div>
+                  <span id="user-name">{{ (user$ | async)?.username }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      }
-      }
-      @else {
-        <div class = "user-login-require">
-          <mat-icon class="material-symbols-rounded icon">history</mat-icon>
-          <h4>Don't miss out on the videos you've watched!</h4>
-          <p>Sign in to review your history and continue enjoying your favorite content</p>
-          <button
-            mat-stroked-button
-            [routerLink]="['/login']"
-            (click)="signInWithGoogle()"
-          >
-            <mat-icon
-              class="material-symbols-rounded"
-              fontIcon="account_circle"
-            ></mat-icon>
-            Sign in
-          </button>
-        </div>
-      }
-    </cdk-virtual-scroll-viewport>
-  </div>
+      </div>
+      <div id="content-container">
+        <cdk-virtual-scroll-viewport id="main-content" itemSize="50">
+          @defer (when (videos$ | async)?.length) {
+            <div class="video-list">
+              @for (video of videos$ | async; track $index) {
+                <div class="history-group">
+                  <h3 class="watch-date">
+                    {{ video.watched_at }}
+                  </h3>
+
+                  <div class="video-items">
+                    @for (videoDetail of video.videos; track $index) {
+                      <app-video-card-vertical
+                        [video]="videoDetail.video_details"
+                      ></app-video-card-vertical>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          } @placeholder (minimum 1s) {
+            <div class="video-list">
+              <div class="history-group">
+                <ngx-skeleton-loader
+                  [theme]="{
+                    width: ' 110px',
+                    height: '20px',
+                    filter: 'brightness(0.5)',
+                  }"
+                  appearance="line"
+                >
+                </ngx-skeleton-loader>
+                <div class="video-items">
+                  @for (_ of [].constructor(8); track $index) {
+                    <app-video-card-vertical-skeleton></app-video-card-vertical-skeleton>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </cdk-virtual-scroll-viewport>
+      </div>
+    } @else {
+      <div class="user-login-require">
+        <mat-icon class="material-symbols-rounded icon">history</mat-icon>
+        <h4>Don't miss out on the videos you've watched!</h4>
+        <p>
+          Sign in to review your history and continue enjoying your favorite
+          content
+        </p>
+        <button
+          mat-stroked-button
+          [routerLink]="['/login']"
+          (click)="signInWithGoogle()"
+        >
+          <mat-icon
+            class="material-symbols-rounded"
+            fontIcon="account_circle"
+          ></mat-icon>
+          Sign in
+        </button>
+      </div>
+    }
+  } @placeholder (minimum 500ms) {
+    <div class="loading">
+      <mat-spinner class="circle"></mat-spinner>
+    </div>
+  }
 </div>

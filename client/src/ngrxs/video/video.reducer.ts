@@ -43,6 +43,10 @@ const initialState: VideoState = {
   isGettingVideosByUserId: false,
   isGetVideosByUserIdSuccess: false,
   getVideosByUserIdErrorMessage: '',
+
+  isGettingVideosLikedByUser: false,
+  isGetVideosLikedByUserSuccess: false,
+  getVideosLikedByUserErrorMessage: '',
 };
 
 export const videoReducer = createReducer(
@@ -299,6 +303,34 @@ export const videoReducer = createReducer(
       ...state,
       isGettingVideosByUserId: false,
       getVideosByUserIdErrorMessage: action.error,
+    };
+  }),
+
+  on(VideoActions.getVideosLikedByUser, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isGettingVideosLikedByUser: true,
+      isGetVideosLikedByUserSuccess: false,
+    };
+  }),
+
+  on(VideoActions.getVideosLikedByUserSuccess, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isGettingVideosLikedByUser: false,
+      isGetVideosLikedByUserSuccess: true,
+      videos: action.videos,
+    };
+  }),
+
+  on(VideoActions.getVideosLikedByUserFailure, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isGettingVideosLikedByUser: false,
+      getVideosLikedByUserErrorMessage: action.error,
     };
   }),
 

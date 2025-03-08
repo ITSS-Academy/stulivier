@@ -42,6 +42,7 @@ export class HeaderComponent {
   isInputFocused: boolean = false;
   readonly dialog = inject(MatDialog);
   searchText: string = '';
+  isCheckLogin$!: Observable<boolean>;
 
   @Output() menuClick = new EventEmitter<void>();
 
@@ -56,6 +57,7 @@ export class HeaderComponent {
   ) {
     this.user$ = this.store.select('user', 'user');
     this.isGettingUser$ = this.store.select('user', 'isGettingUser');
+    this.isCheckLogin$ = this.store.select('auth', 'isCheckLoggedIn');
   }
 
   onMenuClick(): void {

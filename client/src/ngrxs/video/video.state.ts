@@ -40,4 +40,8 @@ export interface VideoState {
   isSearchingVideos: boolean;
   isSearchVideosSuccess: boolean;
   searchVideosErrorMessage: string;
+
+  isGettingVideosLikedByUser: boolean;
+  isGetVideosLikedByUserSuccess: boolean;
+  getVideosLikedByUserErrorMessage: string;
 }
