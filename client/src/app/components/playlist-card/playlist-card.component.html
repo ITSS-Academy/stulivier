@@ -10,7 +10,7 @@
         alt="Thumbnail"
         class="thumbnail"
         mat-card-image
-        [src]="playlist.thumbnail_url"
+        [src]="playlist.thumbnail_url || 'images.png'"
       />
       <div class="overlay">
         <mat-icon class="material-symbols-rounded">play_arrow</mat-icon>
