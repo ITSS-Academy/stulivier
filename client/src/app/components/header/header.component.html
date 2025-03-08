@@ -55,22 +55,30 @@
       ></mat-icon>
       Create
     </button>
-    @if ((user$ | async)?.id) {
-      <div [routerLink]="['/profile']" class="avatar">
-        <img alt="avatar" src="{{ (user$ | async)?.avatar_url }}" />
-      </div>
-    } @else {
-      <button
-        mat-stroked-button
-        [routerLink]="['/login']"
-        (click)="signInWithGoogle()"
+    @defer (when (isGettingUser$|async)) {
+      @if ((user$ | async)?.id) {
+        <div [routerLink]="['/profile']" class="avatar">
+          <img alt="avatar" src="{{ (user$ | async)?.avatar_url }}" />
+        </div>
+      } @else {
+        <button
+          mat-stroked-button
+          [routerLink]="['/login']"
+          (click)="signInWithGoogle()"
+        >
+          <mat-icon
+            class="material-symbols-rounded"
+            fontIcon="account_circle"
+          ></mat-icon>
+          Sign in
+        </button>
+      }
+    } @placeholder (minimum 800ms) {
+      <ngx-skeleton-loader
+        [theme]="{ width: '40px', height: '40px', filter: 'brightness(0.5)' }"
+        appearance="circle"
       >
-        <mat-icon
-          class="material-symbols-rounded"
-          fontIcon="account_circle"
-        ></mat-icon>
-        Sign in
-      </button>
+      </ngx-skeleton-loader>
     }
   </div>
 </div>

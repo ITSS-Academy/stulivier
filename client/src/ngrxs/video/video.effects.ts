@@ -178,3 +178,24 @@ export const searchVideos$ = createEffect(
   },
   { functional: true },
 );
+
+export const getVideosByUserId$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const videoService = inject(VideoService);
+    return actions$.pipe(
+      ofType(VideoActions.getVideosByUserId),
+      exhaustMap((action) => {
+        return videoService.getVideosByUserId(action.userId).pipe(
+          map((videos) => {
+            return VideoActions.getVideosByUserIdSuccess({ videos });
+          }),
+          catchError((error) => {
+            return of(VideoActions.getVideosByUserIdFailure({ error: error }));
+          }),
+        );
+      }),
+    );
+  },
+  { functional: true },
+);

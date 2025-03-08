@@ -42,6 +42,21 @@ export const getVideoByIdFailure = createAction(
   props<{ error: string }>(),
 );
 
+export const getVideosByUserId = createAction(
+  '[Video] Get Videos By User Id',
+  props<{ userId: string }>(),
+);
+
+export const getVideosByUserIdSuccess = createAction(
+  '[Video] Get Videos By User Id Success',
+  props<{ videos: VideoModel[] }>(),
+);
+
+export const getVideosByUserIdFailure = createAction(
+  '[Video] Get Videos By User Id Failure',
+  props<{ error: string }>(),
+);
+
 export const increaseViewCount = createAction(
   '[Video] Increase View Count',
   props<{ id: string }>(),

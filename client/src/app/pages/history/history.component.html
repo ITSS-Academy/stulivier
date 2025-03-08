@@ -49,7 +49,11 @@
         <div class="video-list">
           <div class="history-group">
             <ngx-skeleton-loader
-              [theme]="{ width: ' 110px', height: '20px' }"
+              [theme]="{
+                width: ' 110px',
+                height: '20px',
+                filter: 'brightness(0.5)',
+              }"
               appearance="line"
             >
             </ngx-skeleton-loader>

@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -21,6 +22,8 @@ import { Observable, Subscription } from 'rxjs';
 import { UserState } from '../../../ngrxs/user/user.state';
 import { UserModel } from '../../../models/user.model';
 import { AlertService } from '../../../services/alert.service';
+import { PlaylistDialogComponent } from '../../dialogs/playlist-dialog/playlist-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-video-card-horizontal',
@@ -37,6 +40,8 @@ export class VideoCardHorizontalComponent
   user!: UserModel;
   @Input() video!: VideoModel;
   @Output() removeVideoInPlaylistEvent = new EventEmitter<VideoModel>();
+  routerLink!: string;
+  readonly dialog = inject(MatDialog);
 
   constructor(
     private router: Router,
@@ -46,6 +51,7 @@ export class VideoCardHorizontalComponent
     private el: ElementRef,
   ) {
     this.user$ = this.store.select('user', 'user');
+    this.routerLink = this.router.url;
   }
 
   ngOnInit(): void {
@@ -88,7 +94,7 @@ export class VideoCardHorizontalComponent
         'height',
         'calc(150px / 16 * 9)',
       );
-    } else if (this.router.url.includes('/search')) {
+    } else if (this.router.url.includes('/results')) {
       this.renderer.setStyle(
         this.el.nativeElement.querySelector('.card'),
         'height',
@@ -116,6 +122,26 @@ export class VideoCardHorizontalComponent
 
   removeVideoInPlaylist() {
     this.removeVideoInPlaylistEvent.emit(this.video);
+  }
+
+  openPlaylistDialog() {
+    const dialogRef = this.dialog.open(PlaylistDialogComponent, {
+      minWidth: 400,
+      minHeight: 410,
+      data: this.video.id,
+      disableClose: true,
+    });
+  }
+
+  addToWatchLater() {
+    if (this.user) {
+      this.store.dispatch(
+        PlaylistActions.updateWatchLaterPlaylist({
+          videoId: this.video.id,
+          userId: this.user.id,
+        }),
+      );
+    }
   }
 
   ngOnDestroy(): void {

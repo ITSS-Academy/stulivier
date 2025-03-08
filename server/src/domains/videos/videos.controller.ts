@@ -93,4 +93,11 @@ export class VideosController {
     const { search_query } = req.query;
     return await this.videosService.searchVideos(search_query);
   }
+
+  @Public()
+  @Get('liked')
+  async getLikedVideos(@Request() req: any) {
+    const { userId } = req.query;
+    return await this.videosService.getLikedVideos(userId);
+  }
 }

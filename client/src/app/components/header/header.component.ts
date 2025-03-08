@@ -19,6 +19,7 @@ import { CreateVideoDialogComponent } from '../../dialogs/create-video-dialog/cr
 import { SidebarState } from '../../../ngrxs/sidebar/sidebar.state';
 import { ThemeService } from '../../../services/theme.service';
 import { Router } from '@angular/router';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 @Component({
   selector: 'app-header',
@@ -30,12 +31,14 @@ import { Router } from '@angular/router';
     MatFormFieldModule,
     FormsModule,
     MatIconModule,
+    NgxSkeletonLoaderComponent,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
   user$: Observable<UserModel>;
+  isGettingUser$: Observable<boolean>;
   isInputFocused: boolean = false;
   readonly dialog = inject(MatDialog);
   searchText: string = '';
@@ -52,6 +55,7 @@ export class HeaderComponent {
     private router: Router,
   ) {
     this.user$ = this.store.select('user', 'user');
+    this.isGettingUser$ = this.store.select('user', 'isGettingUser');
   }
 
   onMenuClick(): void {

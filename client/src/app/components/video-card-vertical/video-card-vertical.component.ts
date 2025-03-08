@@ -12,7 +12,6 @@ import { SharedModule } from '../../../shared/modules/shared.module';
 import { MaterialModule } from '../../../shared/modules/material.module';
 import { VideoModule } from '../../../shared/modules/video.module';
 import { VideoModel } from '../../../models/video.model';
-import { DecimalPipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { PlaylistDialogComponent } from '../../dialogs/playlist-dialog/playlist-dialog.component';
 import { Router } from '@angular/router';
@@ -28,7 +27,7 @@ import { SidebarState } from '../../../ngrxs/sidebar/sidebar.state';
 @Component({
   selector: 'app-video-card-vertical',
   standalone: true,
-  imports: [SharedModule, MaterialModule, VideoModule, DecimalPipe],
+  imports: [SharedModule, MaterialModule, VideoModule],
   templateUrl: './video-card-vertical.component.html',
   styleUrl: './video-card-vertical.component.scss',
 })
