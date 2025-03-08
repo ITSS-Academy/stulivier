@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit{
       filter(user => !!user?.id), // Chỉ lấy khi user có id
       take(1)
     ).subscribe(user => {
-    this.store.dispatch(VideoActions.getAllVideos());
+      this.store.dispatch(VideoActions.getVideosByUserId({ userId: user.id }));
     });
     this.playlists$ = this.store.select('playlist', 'playlists');
     this.user$.pipe(

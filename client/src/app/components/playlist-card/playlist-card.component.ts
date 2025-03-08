@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
 import { MaterialModule } from '../../../shared/modules/material.module';
 import { VideoModule } from '../../../shared/modules/video.module';
+import {PlaylistModel} from '../../../models/playlist.model';
 
 @Component({
   selector: 'app-playlist-card',
@@ -10,4 +11,6 @@ import { VideoModule } from '../../../shared/modules/video.module';
   templateUrl: './playlist-card.component.html',
   styleUrl: './playlist-card.component.scss',
 })
-export class PlaylistCardComponent {}
+export class PlaylistCardComponent {
+  @Input() playlist!: PlaylistModel;
+}

@@ -68,6 +68,7 @@ export class WatchComponent implements OnInit, OnDestroy {
   comment: string = '';
   createCommentFailure: Observable<string>;
   comments$!: Observable<CommentModel[]>;
+  // scroll: number = 340;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -186,8 +187,24 @@ export class WatchComponent implements OnInit, OnDestroy {
       this.isGetPlaylistByIdSuccess$.subscribe((isGetPlaylistByIdSuccess) => {
         if (isGetPlaylistByIdSuccess) {
           setTimeout(() => {
-            this.updateButtonsVisibility();
-          }, 500);
+            const containers = this.el.nativeElement.querySelectorAll('.data-container');
+
+            containers.forEach((container: HTMLElement) => {
+              const data = container.querySelector('.data') as HTMLElement;
+              // const btnLeft = container.querySelector('.button-left') as HTMLElement;
+              // const btnRight = container.querySelector('.button-right') as HTMLElement;
+              // if (!data || !btnLeft || !btnRight) {
+              //   console.error('⚠️ :', { data, btnLeft, btnRight });
+              //   return;
+              // }
+              //
+              // console.log('✅ Found data container:', data);
+              // console.log('👉 Scrolling to:', this.startRadio * 340);
+
+              data.scrollLeft = this.startRadio * 340;
+              this.updateButtonsVisibility();
+            });
+          }, 500); // Đợi lâu hơn để DOM chắc chắn đã render
         }
       }),
       this.video$.subscribe((video) => {
