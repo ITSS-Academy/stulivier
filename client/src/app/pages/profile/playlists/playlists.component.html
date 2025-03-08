@@ -1,5 +1,5 @@
 <div id="container">
 @for (playlist of playlists$ | async; track $index) {
-  <app-playlist-card></app-playlist-card>
+  <app-playlist-card [playlist]="playlist"></app-playlist-card>
 }
 </div>

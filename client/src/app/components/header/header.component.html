@@ -55,6 +55,7 @@
       ></mat-icon>
       Create
     </button>
+    @defer (when (isGettingUser$|async)) {
     @if ((user$ | async)?.id) {
       <div class="avatar">
         <!--        [routerLink]="['/profile']"-->
@@ -96,6 +97,13 @@
         ></mat-icon>
         Sign in
       </button>
+    }
+    } @placeholder (minimum 800ms) {
+      <ngx-skeleton-loader
+        [theme]="{ width: '40px', height: '40px', filter: 'brightness(0.5)' }"
+        appearance="circle"
+      >
+      </ngx-skeleton-loader>
     }
   </div>
 </div>

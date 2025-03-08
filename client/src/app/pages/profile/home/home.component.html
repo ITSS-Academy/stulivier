@@ -30,7 +30,7 @@
     <div class="data-container">
       <div class="data" #dataContainer>
         @for (playlist of (playlists$ | async); track $index) {
-          <app-playlist-card></app-playlist-card>
+          <app-playlist-card [playlist]="playlist"></app-playlist-card>
         }
       </div>
       <div class="button">
@@ -52,7 +52,7 @@
     <div class="data-container">
       <div class="data" #dataContainer>
         @for (model of items.video_id; track $index) {
-          <app-playlist-card></app-playlist-card>
+<!--          <app-video-card-vertical [video]="model"></app-video-card-vertical>-->
         }
       </div>
       <div class="button">

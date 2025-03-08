@@ -427,4 +427,20 @@ export class VideosService {
       throw new HttpException(e, HttpStatus.BAD_REQUEST);
     }
   }
+
+  async getLikedVideos(userId: string) {
+    try {
+      const { data, error } = await this.supabase.rpc('get_liked_video', {
+        v_user_id: userId,
+      });
+
+      if (error) {
+        throw new HttpException(error, HttpStatus.BAD_REQUEST);
+      }
+
+      return data;
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
+  }
 }

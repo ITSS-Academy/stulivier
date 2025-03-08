@@ -34,6 +34,10 @@ export class VideoService {
     return this.http.get('videos/', { params: { videoId, userId } });
   }
 
+  getVideosByUserId(userId: string) {
+    return this.http.get('videos/user', { params: { userId } });
+  }
+
   getVideosByCategoryId(categoryId: string) {
     return this.http.get('videos/category', { params: { categoryId } });
   }
