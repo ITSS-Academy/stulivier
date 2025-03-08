@@ -102,7 +102,10 @@
       </div>
       <div class="video-list">
         @for (video of filteredVideos$ | async; track $index) {
-          <app-video-card-vertical [video]="video"></app-video-card-vertical>
+          <app-video-card-vertical
+            [video]="video"
+            (click)="nextVideo()"
+          ></app-video-card-vertical>
         }
       </div>
     </cdk-virtual-scroll-viewport>

@@ -68,6 +68,7 @@ export class WatchComponent implements OnInit, OnDestroy {
   comment: string = '';
   createCommentFailure: Observable<string>;
   comments$!: Observable<CommentModel[]>;
+
   // scroll: number = 340;
 
   constructor(
@@ -187,7 +188,8 @@ export class WatchComponent implements OnInit, OnDestroy {
       this.isGetPlaylistByIdSuccess$.subscribe((isGetPlaylistByIdSuccess) => {
         if (isGetPlaylistByIdSuccess) {
           setTimeout(() => {
-            const containers = this.el.nativeElement.querySelectorAll('.data-container');
+            const containers =
+              this.el.nativeElement.querySelectorAll('.data-container');
 
             containers.forEach((container: HTMLElement) => {
               const data = container.querySelector('.data') as HTMLElement;
@@ -409,6 +411,31 @@ export class WatchComponent implements OnInit, OnDestroy {
     this.commentInput.nativeElement.focus();
   }
 
+  nextVideo() {
+    if (this.watchHistory.length === 0 && this.totalWatchTime >= 30) {
+      this.registerView();
+    }
+
+    if (this.user) {
+      this.store.dispatch(
+        VideoActions.updateWatchTime({
+          videoId: this.videoId,
+          userId: this.user.id,
+          watchTime: this.totalWatchTime,
+        }),
+      );
+
+      if (this.video.is_liked !== this.is_liked) {
+        this.store.dispatch(
+          VideoActions.toggleReaction({
+            videoId: this.videoId,
+            userId: this.user?.id as string,
+          }),
+        );
+      }
+    }
+  }
+
   ngOnDestroy(): void {
     if (this.watchHistory.length === 0 && this.totalWatchTime >= 30) {
       this.registerView();
@@ -438,12 +465,14 @@ export class WatchComponent implements OnInit, OnDestroy {
               }),
             );
           }
-          this.store.dispatch(VideoActions.clearState()); // Chỉ dispatch khi thành công
+          this.store.dispatch(VideoActions.clearState());
+          this.store.dispatch(PlaylistActions.clearAllPlaylistState());
           this.subscription.forEach((sub) => sub.unsubscribe());
         });
     } else {
       // Nếu không có user thì clear và unsubscribe ngay
       this.store.dispatch(VideoActions.clearState());
+      this.store.dispatch(PlaylistActions.clearAllPlaylistState());
       this.subscription.forEach((sub) => sub.unsubscribe());
     }
   }

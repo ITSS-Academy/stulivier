@@ -4,14 +4,20 @@
       <div id="header-container">
         <div id="playlist-thumbnail-background">
           <img
-            [src]="(videos$ | async)?.[0]?.thumbnail_url"
+            [src]="
+              (videos$ | async)?.[0]?.thumbnail_url ??
+              'https://hybsmigdaummopabuqki.supabase.co/storage/v1/object/public/cover_img//image-default.jpg'
+            "
             alt="playlist-thumbnail"
           />
         </div>
         <div id="playlist-info">
           <div id="playlist-thumbnail">
             <img
-              [src]="(videos$ | async)?.[0]?.thumbnail_url"
+              [src]="
+                (videos$ | async)?.[0]?.thumbnail_url ??
+                'https://hybsmigdaummopabuqki.supabase.co/storage/v1/object/public/cover_img//image-default.jpg'
+              "
               alt="playlist-thumbnail"
             />
             <div id="right-playlist-thumbnail">
