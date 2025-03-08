@@ -39,6 +39,10 @@ const initialState: VideoState = {
   isSearchingVideos: false,
   isSearchVideosSuccess: false,
   searchVideosErrorMessage: '',
+
+  isGettingVideosByUserId: false,
+  isGetVideosByUserIdSuccess: false,
+  getVideosByUserIdErrorMessage: '',
 };
 
 export const videoReducer = createReducer(
@@ -267,6 +271,34 @@ export const videoReducer = createReducer(
       ...state,
       isSearchingVideos: false,
       searchVideosErrorMessage: action.error,
+    };
+  }),
+
+  on(VideoActions.getVideosByUserId, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isGettingVideosByUserId: true,
+      isGetVideosByUserIdSuccess: false,
+    };
+  }),
+
+  on(VideoActions.getVideosByUserIdSuccess, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isGettingVideosByUserId: false,
+      isGetVideosByUserIdSuccess: true,
+      videos: action.videos,
+    };
+  }),
+
+  on(VideoActions.getVideosByUserIdFailure, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isGettingVideosByUserId: false,
+      getVideosByUserIdErrorMessage: action.error,
     };
   }),
 
