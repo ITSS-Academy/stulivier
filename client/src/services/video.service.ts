@@ -45,4 +45,12 @@ export class VideoService {
   updateWatchTime(videoId: string, userId: string, watchTime: number) {
     return this.http.post('videos/watch-time', { videoId, userId, watchTime });
   }
+
+  toggleReaction(videoId: string, userId: string) {
+    return this.http.post('videos/reaction', { videoId, userId });
+  }
+
+  searchVideos(search_query: string) {
+    return this.http.get('videos/search', { params: { search_query } });
+  }
 }

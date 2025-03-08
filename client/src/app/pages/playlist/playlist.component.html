@@ -16,6 +16,7 @@
         @for (video of (playlistDetail$ | async)?.videos; track $index) {
           <app-video-card-horizontal
             [video]="video"
+            (removeVideoInPlaylistEvent)="removeVideoInPlaylist($event)"
           ></app-video-card-horizontal>
         }
       </div>

@@ -42,11 +42,19 @@
   </div>
   <div id="content-container">
     <cdk-virtual-scroll-viewport id="main-content" itemSize="50">
-      <div id="content">
-        @for (video of (videos$ | async); track $index) {
-          <app-video-card-vertical [video]="video"></app-video-card-vertical>
-        }
-      </div>
+      @defer (when (playlistDetail$ | async)?.videos) {
+        <div class="content">
+          @for (video of (playlistDetail$ | async)?.videos; track $index) {
+            <app-video-card-vertical [video]="video"></app-video-card-vertical>
+          }
+        </div>
+      } @placeholder (minimum 500ms) {
+        <div class="content">
+          @for (_ of [].constructor(8); track $index) {
+            <app-video-card-vertical-skeleton></app-video-card-vertical-skeleton>
+          }
+        </div>
+      }
     </cdk-virtual-scroll-viewport>
   </div>
 </div>

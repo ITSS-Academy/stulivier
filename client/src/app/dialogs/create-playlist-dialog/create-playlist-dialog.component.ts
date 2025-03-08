@@ -1,29 +1,44 @@
-import {Component, ElementRef, Inject, inject, Input, OnInit, Renderer2} from '@angular/core';
-import {MatIcon} from '@angular/material/icon';
-import {MatFormField, MatHint, MatLabel} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
-import {MatOption, MatSelect} from '@angular/material/select';
-import {MatButton} from '@angular/material/button';
-import {CreatePlaylistDto, PlaylistModel} from '../../../models/playlist.model';
-import {Store} from '@ngrx/store';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {
+  Component,
+  ElementRef,
+  Inject,
+  inject,
+  Input,
+  OnInit,
+  Renderer2,
+} from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
+import { MatButton } from '@angular/material/button';
+import {
+  CreatePlaylistDto,
+  PlaylistModel,
+} from '../../../models/playlist.model';
+import { Store } from '@ngrx/store';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
-import {VideoModel} from '../../../models/video.model';
-import {Observable, Subscription} from 'rxjs';
-import {UserModel} from '../../../models/user.model';
-import {Router} from '@angular/router';
-import {UserState} from '../../../ngrxs/user/user.state';
-import {PlaylistState} from '../../../ngrxs/playlist/playlist.state';
-import {AlertService} from '../../../services/alert.service';
-import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
-import {DialogRef} from '@angular/cdk/dialog';
-import {CreateVideoDialogComponent} from '../create-video-dialog/create-video-dialog.component';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {SharedModule} from '../../../shared/modules/shared.module';
+import { VideoModel } from '../../../models/video.model';
+import { Observable, Subscription } from 'rxjs';
+import { UserModel } from '../../../models/user.model';
+import { Router } from '@angular/router';
+import { UserState } from '../../../ngrxs/user/user.state';
+import { PlaylistState } from '../../../ngrxs/playlist/playlist.state';
+import { AlertService } from '../../../services/alert.service';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { DialogRef } from '@angular/cdk/dialog';
+import { CreateVideoDialogComponent } from '../create-video-dialog/create-video-dialog.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SharedModule } from '../../../shared/modules/shared.module';
 import * as VideoActions from '../../../ngrxs/video/video.actions';
-import {MatCheckbox} from '@angular/material/checkbox';
-import {VideoService} from '../../../services/video.service';
-import {PlaylistService} from '../../../services/playlist.service';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { VideoService } from '../../../services/video.service';
+import { PlaylistService } from '../../../services/playlist.service';
 
 interface Visibility {
   value: string;
@@ -44,7 +59,7 @@ interface Visibility {
     MatOption,
   ],
   templateUrl: './create-playlist-dialog.component.html',
-  styleUrl: './create-playlist-dialog.component.scss'
+  styleUrl: './create-playlist-dialog.component.scss',
 })
 export class CreatePlaylistDialogComponent implements OnInit {
   subscriptions: Subscription[] = [];
@@ -90,6 +105,7 @@ export class CreatePlaylistDialogComponent implements OnInit {
               'end',
               'top',
             );
+            this.store.dispatch(PlaylistActions.clearPlaylistState());
             this.closeDialog();
           }
         }),

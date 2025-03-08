@@ -20,29 +20,14 @@
       <div (click)="triggerCoverInput()" class="background-linear">
         <div class="background-text">
           <span class="title"> History </span>
-          <div class="actions">
-            <button (click)="playAll($event)" mat-flat-button>
-              <mat-icon
-                class="material-symbols-rounded"
-                fontIcon="play_arrow"
-              ></mat-icon>
-              Play all
-            </button>
-            <button (click)="shuffle($event)" mat-stroked-button>
-              <mat-icon
-                class="material-symbols-rounded"
-                fontIcon="shuffle"
-              ></mat-icon>
-              Shuffle
-            </button>
-          </div>
+          <div class="actions"></div>
         </div>
       </div>
     </div>
   </div>
   <div id="content-container">
     <cdk-virtual-scroll-viewport id="main-content" itemSize="50">
-      <div id="content">
+      @defer (when (videos$ | async)?.length) {
         <div class="video-list">
           @for (video of videos$ | async; track $index) {
             <div class="history-group">
@@ -60,7 +45,22 @@
             </div>
           }
         </div>
-      </div>
+      } @placeholder (minimum 1s) {
+        <div class="video-list">
+          <div class="history-group">
+            <ngx-skeleton-loader
+              [theme]="{ width: ' 110px', height: '20px' }"
+              appearance="line"
+            >
+            </ngx-skeleton-loader>
+            <div class="video-items">
+              @for (_ of [].constructor(8); track $index) {
+                <app-video-card-vertical-skeleton></app-video-card-vertical-skeleton>
+              }
+            </div>
+          </div>
+        </div>
+      }
     </cdk-virtual-scroll-viewport>
   </div>
 </div>

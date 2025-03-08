@@ -13,10 +13,12 @@ import { UserState } from '../../../ngrxs/user/user.state';
 import * as AuthActions from '../../../ngrxs/auth/auth.actions';
 import * as UserActions from '../../../ngrxs/user/user.actions';
 import * as SidebarActions from '../../../ngrxs/sidebar/sidebar.actions';
+import * as VideoActions from '../../../ngrxs/video/video.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateVideoDialogComponent } from '../../dialogs/create-video-dialog/create-video-dialog.component';
 import { SidebarState } from '../../../ngrxs/sidebar/sidebar.state';
-import {ThemeService} from '../../../services/theme.service';
+import { ThemeService } from '../../../services/theme.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -34,7 +36,9 @@ import {ThemeService} from '../../../services/theme.service';
 })
 export class HeaderComponent {
   user$: Observable<UserModel>;
+  isInputFocused: boolean = false;
   readonly dialog = inject(MatDialog);
+  searchText: string = '';
 
   @Output() menuClick = new EventEmitter<void>();
 
@@ -45,6 +49,7 @@ export class HeaderComponent {
       sidebar: SidebarState;
     }>,
     public themeService: ThemeService,
+    private router: Router,
   ) {
     this.user$ = this.store.select('user', 'user');
   }
@@ -62,6 +67,36 @@ export class HeaderComponent {
 
   signInWithGoogle() {
     this.store.dispatch(AuthActions.signInWithGoogle());
+  }
+
+  onLogoClick() {
+    this.router.navigate(['/']);
+  }
+
+  clearSearch() {
+    this.searchText = '';
+  }
+
+  onFocus() {
+    this.isInputFocused = true;
+  }
+
+  onBlur() {
+    this.isInputFocused = false;
+  }
+
+  search() {
+    if (this.searchText === '') {
+      return;
+    }
+    // trim search text
+    this.searchText = this.searchText.trim();
+    this.store.dispatch(
+      VideoActions.searchVideos({ searchQuery: this.searchText }),
+    );
+    this.router.navigate(['/results'], {
+      queryParams: { search_query: this.searchText },
+    });
   }
 
   signOut() {

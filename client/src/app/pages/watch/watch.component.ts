@@ -2,30 +2,31 @@ import {
   Component,
   ElementRef,
   OnDestroy,
-  OnInit, Renderer2,
+  OnInit,
+  Renderer2,
   ViewChild,
 } from '@angular/core';
-import {SharedModule} from '../../../shared/modules/shared.module';
-import {MaterialModule} from '../../../shared/modules/material.module';
-import {VideoModule} from '../../../shared/modules/video.module';
-import {VideoModel} from '../../../models/video.model';
-import {PlaylistDetailModel} from '../../../models/playlist.model';
-import {UserModel} from '../../../models/user.model';
-import {combineLatest, Observable, Subscription} from 'rxjs';
-import {ActivatedRoute, Router} from '@angular/router';
-import {PlaylistState} from '../../../ngrxs/playlist/playlist.state';
-import {UserState} from '../../../ngrxs/user/user.state';
-import {VideoState} from '../../../ngrxs/video/video.state';
-import {VgApiService} from '@videogular/ngx-videogular/core';
-import {Store} from '@ngrx/store';
+import { SharedModule } from '../../../shared/modules/shared.module';
+import { MaterialModule } from '../../../shared/modules/material.module';
+import { VideoModule } from '../../../shared/modules/video.module';
+import { VideoModel } from '../../../models/video.model';
+import { PlaylistDetailModel } from '../../../models/playlist.model';
+import { UserModel } from '../../../models/user.model';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PlaylistState } from '../../../ngrxs/playlist/playlist.state';
+import { UserState } from '../../../ngrxs/user/user.state';
+import { VideoState } from '../../../ngrxs/video/video.state';
+import { VgApiService } from '@videogular/ngx-videogular/core';
+import { Store } from '@ngrx/store';
 import * as VideoActions from '../../../ngrxs/video/video.actions';
 import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
 import * as CommentActions from '../../../ngrxs/comment/comment.actions';
-import {filter, map, take} from 'rxjs/operators';
-import {CommentState} from '../../../ngrxs/comment/comment.state';
-import {VideoCardVerticalComponent} from '../../components/video-card-vertical/video-card-vertical.component';
-import {CommentCardComponent} from '../../components/comment-card/comment-card.component';
-import {CommentModel} from '../../../models/comment.model';
+import { filter, map, take } from 'rxjs/operators';
+import { CommentState } from '../../../ngrxs/comment/comment.state';
+import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
+import { CommentCardComponent } from '../../components/comment-card/comment-card.component';
+import { CommentModel } from '../../../models/comment.model';
 
 @Component({
   selector: 'app-watch',
@@ -41,12 +42,16 @@ import {CommentModel} from '../../../models/comment.model';
   styleUrl: './watch.component.scss',
 })
 export class WatchComponent implements OnInit, OnDestroy {
-  @ViewChild('media', {static: true}) media!: ElementRef;
+  @ViewChild('media', { static: true }) media!: ElementRef;
+  @ViewChild('commentInput') commentInput!: ElementRef;
+
   isDescriptionExpanded = false;
   videoId!: string;
   listId!: string;
   startRadio!: number;
   video$: Observable<VideoModel>;
+  video!: VideoModel;
+  is_liked!: boolean;
   playlistDetail$: Observable<PlaylistDetailModel>;
   isGetPlaylistByIdSuccess$: Observable<boolean>;
   user!: UserModel | null;
@@ -129,7 +134,7 @@ export class WatchComponent implements OnInit, OnDestroy {
             this.startRadio = Number(params.get('index') || 0);
             this.store.dispatch(VideoActions.getAllVideos());
             this.store.dispatch(
-              CommentActions.getCommentsByVideoId({videoId: this.videoId}),
+              CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
             );
 
             if (isGetSuccess && !isGetting) {
@@ -143,7 +148,7 @@ export class WatchComponent implements OnInit, OnDestroy {
               }
               if (this.listId) {
                 this.store.dispatch(
-                  PlaylistActions.getPlaylistById({id: this.listId}),
+                  PlaylistActions.getPlaylistById({ id: this.listId }),
                 );
               }
             } else {
@@ -154,7 +159,7 @@ export class WatchComponent implements OnInit, OnDestroy {
                 }),
               );
               this.store.dispatch(
-                PlaylistActions.getPlaylistById({id: this.listId as string}),
+                PlaylistActions.getPlaylistById({ id: this.listId as string }),
               );
             }
           });
@@ -174,18 +179,23 @@ export class WatchComponent implements OnInit, OnDestroy {
         .subscribe((isCreateCommentSuccess) => {
           if (isCreateCommentSuccess) {
             this.store.dispatch(
-              CommentActions.getCommentsByVideoId({videoId: this.videoId}),
+              CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
             );
           }
         }),
       this.isGetPlaylistByIdSuccess$.subscribe((isGetPlaylistByIdSuccess) => {
-          if (isGetPlaylistByIdSuccess) {
-            setTimeout(() => {
-              this.updateButtonsVisibility();
-            }, 500);
-          }
+        if (isGetPlaylistByIdSuccess) {
+          setTimeout(() => {
+            this.updateButtonsVisibility();
+          }, 500);
         }
-      )
+      }),
+      this.video$.subscribe((video) => {
+        if (video) {
+          this.video = video;
+          this.is_liked = video.is_liked;
+        }
+      }),
     );
   }
 
@@ -272,7 +282,7 @@ export class WatchComponent implements OnInit, OnDestroy {
           const nextVideo = videos[currentIndex + 1];
           if (nextVideo) {
             this.router.navigate(['/watch'], {
-              queryParams: {v: nextVideo.id},
+              queryParams: { v: nextVideo.id },
             });
           } else {
             console.log('No more videos to play.');
@@ -304,7 +314,7 @@ export class WatchComponent implements OnInit, OnDestroy {
       );
 
       // Gửi lên server cập nhật lượt xem
-      this.store.dispatch(VideoActions.increaseViewCount({id: this.videoId}));
+      this.store.dispatch(VideoActions.increaseViewCount({ id: this.videoId }));
     } else {
       console.log('Phát hiện spam, không tính thêm lượt xem!');
     }
@@ -325,6 +335,61 @@ export class WatchComponent implements OnInit, OnDestroy {
       }),
     );
     this.comment = '';
+  }
+
+  updateButtonsVisibility() {
+    const containers =
+      this.el.nativeElement.querySelectorAll('.data-container');
+
+    containers.forEach((container: HTMLElement) => {
+      const data = container.querySelector('.data') as HTMLElement;
+      const btnLeft = container.querySelector('.button-left') as HTMLElement;
+      const btnRight = container.querySelector('.button-right') as HTMLElement;
+
+      if (data && btnLeft && btnRight) {
+        const updateButtonsVisibility = () => {
+          if (!data.scrollWidth) return; // Chưa có nội dung thì không làm gì
+
+          btnLeft.style.visibility = data.scrollLeft > 0 ? 'visible' : 'hidden';
+          btnRight.style.visibility =
+            data.scrollLeft + data.clientWidth >= data.scrollWidth
+              ? 'hidden'
+              : 'visible';
+        };
+
+        // Lắng nghe sự thay đổi của nội dung bên trong data
+        const observer = new MutationObserver(() => {
+          updateButtonsVisibility();
+        });
+
+        observer.observe(data, { childList: true, subtree: true });
+
+        // Lắng nghe sự kiện cuộn
+        this.renderer.listen(data, 'scroll', updateButtonsVisibility);
+
+        // Lắng nghe click để cập nhật nút sau khi cuộn
+        this.renderer.listen(btnLeft, 'click', () => {
+          data.scrollBy({ left: -340, behavior: 'smooth' });
+          setTimeout(updateButtonsVisibility, 340);
+        });
+
+        this.renderer.listen(btnRight, 'click', () => {
+          data.scrollBy({ left: 340, behavior: 'smooth' });
+          setTimeout(updateButtonsVisibility, 340);
+        });
+
+        // Kiểm tra lại sau 500ms nếu dữ liệu load chậm
+        setTimeout(updateButtonsVisibility, 500);
+      }
+    });
+  }
+
+  toggleReaction() {
+    this.is_liked = !this.is_liked;
+  }
+
+  focusCommentInput() {
+    this.commentInput.nativeElement.focus();
   }
 
   ngOnDestroy(): void {
@@ -348,6 +413,14 @@ export class WatchComponent implements OnInit, OnDestroy {
           take(1),
         ) // Lọc khi success = true và lấy duy nhất 1 lần
         .subscribe(() => {
+          if (this.video.is_liked !== this.is_liked) {
+            this.store.dispatch(
+              VideoActions.toggleReaction({
+                videoId: this.videoId,
+                userId: this.user?.id as string,
+              }),
+            );
+          }
           this.store.dispatch(VideoActions.clearState()); // Chỉ dispatch khi thành công
           this.subscription.forEach((sub) => sub.unsubscribe());
         });
@@ -357,50 +430,4 @@ export class WatchComponent implements OnInit, OnDestroy {
       this.subscription.forEach((sub) => sub.unsubscribe());
     }
   }
-
-
-  updateButtonsVisibility() {
-    const containers = this.el.nativeElement.querySelectorAll('.data-container');
-
-    containers.forEach((container: HTMLElement) => {
-      const data = container.querySelector('.data') as HTMLElement;
-      const btnLeft = container.querySelector('.button-left') as HTMLElement;
-      const btnRight = container.querySelector('.button-right') as HTMLElement;
-
-      if (data && btnLeft && btnRight) {
-        const updateButtonsVisibility = () => {
-          if (!data.scrollWidth) return; // Chưa có nội dung thì không làm gì
-
-          btnLeft.style.visibility = data.scrollLeft > 0 ? 'visible' : 'hidden';
-          btnRight.style.visibility =
-            data.scrollLeft + data.clientWidth >= data.scrollWidth ? 'hidden' : 'visible';
-        };
-
-        // Lắng nghe sự thay đổi của nội dung bên trong data
-        const observer = new MutationObserver(() => {
-          updateButtonsVisibility();
-        });
-
-        observer.observe(data, {childList: true, subtree: true});
-
-        // Lắng nghe sự kiện cuộn
-        this.renderer.listen(data, 'scroll', updateButtonsVisibility);
-
-        // Lắng nghe click để cập nhật nút sau khi cuộn
-        this.renderer.listen(btnLeft, 'click', () => {
-          data.scrollBy({left: -340, behavior: 'smooth'});
-          setTimeout(updateButtonsVisibility, 340);
-        });
-
-        this.renderer.listen(btnRight, 'click', () => {
-          data.scrollBy({left: 340, behavior: 'smooth'});
-          setTimeout(updateButtonsVisibility, 340);
-        });
-
-        // Kiểm tra lại sau 500ms nếu dữ liệu load chậm
-        setTimeout(updateButtonsVisibility, 500);
-      }
-    });
-  }
-
 }

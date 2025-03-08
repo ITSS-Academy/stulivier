@@ -97,7 +97,7 @@
         </div>
       }
       <div class="content-header">
-        <h3>Recommend video</h3>
+        <h3 class="recommended-video">Recommend video</h3>
         <!--        <button mat-stroked-button [routerLink]="['/playlists/{{id}}']">View more</button>-->
       </div>
       <div class="video-list">
@@ -131,11 +131,22 @@
     </div>
     <div class="line"></div>
     <div class="reaction-btn">
+      @if (this.is_liked) {
+        <mat-icon
+          class="material-symbols-rounded icon liked"
+          fontIcon="favorite"
+          (click)="toggleReaction()"
+        ></mat-icon>
+      } @else {
+        <mat-icon
+          class="material-symbols-rounded icon"
+          fontIcon="favorite"
+          (click)="toggleReaction()"
+        ></mat-icon>
+      }
+
       <mat-icon
-        class="material-symbols-rounded icon"
-        fontIcon="favorite"
-      ></mat-icon>
-      <mat-icon
+        (click)="focusCommentInput()"
         class="material-symbols-rounded icon"
         fontIcon="mode_comment"
       ></mat-icon>
@@ -143,7 +154,7 @@
     <div class="comment-forms">
       <mat-form-field appearance="fill" class="comment-field">
         <mat-label>Comment</mat-label>
-        <input [(ngModel)]="comment" matInput />
+        <input #commentInput [(ngModel)]="comment" matInput />
       </mat-form-field>
       <button
         (click)="createComment()"

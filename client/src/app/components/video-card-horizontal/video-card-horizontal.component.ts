@@ -2,9 +2,11 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   Renderer2,
 } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
@@ -34,6 +36,7 @@ export class VideoCardHorizontalComponent
   user$: Observable<UserModel>;
   user!: UserModel;
   @Input() video!: VideoModel;
+  @Output() removeVideoInPlaylistEvent = new EventEmitter<VideoModel>();
 
   constructor(
     private router: Router,
@@ -111,13 +114,8 @@ export class VideoCardHorizontalComponent
     this.store.dispatch(PlaylistActions.clearPlaylistState());
   }
 
-  removeVideoInWatchLaterPlaylist() {
-    this.store.dispatch(
-      PlaylistActions.deleteWatchLaterPlaylist({
-        userId: this.user.id,
-        videoId: this.video.id,
-      }),
-    );
+  removeVideoInPlaylist() {
+    this.removeVideoInPlaylistEvent.emit(this.video);
   }
 
   ngOnDestroy(): void {

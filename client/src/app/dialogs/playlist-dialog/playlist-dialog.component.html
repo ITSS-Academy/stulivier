@@ -20,33 +20,35 @@
     ></mat-icon>
   </div>
   <div class="main-content">
-    <form [formGroup]="playlistForm">
-      <div formArrayName="playlists">
-        @for (playlist of playlists$ | async; track $index) {
-          <div id="save-options">
-            <mat-checkbox
-              class="material-symbols-rounded"
-              [formControlName]="$index"
-              (click)="updatePlaylist(playlist, $index)"
-              >{{ playlist.title }}
-            </mat-checkbox>
-            @if (playlist.is_public) {
-              <mat-icon
+    @if (isGetPlaylistByUserIdSuccess$ | async) {
+      <form [formGroup]="playlistForm">
+        <div formArrayName="playlists">
+          @for (playlist of playlists$ | async; track $index) {
+            <div id="save-options">
+              <mat-checkbox
                 class="material-symbols-rounded"
-                fontIcon="public"
-                id="button-lock-open"
-              ></mat-icon>
-            } @else {
-              <mat-icon
-                class="material-symbols-rounded"
-                fontIcon="lock"
-                id="button-lock"
-              ></mat-icon>
-            }
-          </div>
-        }
-      </div>
-    </form>
+                [formControlName]="$index"
+                (click)="updatePlaylist(playlist, $index)"
+                >{{ playlist.title }}
+              </mat-checkbox>
+              @if (playlist.is_public) {
+                <mat-icon
+                  class="material-symbols-rounded"
+                  fontIcon="public"
+                  id="button-lock-open"
+                ></mat-icon>
+              } @else {
+                <mat-icon
+                  class="material-symbols-rounded"
+                  fontIcon="lock"
+                  id="button-lock"
+                ></mat-icon>
+              }
+            </div>
+          }
+        </div>
+      </form>
+    }
   </div>
   <div class="button">
     <button (click)="createPlaylist()" mat-flat-button>

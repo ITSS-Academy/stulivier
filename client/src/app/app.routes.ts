@@ -44,7 +44,7 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'search',
+    path: 'results',
     loadChildren: () =>
       import('./pages/search/search.route').then((m) => m.SEARCH_ROUTES),
   },

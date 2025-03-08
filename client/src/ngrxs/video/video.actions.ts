@@ -72,9 +72,8 @@ export const updateWatchTimeFailure = createAction(
 
 export const getVideoByCategoryId = createAction(
   '[Video] Get Video By Category Id',
-  props<{ categoryId: string }>()
+  props<{ categoryId: string }>(),
 );
-
 
 export const getVideoByCategoryIdSuccess = createAction(
   '[Video] Get Video By Category Id Success',
@@ -83,6 +82,35 @@ export const getVideoByCategoryIdSuccess = createAction(
 
 export const getVideoByCategoryIdFailure = createAction(
   '[Video] Get Video By Category Id Failure',
+  props<{ error: string }>(),
+);
+
+export const toggleReaction = createAction(
+  '[Video] Toggle Reaction',
+  props<{ videoId: string; userId: string }>(),
+);
+
+export const toggleReactionSuccess = createAction(
+  '[Video] Toggle Reaction Success',
+);
+
+export const toggleReactionFailure = createAction(
+  '[Video] Toggle Reaction Failure',
+  props<{ error: string }>(),
+);
+
+export const searchVideos = createAction(
+  '[Video] Search Videos',
+  props<{ searchQuery: string }>(),
+);
+
+export const searchVideosSuccess = createAction(
+  '[Video] Search Videos Success',
+  props<{ videos: VideoModel[] }>(),
+);
+
+export const searchVideosFailure = createAction(
+  '[Video] Search Videos Failure',
   props<{ error: string }>(),
 );
 

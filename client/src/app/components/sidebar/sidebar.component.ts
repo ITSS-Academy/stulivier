@@ -11,6 +11,8 @@ import { NavigationEnd, Router } from '@angular/router';
 import { MaterialModule } from '../../../shared/modules/material.module';
 import { SharedModule } from '../../../shared/modules/shared.module';
 import { ThemeService } from '../../../services/theme.service';
+import { Store } from '@ngrx/store';
+import { SidebarState } from '../../../ngrxs/sidebar/sidebar.state';
 
 @Component({
   selector: 'app-sidebar',
@@ -68,6 +70,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     public themeService: ThemeService,
+    private store: Store<{ sidebar: SidebarState }>,
   ) {
     this.checked = this.themeService.darkModeEnabled;
     if (this.router.url.includes('home')) {

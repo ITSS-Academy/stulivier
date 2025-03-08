@@ -42,6 +42,8 @@ export class PlaylistsService {
       p_playlist_id: id,
     });
 
+    data['videos'].reverse();
+
     if (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -56,6 +58,9 @@ export class PlaylistsService {
       },
     );
 
+    // reverse the order of the videos in playlist
+    data['videos'].reverse();
+
     if (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -67,7 +72,15 @@ export class PlaylistsService {
       .from('playlists')
       .select('*')
       .eq('user_id', id)
-      .neq('title', 'Watch later');
+      .neq('title', 'Watch later')
+      .order('created_at', { ascending: false });
+
+    // check if video_id is null, replace it with empty array
+    data.forEach((playlist) => {
+      if (!playlist.video_id) {
+        playlist.video_id = [];
+      }
+    });
 
     if (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
@@ -110,6 +123,21 @@ export class PlaylistsService {
           p_video_id: videoId,
         },
       );
+
+      if (error) {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      }
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async removeVideoInPlaylist(playlistId: string, videoId: string) {
+    try {
+      const { error } = await this.supabase.rpc('remove_video_in_playlist', {
+        p_playlist_id: playlistId,
+        p_video_id: videoId,
+      });
 
       if (error) {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

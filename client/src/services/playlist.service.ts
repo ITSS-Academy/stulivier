@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClientAuth } from '../utils/http-client-auth';
-import { CreatePlaylistDto } from '../models/playlist.model';
+import { CreatePlaylistDto, UpdatePlaylistDto } from '../models/playlist.model';
 
 @Injectable({
   providedIn: 'root',
@@ -46,7 +46,17 @@ export class PlaylistService {
     });
   }
 
-  removePlaylist(playlistId: string) {
+  removeVideoInPlaylist(playlistId: string, videoId: string) {
+    return this.http.delete('playlists/playlist', {
+      params: { playlistId, videoId },
+    });
+  }
+
+  deletePlaylistById(playlistId: string) {
     return this.http.delete('playlists', { params: { playlistId } });
+  }
+
+  updatePlaylistById(playlistId: string, playlist: UpdatePlaylistDto) {
+    return this.http.put('playlists', playlist, { params: { playlistId } });
   }
 }

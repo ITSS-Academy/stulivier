@@ -3,6 +3,7 @@ import {
   CreatePlaylistDto,
   PlaylistDetailModel,
   PlaylistModel,
+  UpdatePlaylistDto,
 } from '../../models/playlist.model';
 
 export const createPlaylist = createAction(
@@ -114,15 +115,45 @@ export const deleteWatchLaterPlaylistFailure = createAction(
   props<{ error: string }>(),
 );
 
-export const deletePlaylist = createAction(
-  '[Playlist] Delete',
+export const removeVideoInPlaylist = createAction(
+  '[Playlist] Remove Video In Playlist',
+  props<{ playlistId: string; videoId: string }>(),
+);
+
+export const removeVideoInPlaylistSuccess = createAction(
+  '[Playlist] Remove Video In Playlist Success',
+);
+
+export const removeVideoInPlaylistFailure = createAction(
+  '[Playlist] Remove Video In Playlist Failure',
+  props<{ error: string }>(),
+);
+
+export const deletePlaylistById = createAction(
+  '[Playlist] Delete Playlist By Id',
   props<{ playlistId: string }>(),
 );
 
-export const deletePlaylistSuccess = createAction('[Playlist] Delete Success');
+export const deletePlaylistByIdSuccess = createAction(
+  '[Playlist] Delete Playlist By Id Success',
+);
 
-export const deletePlaylistFailure = createAction(
-  '[Playlist] Delete Failure',
+export const deletePlaylistByIdFailure = createAction(
+  '[Playlist] Delete Playlist By Id Failure',
+  props<{ error: string }>(),
+);
+
+export const upsertPlaylistById = createAction(
+  '[Playlist] Upsert Playlist By Id',
+  props<{ playlistId: string; updatePlaylistDto: UpdatePlaylistDto }>(),
+);
+
+export const upsertPlaylistByIdSuccess = createAction(
+  '[Playlist] Upsert Playlist By Id Success',
+);
+
+export const upsertPlaylistByIdFailure = createAction(
+  '[Playlist] Upsert Playlist By Id Failure',
   props<{ error: string }>(),
 );
 export const clearPlaylistState = createAction('[Playlist] Clear State');

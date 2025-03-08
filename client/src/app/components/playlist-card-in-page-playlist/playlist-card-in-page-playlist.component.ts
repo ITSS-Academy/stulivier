@@ -56,7 +56,7 @@ export class PlaylistCardInPagePlaylistComponent {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.store.dispatch(
-          PlaylistActions.deletePlaylist({ playlistId: this.playlist.id }),
+          PlaylistActions.deletePlaylistById({ playlistId: this.playlist.id }),
         );
         // Perform deletion logic here
       } else {

@@ -1,1 +1,17 @@
-<p>search works!</p>
+<div class="container">
+  <div class="left-container">
+    <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
+      @if (isSearchVideosSuccess$ | async) {
+        <div class="video-list">
+          @for (video of videos$ | async; track $index) {
+            <div class="video-items">
+              <app-video-card-horizontal
+                [video]="video"
+              ></app-video-card-horizontal>
+            </div>
+          }
+        </div>
+      }
+    </cdk-virtual-scroll-viewport>
+  </div>
+</div>

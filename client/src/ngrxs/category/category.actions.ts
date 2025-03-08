@@ -42,3 +42,5 @@ export const getTopCategoriesFailure = createAction(
   '[Category] Get Top Failure',
   props<{ error: string }>(),
 );
+
+export const clearCategoryState = createAction('[Category] Clear State');

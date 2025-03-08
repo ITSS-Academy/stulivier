@@ -31,6 +31,14 @@ const initialState: VideoState = {
   isGettingVideoByCategoryId: false,
   isGetVideoByCategoryIdSuccess: false,
   getVideoByCategoryIdErrorMessage: '',
+
+  isToggleReaction: false,
+  isToggleReactionSuccess: false,
+  toggleReactionErrorMessages: '',
+
+  isSearchingVideos: false,
+  isSearchVideosSuccess: false,
+  searchVideosErrorMessage: '',
 };
 
 export const videoReducer = createReducer(
@@ -204,6 +212,61 @@ export const videoReducer = createReducer(
       ...state,
       isIncreasingViewCount: false,
       increaseViewCountErrorMessages: action.error,
+    };
+  }),
+
+  on(VideoActions.toggleReaction, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isToggleReaction: true,
+      isToggleReactionSuccess: false,
+    };
+  }),
+
+  on(VideoActions.toggleReactionSuccess, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isToggleReaction: false,
+      isToggleReactionSuccess: true,
+    };
+  }),
+
+  on(VideoActions.toggleReactionFailure, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isToggleReaction: false,
+      toggleReactionErrorMessages: action.error,
+    };
+  }),
+
+  on(VideoActions.searchVideos, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isSearchingVideos: true,
+      isSearchVideosSuccess: false,
+    };
+  }),
+
+  on(VideoActions.searchVideosSuccess, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isSearchingVideos: false,
+      isSearchVideosSuccess: true,
+      videos: action.videos,
+    };
+  }),
+
+  on(VideoActions.searchVideosFailure, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isSearchingVideos: false,
+      searchVideosErrorMessage: action.error,
     };
   }),
 

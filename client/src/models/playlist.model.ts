@@ -20,3 +20,8 @@ export interface CreatePlaylistDto {
   is_public: boolean;
   user_id: string;
 }
+
+export interface UpdatePlaylistDto {
+  title: string;
+  is_public: boolean;
+}
