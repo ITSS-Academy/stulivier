@@ -20,7 +20,7 @@ import {
 } from '../../../models/playlist.model';
 import { UserState } from '../../../ngrxs/user/user.state';
 import { UserModel } from '../../../models/user.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../../services/alert.service';
 import { VideoModel } from '../../../models/video.model';
 
@@ -51,6 +51,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     private store: Store<{ playlist: PlaylistState; user: UserState }>,
     private router: Router,
     private alertService: AlertService,
+    private activatedRoute: ActivatedRoute,
   ) {
     this.playlists$ = this.store.select('playlist', 'playlists');
     this.isGetPlaylistByUserIdSuccess$ = this.store.select(
@@ -66,6 +67,10 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscriptions.push(
+      this.activatedRoute.queryParamMap.subscribe((queryParams) => {
+        const index = queryParams.get('index');
+        console.log('index', index);
+      }),
       this.store.select('user', 'user').subscribe((user: UserModel) => {
         if (user.id) {
           this.user = user;

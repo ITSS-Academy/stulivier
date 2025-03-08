@@ -50,7 +50,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     },
     {
       name: 'Playlists',
-      route: '/playlists',
+      route: '/playlists?index=0',
       icon: 'playlist_play',
     },
     {
