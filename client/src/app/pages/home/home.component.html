@@ -1,10 +1,34 @@
 <div id="container">
   <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
-    @for (item of topCategory$ | async; track $index) {
-      <p class="title">{{ item.name }}</p>
+    @defer (when (topCategory$ | async)?.length) {
+      @for (item of topCategory$ | async; track $index) {
+        <p class="title">{{ item.name }}</p>
+        <div class="video-container">
+          @for (video of item.videos | slice: 0 : 8; track $index) {
+            <app-video-card-vertical [video]="video"></app-video-card-vertical>
+          }
+        </div>
+        <div class="action">
+          <div class="line"></div>
+          <div class="show-all-btn" (click)="navigateToCategory(item.id)">
+            <span>Show all</span>
+            <mat-icon
+              class="material-symbols-rounded"
+              fontIcon="chevron_right"
+            ></mat-icon>
+          </div>
+          <div class="line"></div>
+        </div>
+      }
+    } @placeholder (minimum 500ms) {
+      <ngx-skeleton-loader
+        [theme]="{ width: ' 110px', height: '20px', filter: 'brightness(0.5)' }"
+        appearance="line"
+      >
+      </ngx-skeleton-loader>
       <div class="video-container">
-        @for (video of item.videos; track $index) {
-          <app-video-card-vertical [video]="video"></app-video-card-vertical>
+        @for (_ of [].constructor(8); track $index) {
+          <app-video-card-vertical-skeleton></app-video-card-vertical-skeleton>
         }
       </div>
     }

@@ -5,20 +5,44 @@
       class="menu-icon material-symbols-rounded"
       fontIcon="menu"
     ></mat-icon>
-    <div class="logo" [routerLink]="['/home']">
-    <img alt="logo" [src]="themeService.isDarkMode ? '/assets/logo_stulivier_dark_theme_new.png': '/assets/logo_stulivier_light_theme_new1.png'" />
+    <div class="logo">
+      <img
+        (click)="onLogoClick()"
+        [src]="
+          themeService.isDarkMode
+            ? '/assets/logo_stulivier_dark_theme_new.png'
+            : '/assets/logo_stulivier_light_theme_new1.png'
+        "
+        alt="logo"
+      />
     </div>
   </div>
   <div class="search-container">
     <div class="search-input">
-      <input placeholder="Search" type="text" />
+      @if (isInputFocused) {
+        <mat-icon
+          class="search-icon material-symbols-rounded"
+          fontIcon="search"
+        ></mat-icon>
+      }
 
-      <mat-icon
-        class="clear-icon material-symbols-rounded"
-        fontIcon="clear"
-      ></mat-icon>
+      <input
+        (blur)="onBlur()"
+        (focus)="onFocus()"
+        (keydown.enter)="search()"
+        [(ngModel)]="searchText"
+        placeholder="Search"
+        type="text"
+      />
+      @if (searchText) {
+        <mat-icon
+          class="clear-icon material-symbols-rounded"
+          fontIcon="clear"
+          (click)="clearSearch()"
+        ></mat-icon>
+      }
     </div>
-    <div [routerLink]="['/search']" class="search-action">
+    <div class="search-action">
       <mat-icon class="material-symbols-rounded" fontIcon="search"></mat-icon>
     </div>
   </div>

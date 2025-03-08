@@ -1,52 +1,54 @@
 <div id="container">
   <div class="out-header">
-  <div class="header">
-    <span class="container-ribbon">
-      <mat-icon
-        class="material-symbols-rounded"
-        style="font-size: 2.5rem; width: 100%; height: 100%"
-        >bookmark</mat-icon
-      >
-    </span>
-    <div class="title">
-      <p>Save to Playlist</p>
+    <div class="header">
+      <span class="container-ribbon">
+        <mat-icon
+          class="material-symbols-rounded"
+          style="font-size: 2.5rem; width: 100%; height: 100%"
+          >bookmark</mat-icon
+        >
+      </span>
+      <div class="title">
+        <p>Save to Playlist</p>
+      </div>
     </div>
-  </div>
     <mat-icon
       (click)="closeDialog()"
-      class="material-symbols-rounded"
+      class="material-symbols-rounded close-btn"
       fontIcon="close"
       style="cursor: pointer"
     ></mat-icon>
   </div>
   <div class="main-content">
-    <form [formGroup]="playlistForm">
-      <div formArrayName="playlists">
-        @for (playlist of playlists$ | async; track $index) {
-          <div id="save-options">
-            <mat-checkbox
-              class="material-symbols-rounded"
-              [formControlName]="$index"
-              (click)="updatePlaylist(playlist, $index)"
-              >{{ playlist.title }}
-            </mat-checkbox>
-            @if (playlist.is_public) {
-              <mat-icon
+    @if (isGetPlaylistByUserIdSuccess$ | async) {
+      <form [formGroup]="playlistForm">
+        <div formArrayName="playlists">
+          @for (playlist of playlists$ | async; track $index) {
+            <div id="save-options">
+              <mat-checkbox
                 class="material-symbols-rounded"
-                fontIcon="public"
-                id="button-lock-open"
-              ></mat-icon>
-            } @else {
-              <mat-icon
-                class="material-symbols-rounded"
-                fontIcon="lock"
-                id="button-lock"
-              ></mat-icon>
-            }
-          </div>
-        }
-      </div>
-    </form>
+                [formControlName]="$index"
+                (click)="updatePlaylist(playlist, $index)"
+                >{{ playlist.title }}
+              </mat-checkbox>
+              @if (playlist.is_public) {
+                <mat-icon
+                  class="material-symbols-rounded"
+                  fontIcon="public"
+                  id="button-lock-open"
+                ></mat-icon>
+              } @else {
+                <mat-icon
+                  class="material-symbols-rounded"
+                  fontIcon="lock"
+                  id="button-lock"
+                ></mat-icon>
+              }
+            </div>
+          }
+        </div>
+      </form>
+    }
   </div>
   <div class="button">
     <button (click)="createPlaylist()" mat-flat-button>

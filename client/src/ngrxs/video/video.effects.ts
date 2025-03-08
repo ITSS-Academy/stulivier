@@ -126,7 +126,51 @@ export const getVideosByCategoryId$ = createEffect(
             return VideoActions.getVideoByCategoryIdSuccess({ videos });
           }),
           catchError((error) => {
-            return of(VideoActions.getVideoByCategoryIdFailure({ error: error }));
+            return of(
+              VideoActions.getVideoByCategoryIdFailure({ error: error }),
+            );
+          }),
+        );
+      }),
+    );
+  },
+  { functional: true },
+);
+
+export const toggleReaction$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const videoService = inject(VideoService);
+    return actions$.pipe(
+      ofType(VideoActions.toggleReaction),
+      exhaustMap((action) => {
+        return videoService.toggleReaction(action.videoId, action.userId).pipe(
+          map(() => {
+            return VideoActions.toggleReactionSuccess();
+          }),
+          catchError((error) => {
+            return of(VideoActions.toggleReactionFailure({ error: error }));
+          }),
+        );
+      }),
+    );
+  },
+  { functional: true },
+);
+
+export const searchVideos$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const videoService = inject(VideoService);
+    return actions$.pipe(
+      ofType(VideoActions.searchVideos),
+      exhaustMap((action) => {
+        return videoService.searchVideos(action.searchQuery).pipe(
+          map((videos) => {
+            return VideoActions.searchVideosSuccess({ videos });
+          }),
+          catchError((error) => {
+            return of(VideoActions.searchVideosFailure({ error: error }));
           }),
         );
       }),

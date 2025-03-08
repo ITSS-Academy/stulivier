@@ -26,6 +26,7 @@
     "@videogular/ngx-videogular": "^10.0.1",
     "hls.js": "^1.5.19",
     "jwt-decode": "^4.0.0",
+    "ngx-skeleton-loader": "^10.0.0",
     "ngx-socket-io": "^4.7.0",
     "node-vibrant": "^4.0.3",
     "rxjs": "~7.8.0",

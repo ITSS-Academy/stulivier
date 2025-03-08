@@ -21,7 +21,6 @@ import { VideoCardVerticalComponent } from '../../components/video-card-vertical
     SharedModule,
     MaterialModule,
     VideoModule,
-    CategoryCardComponent,
     VideoCardVerticalComponent,
   ],
   templateUrl: './category-detail.component.html',
@@ -44,7 +43,6 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.activatedRoute.queryParamMap.subscribe((params) => {
         const categoryId = params.get('id');
-        console.log(params.get('id'));
         this.store.dispatch(
           CategoryActions.getCategoryById({ id: categoryId as string }),
         );
@@ -53,6 +51,9 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
             categoryId: categoryId as string,
           }),
         );
+      }),
+      this.category$.subscribe((category) => {
+        console.log(category);
       }),
     );
   }

@@ -394,4 +394,37 @@ export class VideosService {
       throw new HttpException(e, HttpStatus.BAD_REQUEST);
     }
   }
+
+  async toggleReaction(videoId: string, userId: string) {
+    try {
+      const { data, error } = await this.supabase.rpc('toggle_video_reaction', {
+        video_id_param: videoId,
+        user_id_param: userId,
+      });
+
+      if (error) {
+        throw new HttpException(error, HttpStatus.BAD_REQUEST);
+      }
+
+      return data;
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async searchVideos(searchTerm: string) {
+    try {
+      const { data, error } = await this.supabase.rpc('search_videos', {
+        p_search_query: searchTerm,
+      });
+
+      if (error) {
+        throw new HttpException(error, HttpStatus.BAD_REQUEST);
+      }
+
+      return data;
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
+  }
 }

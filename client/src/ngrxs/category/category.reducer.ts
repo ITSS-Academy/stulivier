@@ -60,7 +60,7 @@ export const categoryReducer = createReducer(
   })),
 
   // Top
-  on(CategoryActions.getTopCategories, (state) => ({
+  on(CategoryActions.getTopCategories, (state, { type }) => ({
     ...state,
     isGettingTopCategories: true,
     isGetTopCategoriesSuccess: false,
@@ -75,5 +75,21 @@ export const categoryReducer = createReducer(
     ...state,
     isGettingTopCategories: false,
     getTopCategoriesErrorMessages: action.error,
+  })),
+
+  on(CategoryActions.clearCategoryState, (state) => ({
+    ...state,
+
+    isGettingAllCategories: false,
+    isGetAllCategoriesSuccess: false,
+    getAllCategoriesErrorMessages: '',
+
+    isGettingCategoryById: false,
+    isGetCategoryByIdSuccess: false,
+    getCategoryByIdErrorMessage: '',
+
+    isGettingTopCategories: false,
+    isGetTopCategoriesSuccess: false,
+    getTopCategoriesErrorMessages: '',
   })),
 );

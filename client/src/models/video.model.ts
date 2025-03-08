@@ -5,13 +5,10 @@ export interface VideoModel {
   video_url: string;
   thumbnail_url: string;
   views: number;
-  likes: number;
-  dislikes: number;
   created_at: string;
+  is_liked: boolean;
   user_id: string;
-  reaction_type: string;
   resume_position: number;
-  category_id: string;
   user_data: {
     username: string;
     avatar_url: string;

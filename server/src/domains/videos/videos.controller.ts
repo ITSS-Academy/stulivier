@@ -80,4 +80,17 @@ export class VideosController {
     const { videoId, userId, watchTime } = req.body;
     return await this.videosService.updateWatchTime(videoId, userId, watchTime);
   }
+
+  @Post('reaction')
+  async likeVideo(@Request() req: any) {
+    const { videoId, userId } = req.body;
+    return await this.videosService.toggleReaction(videoId, userId);
+  }
+
+  @Public()
+  @Get('search')
+  async searchVideos(@Request() req: any) {
+    const { search_query } = req.query;
+    return await this.videosService.searchVideos(search_query);
+  }
 }

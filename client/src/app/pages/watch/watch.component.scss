@@ -71,7 +71,6 @@
       flex-wrap: wrap;
       gap: 10px;
       padding: 10px 20px;
-
     }
   }
 
@@ -142,6 +141,7 @@
 
       .icon {
         color: var(--md-sys-color-on-surface);
+        cursor: pointer;
       }
     }
 
@@ -180,7 +180,7 @@
     h3 {
       font-size: 24px;
       font-weight: 700;
-      color: var(--md-sys-color-on-surface);
+      color: var(--md-sys-color-primary);
       margin: 0;
       padding: 0;
     }
@@ -198,7 +198,6 @@
     justify-content: center;
     align-items: center;
 
-
     .button {
       z-index: 1;
       position: absolute;
@@ -211,7 +210,7 @@
         width: 50px;
         height: 50px;
         border-radius: 100%;
-        background: rgba(23, 23, 23, 0.50);
+        background: rgba(23, 23, 23, 0.5);
         color: white;
         pointer-events: all;
         transition: opacity 0.3s;
@@ -268,4 +267,9 @@
 
 ::ng-deep.mdc-text-field--filled:not(.mdc-text-field--disabled) {
   background-color: transparent !important;
+}
+
+.liked {
+  color: var(--md-sys-color-primary) !important;
+  font-variation-settings: "FILL" 1; // Trạng thái fill
 }

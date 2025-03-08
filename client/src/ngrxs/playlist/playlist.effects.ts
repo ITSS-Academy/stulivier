@@ -192,20 +192,20 @@ export const upsertWatchLaterPlaylist$ = createEffect(
   { functional: true },
 );
 
-export const removeVideoInWatchLaterPlaylist$ = createEffect(
+export const removeVideoInPlaylist$ = createEffect(
   () => {
     const actions$ = inject(Actions);
     const playlistService = inject(PlaylistService);
     return actions$.pipe(
-      ofType(PlaylistActions.deleteWatchLaterPlaylist),
+      ofType(PlaylistActions.removeVideoInPlaylist),
       exhaustMap((action) => {
         return playlistService
-          .removeVideoInWatchLaterPlaylist(action.userId, action.videoId)
+          .removeVideoInPlaylist(action.playlistId, action.videoId)
           .pipe(
-            map(() => PlaylistActions.deleteWatchLaterPlaylistSuccess()),
+            map(() => PlaylistActions.removeVideoInPlaylistSuccess()),
             catchError((obj) => {
               return of(
-                PlaylistActions.deleteWatchLaterPlaylistFailure({
+                PlaylistActions.removeVideoInPlaylistFailure({
                   error: obj.error.message,
                 }),
               );
@@ -217,23 +217,48 @@ export const removeVideoInWatchLaterPlaylist$ = createEffect(
   { functional: true },
 );
 
-export const removePlaylistById$ = createEffect(
+export const deletePlaylistById$ = createEffect(
   () => {
     const actions$ = inject(Actions);
     const playlistService = inject(PlaylistService);
     return actions$.pipe(
-      ofType(PlaylistActions.deletePlaylist),
+      ofType(PlaylistActions.deletePlaylistById),
       exhaustMap((action) => {
-        return playlistService.removePlaylist(action.playlistId).pipe(
-          map(() => PlaylistActions.deletePlaylistSuccess()),
+        return playlistService.deletePlaylistById(action.playlistId).pipe(
+          map(() => PlaylistActions.deletePlaylistByIdSuccess()),
           catchError((obj) => {
             return of(
-              PlaylistActions.deletePlaylistFailure({
+              PlaylistActions.deletePlaylistByIdFailure({
                 error: obj.error.message,
               }),
             );
           }),
         );
+      }),
+    );
+  },
+  { functional: true },
+);
+
+export const upsertPlaylistById$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const playlistService = inject(PlaylistService);
+    return actions$.pipe(
+      ofType(PlaylistActions.upsertPlaylistById),
+      exhaustMap((action) => {
+        return playlistService
+          .updatePlaylistById(action.playlistId, action.updatePlaylistDto)
+          .pipe(
+            map(() => PlaylistActions.upsertPlaylistByIdSuccess()),
+            catchError((obj) => {
+              return of(
+                PlaylistActions.upsertPlaylistByIdFailure({
+                  error: obj.error.message,
+                }),
+              );
+            }),
+          );
       }),
     );
   },

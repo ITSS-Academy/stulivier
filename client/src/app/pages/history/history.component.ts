@@ -17,6 +17,8 @@ import { UserState } from '../../../ngrxs/user/user.state';
 import * as HistoryActions from '../../../ngrxs/history/history.actions';
 import { VideoCardHorizontalComponent } from '../../components/video-card-horizontal/video-card-horizontal.component';
 import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
+import { VideoCardVerticalSkeletonComponent } from '../../components/video-card-vertical-skeleton/video-card-vertical-skeleton.component';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 @Component({
   selector: 'app-history',
@@ -25,8 +27,9 @@ import { VideoCardVerticalComponent } from '../../components/video-card-vertical
     SharedModule,
     MaterialModule,
     VideoModule,
-    VideoCardHorizontalComponent,
     VideoCardVerticalComponent,
+    VideoCardVerticalSkeletonComponent,
+    NgxSkeletonLoaderComponent,
   ],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss',
@@ -80,15 +83,5 @@ export class HistoryComponent implements OnInit, OnDestroy {
       reader.onload = (e) => (this.coverImage = reader.result);
       reader.readAsDataURL(file);
     }
-  }
-
-  playAll(event: Event): void {
-    event.stopPropagation();
-    // Add your play all logic here
-  }
-
-  shuffle(event: Event): void {
-    event.stopPropagation();
-    // Add your shuffle logic here
   }
 }

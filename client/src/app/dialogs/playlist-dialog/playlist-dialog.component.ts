@@ -39,6 +39,7 @@ export class PlaylistDialogComponent implements OnInit, OnDestroy {
   playlists$!: Observable<PlaylistModel[]>;
   playlist!: PlaylistModel[];
   playlistForm: FormGroup;
+  isGetPlaylistByUserIdSuccess$!: Observable<boolean>;
 
   readonly checked = model(false);
   readonly labelPosition = model<'before' | 'after'>('after');
@@ -61,7 +62,10 @@ export class PlaylistDialogComponent implements OnInit, OnDestroy {
     this.playlistForm = this.fb.group({
       playlists: this.fb.array([]),
     });
-    console.log(data);
+    this.isGetPlaylistByUserIdSuccess$ = this.store.select(
+      'playlist',
+      'isGetPlaylistByUserIdSuccess',
+    );
   }
 
   get playlistsFormArray() {
@@ -88,15 +92,14 @@ export class PlaylistDialogComponent implements OnInit, OnDestroy {
         }),
       this.playlists$.subscribe((playlist: PlaylistModel[]) => {
         this.playlist = playlist;
-        this.updatePlaylistsFormArray();
       }),
-      // this.store
-      //   .select('playlist', 'isGetPlaylistByUserIdSuccess')
-      //   .subscribe((isGetPlaylistByUserIdSuccess) => {
-      //     if (isGetPlaylistByUserIdSuccess) {
-      //       this.updatePlaylistsFormArray();
-      //     }
-      //   }),
+      this.store
+        .select('playlist', 'isGetPlaylistByUserIdSuccess')
+        .subscribe((isGetPlaylistByUserIdSuccess) => {
+          if (isGetPlaylistByUserIdSuccess) {
+            this.updatePlaylistsFormArray();
+          }
+        }),
     );
   }
 
@@ -123,21 +126,8 @@ export class PlaylistDialogComponent implements OnInit, OnDestroy {
   }
 
   updatePlaylist(playlist: PlaylistModel, index: number) {
-    if (playlist.title == 'Watch later') {
-      this.store.dispatch(
-        PlaylistActions.updateWatchLaterPlaylist({
-          userId: this.user.id,
-          videoId: this.data as any,
-        }),
-      );
-    } else {
-      this.store.dispatch(
-        PlaylistActions.updatePlaylist({
-          playlistId: playlist.id,
-          videoId: this.data as any,
-        }),
-      );
-    }
+    console.log('updatePlaylist', this.playlistsFormArray.at(index).value);
+
     if (this.playlistsFormArray.at(index).value) {
       this.alertService.showAlert(
         `Added to ${playlist.title}`,
@@ -153,6 +143,21 @@ export class PlaylistDialogComponent implements OnInit, OnDestroy {
         3000,
         'end',
         'top',
+      );
+    }
+    if (playlist.title == 'Watch later') {
+      this.store.dispatch(
+        PlaylistActions.updateWatchLaterPlaylist({
+          userId: this.user.id,
+          videoId: this.data as any,
+        }),
+      );
+    } else {
+      this.store.dispatch(
+        PlaylistActions.updatePlaylist({
+          playlistId: playlist.id,
+          videoId: this.data as any,
+        }),
       );
     }
   }

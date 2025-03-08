@@ -7,7 +7,7 @@ export class CategoriesController {
   constructor(private categoriesService: CategoriesService) {}
 
   @Public()
-  @Get()
+  @Get('all')
   async getAllCategories() {
     return await this.categoriesService.getAllCategories();
   }

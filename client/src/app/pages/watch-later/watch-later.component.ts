@@ -8,7 +8,6 @@ import {
 import { SharedModule } from '../../../shared/modules/shared.module';
 import { MaterialModule } from '../../../shared/modules/material.module';
 import { VideoModule } from '../../../shared/modules/video.module';
-import { VideoCardHorizontalComponent } from '../../components/video-card-horizontal/video-card-horizontal.component';
 import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
 import { Observable, Subscription } from 'rxjs';
 import { VideoModel } from '../../../models/video.model';
@@ -17,11 +16,11 @@ import { VideoState } from '../../../ngrxs/video/video.state';
 import { UserState } from '../../../ngrxs/user/user.state';
 import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
 import { UserModel } from '../../../models/user.model';
-import { user } from '@angular/fire/auth';
 import { PlaylistState } from '../../../ngrxs/playlist/playlist.state';
 import { PlaylistDetailModel } from '../../../models/playlist.model';
-import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { VideoCardVerticalSkeletonComponent } from '../../components/video-card-vertical-skeleton/video-card-vertical-skeleton.component';
 
 @Component({
   selector: 'app-watch-later',
@@ -30,8 +29,9 @@ import { Router } from '@angular/router';
     SharedModule,
     MaterialModule,
     VideoModule,
-    VideoCardHorizontalComponent,
     VideoCardVerticalComponent,
+    NgxSkeletonLoaderModule,
+    VideoCardVerticalSkeletonComponent,
   ],
   templateUrl: './watch-later.component.html',
   styleUrl: './watch-later.component.scss',
@@ -40,11 +40,13 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
   @ViewChild('coverInput') coverInput!: ElementRef<HTMLInputElement>;
   subscription: Subscription[] = [];
   user$!: Observable<UserModel>;
+  user!: UserModel;
   playlistDetail$!: Observable<PlaylistDetailModel>;
   playlistDetail!: PlaylistDetailModel;
   videos$!: Observable<VideoModel[]>;
   coverImage: string | ArrayBuffer | null =
     'https://hybsmigdaummopabuqki.supabase.co/storage/v1/object/public/cover_img//nasa_earth_grid.jpg';
+  isGettingWatchLaterPlaylist$!: Observable<boolean>;
 
   constructor(
     private store: Store<{
@@ -56,17 +58,10 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
   ) {
     this.user$ = this.store.select('user', 'user');
     this.playlistDetail$ = this.store.select('playlist', 'playlistDetail');
-    this.videos$ = this.playlistDetail$.pipe(
-      map((playlistDetail) => playlistDetail?.videos ?? []),
+    this.isGettingWatchLaterPlaylist$ = this.store.select(
+      'playlist',
+      'isGettingWatchLaterPlaylistByUserId',
     );
-
-    this.user$.subscribe((user) => {
-      if (user?.id) {
-        this.store.dispatch(
-          PlaylistActions.getWatchLaterPlaylistByUserId({ userId: user.id }),
-        );
-      }
-    });
   }
 
   ngOnInit(): void {
@@ -74,6 +69,32 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
       this.playlistDetail$.subscribe((playlistDetail) => {
         this.playlistDetail = playlistDetail;
       }),
+      this.user$.subscribe((user) => {
+        if (user?.id) {
+          this.user = user;
+        }
+      }),
+      this.store
+        .select('user', 'isGetUserSuccess')
+        .subscribe((isGetUserSuccess) => {
+          if (isGetUserSuccess) {
+            this.store.dispatch(
+              PlaylistActions.getWatchLaterPlaylistByUserId({
+                userId: this.user.id,
+              }),
+            );
+          }
+        }),
+      this.store
+        .select('playlist', 'playlistDetail')
+        .subscribe((playlistDetail) => {
+          console.log(playlistDetail);
+        }),
+      this.isGettingWatchLaterPlaylist$.subscribe(
+        (isGettingWatchLaterPlaylist) => {
+          console.log(isGettingWatchLaterPlaylist);
+        },
+      ),
     );
   }
 

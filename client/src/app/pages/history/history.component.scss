@@ -10,11 +10,11 @@
 
     .cover-background {
       width: 100%;
-      height: 220px;
+      height: 160px;
 
       .background-img {
         width: 100%;
-        height: 220px;
+        height: 160px;
         position: absolute;
         border-radius: 10px;
         top: 0;
@@ -32,7 +32,7 @@
       .background-linear {
         display: flex;
         width: 100%;
-        height: 220px;
+        height: 160px;
         padding: 15px 30px;
         flex-direction: column;
         justify-content: flex-end;
@@ -60,7 +60,7 @@
           .title {
             font-size: 2rem;
             font-weight: 700;
-            color: var(--md-sys-color-on-surface);
+            color: white;
           }
 
           .actions {

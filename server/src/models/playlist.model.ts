@@ -12,3 +12,8 @@ export interface CreatePlaylistModel {
   user_id: string;
   is_public: boolean;
 }
+
+export interface UpdatePlaylistModel {
+  title: string;
+  is_public: boolean;
+}

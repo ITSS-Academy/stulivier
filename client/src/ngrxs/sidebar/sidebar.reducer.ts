@@ -14,4 +14,11 @@ export const sidebarReducer = createReducer(
       isSidebarOpen: !state.isSidebarOpen,
     };
   }),
+
+  on(SidebarActions.setSidebarVisibility, (state, { isVisible }) => {
+    return {
+      ...state,
+      isSidebarOpen: isVisible,
+    };
+  }),
 );

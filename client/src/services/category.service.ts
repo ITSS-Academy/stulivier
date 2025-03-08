@@ -8,7 +8,7 @@ export class CategoryService {
   constructor(private http: HttpClientAuth) {}
 
   getAllCategories() {
-    return this.http.get('categories/');
+    return this.http.get('categories/all');
   }
 
   getCategoryById(id: string) {
