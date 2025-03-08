@@ -360,7 +360,6 @@ export const playlistReducer = createReducer(
     console.log(action.type);
     return <PlaylistState>{
       ...state,
-      playlistDetail: <PlaylistDetailModel>{},
 
       isGettingAllPlaylists: false,
       isGetAllPlaylistsSuccess: false,

@@ -1,7 +1,30 @@
-<div class="container-playlist">
+<div class="container-playlist" [routerLink]="['/watch']"
+     [queryParams]="{ v: playlist.video_id, list: playlist.id, index: 0 }">
   <mat-card appearance="outlined" class="playlist-card">
-    <div class="video-layer layer1"></div>
-    <div class="video-layer layer2"></div>
+    <div class="video-layer layer1">
+      <img
+        alt="Thumbnail"
+        class="thumbnail visibility"
+        mat-card-image
+
+       src=""/>
+      <div class="overlay visibility">
+        <mat-icon class="material-symbols-rounded">play_arrow</mat-icon>
+        Play all
+      </div>
+    </div>
+    <div class="video-layer layer2">
+      <img
+        alt="Thumbnail"
+        class="thumbnail visibility"
+        mat-card-image
+
+       src=""/>
+      <div class="overlay visibility">
+        <mat-icon class="material-symbols-rounded">play_arrow</mat-icon>
+        Play all
+      </div>
+    </div>
     <div class="video-layer layer3">
       <img
         alt="Thumbnail"
@@ -10,7 +33,7 @@
         [src]="playlist.thumbnail_url"
       />
       <div class="overlay">
-        <mat-icon>play_arrow</mat-icon>
+        <mat-icon class="material-symbols-rounded">play_arrow</mat-icon>
         Play all
       </div>
     </div>
