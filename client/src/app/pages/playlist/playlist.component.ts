@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -25,6 +26,8 @@ import { AlertService } from '../../../services/alert.service';
 import { VideoModel } from '../../../models/video.model';
 import * as AuthActions from '../../../ngrxs/auth/auth.actions';
 import { AuthState } from '../../../ngrxs/auth/auth.state';
+import { MatDialog } from '@angular/material/dialog';
+import { EditPlaylistDialogComponent } from '../../dialogs/edit-playlist-dialog/edit-playlist-dialog.component';
 
 @Component({
   selector: 'app-playlist',
@@ -50,6 +53,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   isRemoveVideoInPlaylistSuccess$!: Observable<boolean>;
   isCheckLogin$!: Observable<boolean>;
   index = 0;
+  readonly dialog = inject(MatDialog);
 
   constructor(
     private store: Store<{
@@ -128,6 +132,23 @@ export class PlaylistComponent implements OnInit, OnDestroy {
             );
           }
         }),
+      this.store
+        .select('playlist', 'isUpsertPlaylistByIdSuccess')
+        .subscribe((isUpdatePlaylistSuccess) => {
+          if (isUpdatePlaylistSuccess) {
+            this.alertService.showAlert(
+              `Playlist updated successfully`,
+              'Close',
+              3000,
+              'end',
+              'top',
+            );
+            this.store.dispatch(PlaylistActions.clearPlaylistState());
+            this.store.dispatch(
+              PlaylistActions.getPlaylistByUserId({ id: this.user.id }),
+            );
+          }
+        }),
       this.isRemoveVideoInPlaylistSuccess$.subscribe(
         (isRemoveVideoInPlaylistSuccess) => {
           if (isRemoveVideoInPlaylistSuccess) {
@@ -147,7 +168,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
       ),
     );
 
-    this.activatedRoute.queryParams.subscribe(params => {
+    this.activatedRoute.queryParams.subscribe((params) => {
       const indexFromUrl = Number(params['index']);
       if (!isNaN(indexFromUrl)) {
         this.index = indexFromUrl;

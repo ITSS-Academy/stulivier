@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { PlaylistState } from '../../../ngrxs/playlist/playlist.state';
 import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
+import { EditPlaylistDialogComponent } from '../../dialogs/edit-playlist-dialog/edit-playlist-dialog.component';
 
 @Component({
   selector: 'app-playlist-card-in-page-playlist',
@@ -62,6 +63,12 @@ export class PlaylistCardInPagePlaylistComponent {
       } else {
         console.log('User cancelled deletion');
       }
+    });
+  }
+
+  editPlaylist() {
+    const dialogRef = this.dialog.open(EditPlaylistDialogComponent, {
+      data: { playlist: this.playlist },
     });
   }
 }
