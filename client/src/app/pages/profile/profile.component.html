@@ -3,16 +3,9 @@
     <div id="user-data">
       <div class="user-background">
         <div class="background-img">
-          <input
-            #coverInput
-            (change)="onCoverSelected($event)"
-            accept="image/*"
-            style="display: none"
-            type="file"
-          />
-          @if (coverImage) {
+          @if ((user$ | async)?.background_url) {
             <img
-              [src]="coverImage"
+              [src]="(user$ | async)?.background_url"
               alt="Selected Image"
               class="background-img-preview"
             />
@@ -21,8 +14,12 @@
 
         <div (click)="triggerCoverInput()" class="background-linear">
           @if (self) {
-            <button mat-fab aria-label="Example icon button with a delete icon" class="avatar-button"
-                    (click)="openEditProfileDialog(); $event.stopPropagation()">
+            <button
+              mat-fab
+              aria-label="Example icon button with a delete icon"
+              class="avatar-button"
+              (click)="openEditProfileDialog(); $event.stopPropagation()"
+            >
               <mat-icon class="material-symbols-rounded">edit</mat-icon>
             </button>
           }
@@ -39,8 +36,8 @@
             />
           </div>
           <div class="user-data">
-            <span class="username">{{(user$ | async)?.username}}</span>
-            <span class="views">123,354 Views</span>
+            <span class="username">{{ (user$ | async)?.username }}</span>
+            <!--            <span class="views">123,354 Views</span>-->
             <span class="describe">
               {{ (user$ | async)?.describe }}
             </span>
@@ -59,12 +56,13 @@
         </div>
       </div>
     </div>
-    <mat-tab-group style="background-color: var(--md-sys-color-surface)"
-      [(selectedIndex)]="activeTab"
+    <mat-tab-group
       (selectedTabChange)="onTabChange($event)"
+      [(selectedIndex)]="activeTab"
       class="sticky-tab-group"
       mat-align-tabs="start"
       mat-stretch-tabs="false"
+      style="background-color: var(--md-sys-color-surface)"
     >
       <mat-tab label="Home"></mat-tab>
       <mat-tab label="Videos"></mat-tab>

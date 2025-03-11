@@ -306,15 +306,12 @@ export class VideosService {
       }
 
       if (userId != null) {
+        console.log('User ID:', userId);
         // Update video history
         const { error } = await this.supabase.rpc('upsert_watch_history', {
           p_video_id: videoId,
           p_user_id: userId,
         });
-
-        if (error) {
-          throw new HttpException(error, HttpStatus.BAD_REQUEST);
-        }
       }
 
       return data[0];

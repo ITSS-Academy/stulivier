@@ -1,19 +1,15 @@
 <div id="container">
   <div id="header">
-    <span id="title">Profile edit instructions</span>
-    <button (click)="closeDialog()" aria-label="Close dialog" mat-icon-button>
-      <mat-icon class="material-symbols-rounded">close</mat-icon>
-    </button>
+    <span id="title">Channel customization </span>
+    <mat-icon (click)="onCancel()" class="material-symbols-rounded icon"
+      >close
+    </mat-icon>
   </div>
   <cdk-virtual-scroll-viewport id="scroll" itemSize="50">
-    <form [formGroup]="editProfile" id="form-container">
+    <form [formGroup]="editProfileForm" id="form-container">
       <div class="upload-video">
         <div
-          #dropZone
           (click)="fileInputBackground.click()"
-          (dragleave)="onDragLeave($event, 'background')"
-          (dragover)="onDragOver($event, 'background')"
-          (drop)="onDrop($event, 'background')"
           [style.border]="previewBackground ? 'none' : 'block'"
           class="upload-video-ouline-ouside"
         >
@@ -27,10 +23,6 @@
                 fontIcon="upload"
               ></mat-icon>
             </div>
-            <div class="slot">
-              Drag and drop photo here to change your background
-            </div>
-            <div class="or-click-this">Or click this box to select a photo</div>
           </div>
           <input
             #fileInputBackground
@@ -47,77 +39,56 @@
           />
         </div>
         <div class="form-container">
-        <div class="form-left">
-        <mat-form-field
-          appearance="outline"
-          style="width: 100%; margin-top: 10px"
-        >
+          <div class="form-left">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Describe</mat-label>
+              <textarea
+                #textarea
+                (input)="autoResize()"
+                [value]="(user$ | async)?.describe"
+                formControlName="describe"
+                matInput
+                maxlength="1000"
+                placeholder="Input describe"
+              ></textarea>
+            </mat-form-field>
 
-          <mat-label>Channel name</mat-label>
-          <input
-            [value]="(user$ | async)?.username"
-            matInput
-            placeholder="Input channel name"
-          />
-          <!--      <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>-->
-          <!--      <mat-hint>Hint</mat-hint>-->
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label>Describe</mat-label>
-          <textarea
-            #textarea
-            [value]="(user$ | async)?.describe"
-            matInput
-            maxlength="1000"
-            placeholder="Input describe"
-            (input)="autoResize()"
-          ></textarea>
-          <!--      <mat-hint>Hint</mat-hint>-->
-        </mat-form-field>
-
-        <div class="input-data-item">
-<!--          <span>Change your avatar image</span>-->
-          <input
-            #fileInputAvatar
-            (change)="onFileSelectedAvatar($event)"
-            accept="image/*"
-            style="display: none"
-            type="file"
-          />
-<!--          <button-->
-<!--            (click)="fileInputAvatar.click()"-->
-<!--            extended-->
-<!--            mat-fab-->
-<!--            style="height: 40px"-->
-<!--          >-->
-<!--            <mat-icon class="material-symbols-rounded">smb_share</mat-icon>-->
-<!--            Upload photo-->
-<!--          </button>-->
-        </div>
-        </div>
-          <div class="form-right">
-            <p>Avatar preview</p>
-            <div class="avatar-preview"
-                #dropZoneAvatar
-                 (click)="fileInputAvatar.click()"
-                 (dragleave)="onDragLeave($event, 'avatar')"
-                 (dragover)="onDragOver($event, 'avatar')"
-                 (drop)="onDrop($event, 'avatar')"
-                 [style.border]="previewAvatar ? 'none' : 'block'">
-              <p [style.display]="previewAvatar ? 'none' : 'block'">Choose to change your avatar image</p>
-            <img
-              [src]="previewAvatar"
-              class="preview-image"
-              alt="Preview"
-              [style.display]="previewAvatar ? 'block' : 'none'">
+            <div class="input-data-item">
+              <input
+                #fileInputAvatar
+                (change)="onFileSelectedAvatar($event)"
+                accept="image/*"
+                style="display: none"
+                type="file"
+              />
             </div>
           </div>
-      </div>
+          <div class="form-right">
+            <p>Avatar preview</p>
+            <div
+              (click)="fileInputAvatar.click()"
+              [style.border]="previewAvatar ? 'none' : 'block'"
+              class="avatar-preview"
+            >
+              <img
+                [src]="previewAvatar"
+                [style.display]="previewAvatar ? 'block' : 'none'"
+                alt="Preview"
+                class="preview-image"
+              />
+            </div>
+          </div>
+        </div>
 
         <div class="button-group">
-          <button color="primary" mat-flat-button>Save</button>
-          <button color="warn" mat-stroked-button>Cancel</button>
+          <button
+            (click)="onSave()"
+            [disabled]="editProfileForm.invalid"
+            mat-flat-button
+          >
+            Save
+          </button>
+          <button (click)="onCancel()" mat-stroked-button>Cancel</button>
         </div>
       </div>
     </form>

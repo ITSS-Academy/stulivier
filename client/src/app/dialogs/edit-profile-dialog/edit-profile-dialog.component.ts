@@ -1,23 +1,34 @@
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   CdkFixedSizeVirtualScroll,
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
+import { MatButton } from '@angular/material/button';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
 import {
-  MatButton,
-  MatFabButton,
-  MatIconButton,
-} from '@angular/material/button';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatIcon} from '@angular/material/icon';
-import {MatInput} from '@angular/material/input';
-import {FormGroup, ReactiveFormsModule} from '@angular/forms';
-import {UserModel} from '../../../models/user.model';
-import {DialogRef} from '@angular/cdk/dialog';
-import {Observable} from 'rxjs';
-import {Store} from '@ngrx/store';
-import {UserState} from '../../../ngrxs/user/user.state';
-import {AsyncPipe} from '@angular/common';
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { UserModel } from '../../../models/user.model';
+import { DialogRef } from '@angular/cdk/dialog';
+import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { UserState } from '../../../ngrxs/user/user.state';
+import { AsyncPipe } from '@angular/common';
+import * as UserActions from '../../../ngrxs/user/user.actions';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-edit-profile-dialog',
@@ -26,10 +37,8 @@ import {AsyncPipe} from '@angular/common';
     CdkFixedSizeVirtualScroll,
     CdkVirtualScrollViewport,
     MatButton,
-    MatFabButton,
     MatFormField,
     MatIcon,
-    MatIconButton,
     MatInput,
     MatLabel,
     ReactiveFormsModule,
@@ -38,46 +47,54 @@ import {AsyncPipe} from '@angular/common';
   templateUrl: './edit-profile-dialog.component.html',
   styleUrl: './edit-profile-dialog.component.scss',
 })
-export class EditProfileDialogComponent {
-  @ViewChild('textarea', {static: false})
+export class EditProfileDialogComponent implements OnInit, OnDestroy {
+  @ViewChild('textarea', { static: false })
+  subscriptions: Subscription[] = [];
   textarea!: ElementRef<HTMLTextAreaElement>;
-  @Input() Progress!: number;
-  value = 90;
-  editProfile = new FormGroup({});
+  editProfileForm!: FormGroup;
   user$!: Observable<UserModel>;
-  @ViewChild('dropZone', {static: false}) dropZone!: ElementRef;
-  @ViewChild('dropZoneAvatar', {static: false}) dropZoneAvatar!: ElementRef;
-  previewBackground: string | null = null;
+  user!: UserModel;
+  previewBackground!: string;
+  previewAvatar!: string;
+  backgroundFile!: File;
+  avatarFile!: File;
 
   constructor(
     private dialogRef: DialogRef<EditProfileDialogComponent>,
-    private store: Store<{ user: UserState }>
+    private store: Store<{ user: UserState }>,
+    private fb: FormBuilder,
+    private dialog: MatDialog,
   ) {
     this.user$ = this.store.select('user', 'user');
+  }
+
+  ngOnInit() {
+    this.editProfileForm = this.fb.group({
+      describe: new FormControl('', Validators.required),
+    });
+
+    this.subscriptions.push(
+      this.user$.subscribe((user) => {
+        if (user) {
+          this.user = user;
+          this.editProfileForm.patchValue({ describe: user.describe });
+          this.previewBackground = user.background_url || '';
+          this.previewAvatar = user.avatar_url;
+        }
+      }),
+    );
   }
 
   closeDialog() {
     this.dialogRef.close();
   }
 
-  // onFileSelected(event: Event): void {
-  //   const input = event.target as HTMLInputElement;
-  //   if (input.files && input.files.length > 0) {
-  //     const file = input.files[0];
-  //     // Handle the selected file
-  //     console.log(file);
-  //   }
-  // }
-
   onFileSelectedBackGround(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       this.previewBackground = URL.createObjectURL(file);
+      this.backgroundFile = file;
     }
-  }
-
-  ngAfterViewInit() {
-    this.autoResize(); // Gọi ngay khi component render
   }
 
   autoResize() {
@@ -88,53 +105,69 @@ export class EditProfileDialogComponent {
     }
   }
 
-
-  onDragOver(event: DragEvent, type: 'background' | 'avatar') {
-    event.preventDefault();
-    if (type === 'background') {
-      this.dropZone.nativeElement.classList.add('drag-over');
-    } else {
-      this.dropZoneAvatar.nativeElement.classList.add('drag-over');
-    }
-  }
-
-  onDragLeave(event: DragEvent, type: 'background' | 'avatar') {
-    if (type === 'background') {
-      this.dropZone.nativeElement.classList.remove('drag-over');
-    } else {
-      this.dropZoneAvatar.nativeElement.classList.remove('drag-over');
-    }
-  }
-
-  onDrop(event: DragEvent, type: 'background' | 'avatar') {
-    event.preventDefault();
-    const files = event.dataTransfer?.files;
-    if (files && files.length > 0) {
-      const file = files[0];
-      if (type === 'background') {
-        this.dropZone.nativeElement.classList.remove('drag-over');
-        this.previewBackground = URL.createObjectURL(file);
-      } else {
-        this.dropZoneAvatar.nativeElement.classList.remove('drag-over');
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.previewAvatar = e.target?.result ?? null;
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-  }
-
-  previewAvatar: string | ArrayBuffer | null | undefined = null;
-
   onFileSelectedAvatar(event: Event) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        this.previewAvatar = e.target?.result ?? null;
+        this.previewAvatar = e.target?.result as string;
+        this.avatarFile = file;
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  onSave(): void {
+    if (this.editProfileForm.invalid) {
+      return;
+    }
+    if (this.avatarFile) {
+      this.store.dispatch(
+        UserActions.updateAvatar({
+          avatar: this.avatarFile,
+          userId: this.user.id,
+        }),
+      );
+    }
+    if (this.backgroundFile) {
+      this.store.dispatch(
+        UserActions.updateChannelImage({
+          channelImg: this.backgroundFile,
+          userId: this.user.id,
+        }),
+      );
+    }
+    this.store.dispatch(
+      UserActions.updateDescribe({
+        userId: this.user.id,
+        describe: this.editProfileForm.value.describe,
+      }),
+    );
+    this.dialogRef.close();
+  }
+
+  onCancel() {
+    if (
+      this.avatarFile ||
+      this.backgroundFile ||
+      this.editProfileForm.value.describe !== this.user.describe
+    ) {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: {
+          message: 'You have unsaved changes. Are you sure you want to leave?',
+        },
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.dialogRef.close();
+        }
+      });
+    } else {
+      this.dialogRef.close();
+    }
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

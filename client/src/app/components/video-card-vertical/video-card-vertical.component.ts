@@ -38,6 +38,7 @@ export class VideoCardVerticalComponent
   @Input() playlistId: string | undefined;
   @Input() index!: number;
   @Input() highlight = false;
+  routerLink!: string;
 
   readonly dialog = inject(MatDialog);
   subscriptions: Subscription[] = [];
@@ -56,6 +57,7 @@ export class VideoCardVerticalComponent
     private alertService: AlertService,
   ) {
     this.isSidebarOpen$ = this.store.select('sidebar', 'isSidebarOpen');
+    this.routerLink = this.router.url;
   }
 
   ngOnInit() {
@@ -190,6 +192,15 @@ export class VideoCardVerticalComponent
         }),
       );
     }
+  }
+
+  removeVideoFromWatchLater() {
+    this.store.dispatch(
+      PlaylistActions.deleteWatchLaterPlaylist({
+        videoId: this.video.id,
+        userId: this.user.id,
+      }),
+    );
   }
 
   ngOnDestroy() {
