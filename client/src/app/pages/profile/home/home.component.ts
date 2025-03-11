@@ -2,7 +2,7 @@ import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core
 import {VideoCardHorizontalComponent} from '../../../components/video-card-horizontal/video-card-horizontal.component';
 import {MatButton, MatFabButton, MatMiniFabButton} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import {AsyncPipe} from '@angular/common';
+import {AsyncPipe, DatePipe} from '@angular/common';
 import {VideoCardVerticalComponent} from '../../../components/video-card-vertical/video-card-vertical.component';
 import {Observable, Subscription, switchMap, tap} from 'rxjs';
 import {VideoModel} from '../../../../models/video.model';
@@ -16,7 +16,7 @@ import {PlaylistState} from '../../../../ngrxs/playlist/playlist.state';
 import {PlaylistModel} from '../../../../models/playlist.model';
 import {UserModel} from '../../../../models/user.model';
 import {UserState} from '../../../../ngrxs/user/user.state';
-import {filter, take} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -28,7 +28,9 @@ import {filter, take} from 'rxjs/operators';
     AsyncPipe,
     VideoCardVerticalComponent,
     PlaylistCardComponent,
-    RouterLink
+    RouterLink,
+    VideoCardHorizontalComponent,
+    DatePipe
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -38,6 +40,7 @@ export class HomeComponent implements OnInit{
   videos$: Observable<VideoModel[]>;
   playlists$: Observable<PlaylistModel[]>;
   user$!: Observable<UserModel>;
+  randomVideo!: VideoModel | null; // Dữ liệu xáo trộn
 
   constructor(private store: Store<{ video: VideoState, playlist: PlaylistState, user: UserState }>,
               private renderer: Renderer2, private el: ElementRef) {
@@ -56,8 +59,11 @@ export class HomeComponent implements OnInit{
     ).subscribe(user => {
       this.store.dispatch(PlaylistActions.getPlaylistByUserId({ id: user.id }));
     });
-
-
+    this.videos$.subscribe(videos => {
+      if (videos.length > 0) {
+        this.randomVideo = videos[Math.floor(Math.random() * videos.length)];
+      }
+    });
   }
 
   ngOnInit() {
@@ -127,6 +133,4 @@ export class HomeComponent implements OnInit{
       }
     });
   }
-
-
 }

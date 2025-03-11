@@ -121,3 +121,63 @@
     }
   }
 }
+
+.recommend-video:hover {
+  background: #6b72b3 !important;
+}
+
+.recommend-video {
+  color: var(--md-sys-color-on-surface);
+  display: flex;
+  max-height: 234px;
+  //flex-direction: column;
+  padding: 20px;
+  gap: 50px;
+  cursor: pointer;
+  border-radius: 10px;
+  overflow: hidden; /* Ẩn phần dư */
+
+
+  .title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    padding-bottom: 20px;
+  }
+
+  .info {
+
+    .in-info {
+      display: flex;
+      margin-bottom: 20px;
+
+      .other-info {
+
+
+        .username {
+          font-size: 20px;
+        }
+      }
+
+      img {
+        width: 50px;
+        height: 50px;
+        border-radius: 100%;
+        object-fit: cover;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  img {
+    width: 300px;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+}
+
+.description {
+  //white-space: pre-line;
+  word-wrap: break-word;
+}

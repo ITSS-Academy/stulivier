@@ -146,10 +146,29 @@ export class PlaylistComponent implements OnInit, OnDestroy {
         },
       ),
     );
+
+    this.activatedRoute.queryParams.subscribe(params => {
+      const indexFromUrl = Number(params['index']);
+      if (!isNaN(indexFromUrl)) {
+        this.index = indexFromUrl;
+
+        // Giả lập click vào playlist tương ứng
+        const playlist = this.playlists[indexFromUrl];
+        if (playlist) {
+          this.onClickPlaylist(playlist.id, indexFromUrl);
+        }
+      }
+    });
   }
 
   onClickPlaylist(playlistId: string, index: number) {
     this.store.dispatch(PlaylistActions.getPlaylistById({ id: playlistId }));
+    // Cập nhật index trên URL
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { index },
+      queryParamsHandling: 'merge', // Giữ các query params khác nếu có
+    });
     this.index = index;
   }
 

@@ -13,7 +13,7 @@ import { VideoModel } from '../../../models/video.model';
 import { PlaylistDetailModel } from '../../../models/playlist.model';
 import { UserModel } from '../../../models/user.model';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import { PlaylistState } from '../../../ngrxs/playlist/playlist.state';
 import { UserState } from '../../../ngrxs/user/user.state';
 import { VideoState } from '../../../ngrxs/video/video.state';
@@ -27,6 +27,7 @@ import { CommentState } from '../../../ngrxs/comment/comment.state';
 import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
 import { CommentCardComponent } from '../../components/comment-card/comment-card.component';
 import { CommentModel } from '../../../models/comment.model';
+import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-watch',
@@ -44,6 +45,7 @@ import { CommentModel } from '../../../models/comment.model';
 export class WatchComponent implements OnInit, OnDestroy {
   @ViewChild('media', { static: true }) media!: ElementRef;
   @ViewChild('commentInput') commentInput!: ElementRef;
+  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
 
   isDescriptionExpanded = false;
   videoId!: string;
@@ -224,6 +226,14 @@ export class WatchComponent implements OnInit, OnDestroy {
         }
       }),
     );
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        setTimeout(() => {
+          this.viewport.scrollToIndex(0, 'smooth');
+        }, 100);
+      }
+    });
   }
 
   /**
@@ -484,4 +494,5 @@ export class WatchComponent implements OnInit, OnDestroy {
       this.subscription.forEach((sub) => sub.unsubscribe());
     }
   }
+
 }
