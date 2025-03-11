@@ -27,6 +27,8 @@ import { CommentState } from '../../../ngrxs/comment/comment.state';
 import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
 import { CommentCardComponent } from '../../components/comment-card/comment-card.component';
 import { CommentModel } from '../../../models/comment.model';
+import {signInWithGoogle} from '../../../ngrxs/auth/auth.actions';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-watch',
@@ -68,7 +70,7 @@ export class WatchComponent implements OnInit, OnDestroy {
   comment: string = '';
   createCommentFailure: Observable<string>;
   comments$!: Observable<CommentModel[]>;
-
+  isLoggedIn = false; // Giả sử người dùng chưa đăng nhập
   // scroll: number = 340;
 
   constructor(
@@ -344,6 +346,10 @@ export class WatchComponent implements OnInit, OnDestroy {
   }
 
   createComment(): void {
+    if (!this.isLoggedIn) {
+      console.log('Bạn cần đăng nhập để bình luận.');
+      return;
+    }
     this.store.dispatch(
       CommentActions.createComment({
         comment: {
@@ -355,7 +361,6 @@ export class WatchComponent implements OnInit, OnDestroy {
     );
     this.comment = '';
   }
-
   updateButtonsVisibility() {
     const containers =
       this.el.nativeElement.querySelectorAll('.data-container');
@@ -404,7 +409,19 @@ export class WatchComponent implements OnInit, OnDestroy {
   }
 
   toggleReaction() {
+    if (!this.isLoggedIn) {
+      // Hiển thị thông báo hoặc chuyển hướng đến trang đăng nhập
+      console.log('Bạn cần đăng nhập để like video.');
+      return;
+    }
     this.is_liked = !this.is_liked;
+    // Dispatch action để toggle reaction
+    this.store.dispatch(
+      VideoActions.toggleReaction({
+        videoId: this.videoId,
+        userId: this.user?.id as string,
+      }),
+    );
   }
 
   focusCommentInput() {
@@ -476,4 +493,6 @@ export class WatchComponent implements OnInit, OnDestroy {
       this.subscription.forEach((sub) => sub.unsubscribe());
     }
   }
+
+  protected readonly signInWithGoogle = signInWithGoogle;
 }
