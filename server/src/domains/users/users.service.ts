@@ -1,6 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { FirebaseUserModel } from '../../models/user.model';
 import { createClient } from '@supabase/supabase-js';
+import { randomUUID } from 'crypto';
+import { Multer } from 'multer';
 
 @Injectable()
 export class UsersService {
@@ -58,37 +60,74 @@ export class UsersService {
     }
   }
 
-  async update(userId: string, updateData: any) {
+  async updateChannelImage(userId: string, img: Multer.File) {
     try {
-      if (!userId) {
-        throw new HttpException('User ID is missing', HttpStatus.BAD_REQUEST);
-      }
-
-      // Chỉ lấy các trường cần update, tránh gửi undefined lên Supabase
-      const updateFields: any = {};
-      if (updateData.username) updateFields.username = updateData.username;
-      if (updateData.describe) updateFields.describe = updateData.describe;
-      if (updateData.avatar_url) updateFields.avatar_url = updateData.avatar_url;
-      if (updateData.background_url) updateFields.background_url = updateData.background_url;
-
-      if (Object.keys(updateFields).length === 0) {
-        throw new HttpException('No valid fields to update', HttpStatus.BAD_REQUEST);
-      }
-
-      const { error } = await this.supabase
-        .from('users')
-        .update(updateFields)
-        .eq('id', userId);
+      const uuid = randomUUID();
+      const { data, error } = await this.supabase.storage
+        .from('background_url')
+        .upload(`backgrounds/${userId}/${uuid}`, img.buffer, {
+          contentType: img.mimetype, // Ensure the correct MIME type is set
+        });
 
       if (error) {
         throw new HttpException(error, HttpStatus.BAD_REQUEST);
       }
 
-      return { message: 'User updated successfully' };
+      // get the public url of the image
+      const { publicURL } = this.supabase.storage
+        .from('background_url')
+        .getPublicUrl(`backgrounds/${userId}/${uuid}`);
+
+      // update the user avatar
+      await this.supabase
+        .from('users')
+        .update({ background_url: publicURL })
+        .eq('id', userId);
+
+      return data;
     } catch (e) {
       throw new HttpException(e, HttpStatus.BAD_REQUEST);
     }
   }
 
+  async updateAvatar(userId: string, img: Multer.File) {
+    try {
+      const uuid = randomUUID();
+      const { data, error } = await this.supabase.storage
+        .from('background_url')
+        .upload(`avatars/${userId}/${uuid}`, img.buffer, {
+          contentType: img.mimetype, // Ensure the correct MIME type is set
+        });
 
+      if (error) {
+        throw new HttpException(error, HttpStatus.BAD_REQUEST);
+      }
+
+      // get the public url of the image
+      const { publicURL } = this.supabase.storage
+        .from('background_url')
+        .getPublicUrl(`avatars/${userId}/${uuid}`);
+
+      // update the user avatar
+      await this.supabase
+        .from('users')
+        .update({ avatar_url: publicURL })
+        .eq('id', userId);
+
+      return data;
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async updateDescribe(userId: string, description: string) {
+    try {
+      await this.supabase
+        .from('users')
+        .update({ describe: description })
+        .eq('id', userId);
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
+  }
 }

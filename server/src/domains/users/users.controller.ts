@@ -1,5 +1,15 @@
-import { Controller, Get, Post, Put, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Multer } from 'multer';
 
 @Controller('users')
 export class UsersController {
@@ -10,17 +20,33 @@ export class UsersController {
     return await this.usersService.create(req.user);
   }
 
-  @Put()
-  async update(@Request() req: any) {
-    // console.log('Auth user:', req.user);  // Kiểm tra dữ liệu từ Firebase
-    // console.log('Request body:', req.body);  // Kiểm tra dữ liệu từ client
-    // console.log('Updating user:', req.user); // Kiểm tra dữ liệu gửi lên
-    return await this.usersService.update(req.user.user_id, req.body);
-  }
-
-
   @Get()
   async findOne(@Request() req: any) {
     return await this.usersService.findOne(req.user.uid || req.user.id);
+  }
+
+  @Post('channel')
+  @UseInterceptors(FileInterceptor('file'))
+  async updateImage(
+    @UploadedFile() file: Multer.File,
+    @Body('userId') userId: string,
+  ) {
+    const parsedUserId = JSON.parse(userId);
+    return await this.usersService.updateChannelImage(parsedUserId, file);
+  }
+
+  @Post('avatar')
+  @UseInterceptors(FileInterceptor('file'))
+  async updateAvatar(
+    @UploadedFile() file: Multer.File,
+    @Body('userId') userId: string,
+  ) {
+    const parsedUserId = JSON.parse(userId);
+    return await this.usersService.updateAvatar(parsedUserId, file);
+  }
+
+  @Post('describe')
+  async updateDescribe(@Body() body: any) {
+    return await this.usersService.updateDescribe(body.userId, body.describe);
   }
 }

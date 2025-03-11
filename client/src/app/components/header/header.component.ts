@@ -108,6 +108,5 @@ export class HeaderComponent {
   signOut() {
     this.store.dispatch(AuthActions.signOut());
     this.store.dispatch(UserActions.clearState());
-    this.store.dispatch(UserActions.clearState());
   }
 }

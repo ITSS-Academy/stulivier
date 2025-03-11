@@ -94,7 +94,7 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
     private store: Store<{ category: CategoryState; video: VideoState }>,
     private videoService: VideoService,
     private alertService: AlertService,
-    private dialog: MatDialog, // Inject MatDialog
+    private dialog: MatDialog,
   ) {
     this.categories$ = this.store.select('category', 'categories');
     this.isCreateVideoSuccess$ = this.store.select(
