@@ -1,0 +1,74 @@
+<div id="container">
+  <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
+    <h2>Video management page</h2>
+
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" class="mat-table">
+
+        <!-- No. Column -->
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef> No. </th>
+          <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+        </ng-container>
+
+        <!-- Thumbnail Column -->
+        <ng-container matColumnDef="thumbnail">
+          <th mat-header-cell *matHeaderCellDef> Video </th>
+          <td mat-cell *matCellDef="let element">
+            <img [src]="element.thumbnail_url"
+                 alt="Video thumbnail"
+                [routerLink]="['/watch']"
+                 [queryParams]="{ v: element.id}">
+          </td>
+        </ng-container>
+
+        <!-- Title Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef  class="title"> Title </th>
+          <td mat-cell *matCellDef="let element"  class="title"> {{ element.title }} </td>
+        </ng-container>
+
+        <!-- Description Column -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef  class="describe"> Description </th>
+          <td mat-cell *matCellDef="let element"  class="describe"> {{ element.description }} </td>
+        </ng-container>
+
+        <!-- Created At Column -->
+        <ng-container matColumnDef="created_at">
+          <th mat-header-cell *matHeaderCellDef> Created at </th>
+          <td mat-cell *matCellDef="let element">
+            {{ formatDate(element.created_at).split(' ')[0] }} <br>
+            {{ formatDate(element.created_at).split(' ')[1] }}
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element" class="action">
+            <button mat-icon-button class="edit-btn" (click)="openEditVideoDialog(element)">
+              <mat-icon class="material-symbols-rounded">edit</mat-icon>
+            </button>
+            <br>
+            <button mat-icon-button class="delete-btn" (click)="openDeleteVideoDialog()">
+              <mat-icon class="material-symbols-rounded">delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Add header and row definitions -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      </table>
+      @if (videos$ | async; as videos) {
+        @if (videos.length > 5) {
+          <mat-paginator [pageSizeOptions]="[ 5, 10, 20 ]" showFirstLastButtons></mat-paginator>
+        }
+      }
+
+    </div>
+
+  </cdk-virtual-scroll-viewport>
+</div>

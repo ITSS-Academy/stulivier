@@ -6,7 +6,7 @@ import {
   Request,
   Get,
   Req,
-  UploadedFiles,
+  UploadedFiles, Put,
 } from '@nestjs/common';
 import { VideosService } from './videos.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -98,5 +98,12 @@ export class VideosController {
   async getLikedVideos(@Request() req: any) {
     const { userId } = req.query;
     return await this.videosService.getLikedVideos(userId);
+  }
+
+  @Put()
+  async update(@Request() req: any) {
+    // console.log('Request body:', req.body);  // Kiểm tra dữ liệu từ client
+    // console.log('Updating user:', req.user); // Kiểm tra dữ liệu gửi lên
+    return await this.videosService.updateVideo(req.body);
   }
 }

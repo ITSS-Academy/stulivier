@@ -4,6 +4,8 @@ import { map, exhaustMap, catchError } from 'rxjs/operators';
 import * as VideoActions from './video.actions';
 import { VideoService } from '../../services/video.service';
 import { inject } from '@angular/core';
+import {updateVideo, updateVideoFailure, updateVideoSuccess} from './video.actions';
+import { UpdateVideoModel } from '../../models/video.model';
 
 export const createVideo$ = createEffect(
   () => {
@@ -27,6 +29,31 @@ export const createVideo$ = createEffect(
   },
   { functional: true },
 );
+
+export const updateVideo$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const videoService = inject(VideoService);
+
+    return actions$.pipe(
+      ofType(updateVideo),
+      exhaustMap(({ video }) => {
+        if (!video.id) {
+          return of(updateVideoFailure({ error: 'Missing videoId' }));
+        }
+
+        return videoService.updateVideo(video).pipe(
+          map((updatedVideo) => updateVideoSuccess({ video: updatedVideo })),
+          catchError((error) => of(updateVideoFailure({ error })))
+        );
+      })
+    );
+  },
+  { functional: true }
+);
+
+
+
 
 export const getAllVideos$ = createEffect(
   () => {

@@ -79,6 +79,10 @@
                 </div>
               </div>
             </div>
+            <button mat-menu-item [routerLink]="['/video-control']">
+              <mat-icon class="material-symbols-rounded">video_settings</mat-icon>
+              <span>Video control</span>
+            </button>
             <button mat-menu-item [routerLink]="['/login']" (click)="signOut()">
               <mat-icon class="material-symbols-rounded">logout</mat-icon>
               <span>Logout</span>

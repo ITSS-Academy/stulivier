@@ -1,0 +1,82 @@
+<div id="container">
+  <div id="header">
+    <span id="title">Edit video</span>
+    <button (click)="closeDialog()" mat-icon-button>
+      <mat-icon class="material-symbols-rounded">close</mat-icon>
+    </button>
+  </div>
+
+  <div id="content-container">
+    <form [formGroup]="editForm">
+      <div id="step2-container">
+        <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
+          <div class="form-left">
+            <mat-form-field>
+              <mat-label>Title</mat-label>
+              <input
+                matInput
+                maxlength="100"
+                placeholder="Add a title that describes your video"
+                formControlName="title"
+                required
+              />
+              <mat-hint align="end" class="hint">
+<!--                {{ (editForm.get("fileName")?.value ?? "").length }}/100-->
+              </mat-hint>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Description</mat-label>
+              <textarea
+                formControlName="description"
+                cdkAutosizeMaxRows="20"
+                cdkAutosizeMinRows="5"
+                cdkTextareaAutosize
+                matInput
+                maxlength="5000"
+                placeholder="Tell viewers about your video"
+              ></textarea>
+              <mat-hint align="end" class="hint">
+<!--                {{-->
+<!--                  (editForm.get("description")?.value ?? "").length-->
+<!--                }}/5000-->
+              </mat-hint>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Category</mat-label>
+              <mat-select formControlName="categories" multiple>
+                @for (category of categories$ | async; track $index) {
+                  <mat-option [value]="category.id"
+                  >{{ category.name }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </cdk-virtual-scroll-viewport>
+
+        <div class="form-right">
+          <div class="thumbnail-container">
+              <div class="thumbnail-img">
+                <img
+                  [src]="video.thumbnail_url"
+                  alt="Thumbnail"
+                />
+              </div>
+          </div>
+        </div>
+      </div>
+      <div id="footer-container">
+        <button
+          (click)="onEditClick()"
+          [disabled]="editForm.invalid"
+          id="create-button"
+          mat-raised-button
+        >
+          Confirm
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

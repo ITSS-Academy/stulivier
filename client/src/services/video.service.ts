@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClientAuth } from '../utils/http-client-auth';
-import { CreateVideoDto } from '../models/video.model';
+import {CreateVideoDto, UpdateVideoModel} from '../models/video.model';
 import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
+import {UserModel} from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -60,5 +61,9 @@ export class VideoService {
 
   getVideoLikedByUserId(userId: string) {
     return this.http.get('videos/liked', { params: { userId } });
+  }
+
+  updateVideo(video: UpdateVideoModel) {
+    return this.http.put(`videos`, video);
   }
 }
