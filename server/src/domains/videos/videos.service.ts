@@ -4,7 +4,7 @@ import * as fs from 'fs-extra';
 import * as ffmpeg from 'fluent-ffmpeg';
 import * as ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
 import { Multer } from 'multer';
-import { CreateVideoModel } from '../../models/video.model';
+import { CreateVideoModel, UpdateVideoModel } from '../../models/video.model';
 import * as path from 'node:path';
 import slugify from 'slugify';
 import { VideoGateway } from './video.gateway';
@@ -440,4 +440,35 @@ export class VideosService {
       throw new HttpException(e, HttpStatus.BAD_REQUEST);
     }
   }
+
+  async updateVideo(video: UpdateVideoModel) {
+    try {
+      if (!video.id) {
+        throw new HttpException('Video ID is missing', HttpStatus.BAD_REQUEST);
+      }
+
+      // Chỉ lấy các trường cần update, tránh gửi undefined lên Supabase
+      const updateFields: any = {};
+      if (video.title) updateFields.title = video.title;
+      if (video.description) updateFields.description = video.description;
+      if (video.category_id) updateFields.category_id = video.category_id;
+
+      if (Object.keys(updateFields).length === 0) {
+        throw new HttpException('No valid fields to update', HttpStatus.BAD_REQUEST);
+      }
+
+      const { error } = await this.supabase.from('videos')
+        .update(updateFields)
+        .eq('id', video.id);
+
+      if (error) {
+        throw new HttpException(error, HttpStatus.BAD_REQUEST);
+      }
+
+      return { message: 'Video updated successfully' };
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
+  }
+
 }

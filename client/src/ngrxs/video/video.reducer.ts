@@ -47,6 +47,11 @@ const initialState: VideoState = {
   isGettingVideosLikedByUser: false,
   isGetVideosLikedByUserSuccess: false,
   getVideosLikedByUserErrorMessage: '',
+
+  isUpdatingVideo: false,
+  isUpdateVideoSuccess: false,
+  updateVideoErrorMessages: '',
+
 };
 
 export const videoReducer = createReducer(
@@ -337,7 +342,80 @@ export const videoReducer = createReducer(
   on(VideoActions.clearState, (state, action) => {
     console.log(action.type);
     return <VideoState>{
-      ...initialState,
+      ...state,
+      isCreatingVideo: false,
+      isCreateVideoSuccess: false,
+      createVideoErrorMessages: '',
+
+      isGettingAllVideos: false,
+      isGetAllVideosSuccess: false,
+      getAllVideosErrorMessage: '',
+
+      isGettingVideoById: false,
+      isGetVideoByIdSuccess: false,
+      getVideoByIdErrorMessage: '',
+
+      isUpdatingWatchTime: false,
+      isUpdateWatchTimeSuccess: false,
+      updateWatchTimeErrorMessages: '',
+
+      isIncreasingViewCount: false,
+      isIncreaseViewCountSuccess: false,
+      increaseViewCountErrorMessages: '',
+
+      isGettingVideoByCategoryId: false,
+      isGetVideoByCategoryIdSuccess: false,
+      getVideoByCategoryIdErrorMessage: '',
+
+      isToggleReaction: false,
+      isToggleReactionSuccess: false,
+      toggleReactionErrorMessages: '',
+
+      isSearchingVideos: false,
+      isSearchVideosSuccess: false,
+      searchVideosErrorMessage: '',
+
+      isGettingVideosByUserId: false,
+      isGetVideosByUserIdSuccess: false,
+      getVideosByUserIdErrorMessage: '',
+
+      isGettingVideosLikedByUser: false,
+      isGetVideosLikedByUserSuccess: false,
+      getVideosLikedByUserErrorMessage: '',
+
+      isUpdatingVideo: false,
+      isUpdateVideoSuccess: false,
+      updateVideoErrorMessages: '',
     };
   }),
+
+  on(VideoActions.updateVideo, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isUpdatingVideo: true,
+      isUpdateVideoSuccess: false,
+    };
+  }),
+
+  on(VideoActions.updateVideoSuccess, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isUpdatingVideo: false,
+      isUpdateVideoSuccess: true,
+      video: { ...state.video, ...action.video },
+    };
+  }),
+
+  on(VideoActions.updateVideoFailure, (state, action) => {
+    console.log(action.type);
+    return <VideoState>{
+      ...state,
+      isUpdatingVideo: false,
+      updateVideoErrorMessages: action.error,
+    };
+  }),
+
+
 );

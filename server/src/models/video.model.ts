@@ -24,3 +24,10 @@ export interface CreateVideoModel {
   category_id: string[];
   playlist_id: string[];
 }
+
+export interface UpdateVideoModel {
+  id: string;
+  title: string;
+  description: string;
+  category_id: string[];
+}

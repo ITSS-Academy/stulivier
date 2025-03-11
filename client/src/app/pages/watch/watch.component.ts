@@ -3,7 +3,7 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  Renderer2,
+  Renderer2, viewChild,
   ViewChild,
 } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
@@ -28,6 +28,10 @@ import { VideoCardVerticalComponent } from '../../components/video-card-vertical
 import { CommentCardComponent } from '../../components/comment-card/comment-card.component';
 import { CommentModel } from '../../../models/comment.model';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
+import {MatMenuTrigger} from '@angular/material/menu';
+import {NgIf} from '@angular/common';
+import * as AuthActions from '../../../ngrxs/auth/auth.actions';
+import {AuthState} from '../../../ngrxs/auth/auth.state';
 
 @Component({
   selector: 'app-watch',
@@ -43,6 +47,7 @@ import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
   styleUrl: './watch.component.scss',
 })
 export class WatchComponent implements OnInit, OnDestroy {
+  readonly menuTrigger = viewChild.required(MatMenuTrigger);
   @ViewChild('media', { static: true }) media!: ElementRef;
   @ViewChild('commentInput') commentInput!: ElementRef;
   @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
@@ -72,10 +77,13 @@ export class WatchComponent implements OnInit, OnDestroy {
   comments$!: Observable<CommentModel[]>;
 
   // scroll: number = 340;
+  isCheckLogin$!: Observable<boolean>;
+  user$: Observable<UserModel>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private store: Store<{
+      auth: AuthState;
       video: VideoState;
       user: UserState;
       playlist: PlaylistState;
@@ -102,10 +110,16 @@ export class WatchComponent implements OnInit, OnDestroy {
     this.isGetPlaylistByIdSuccess$ = this.store.select(
       (state) => state.playlist.isGetPlaylistByIdSuccess,
     );
+    this.isCheckLogin$ = this.store.select('auth', 'isCheckLoggedIn')
+    this.user$ = this.store.select('user', 'user');
   }
 
   toggleDescription(): void {
     this.isDescriptionExpanded = !this.isDescriptionExpanded;
+  }
+
+  signInWithGoogle() {
+    this.store.dispatch(AuthActions.signInWithGoogle());
   }
 
   ngOnInit(): void {
@@ -120,6 +134,9 @@ export class WatchComponent implements OnInit, OnDestroy {
         this.activatedRoute.queryParamMap,
       ]).subscribe(([user, params]) => {
         this.user = user;
+        this.isCheckLogin$ = this.store.select('user', 'user').pipe(
+          map(user => !!user)
+        );
         this.videoId = params.get('v') || '';
         this.listId = params.get('list') || '';
         this.startRadio = Number(params.get('index') || 0);
@@ -423,10 +440,17 @@ export class WatchComponent implements OnInit, OnDestroy {
 
   toggleReaction() {
     this.is_liked = !this.is_liked;
+    // Dispatch the action to toggle the reaction
+    this.store.dispatch(
+      VideoActions.toggleReaction({
+        videoId: this.videoId,
+        userId: this.user?.id as string,
+      }),
+    );
   }
 
   focusCommentInput() {
-    this.commentInput.nativeElement.focus();
+      this.commentInput.nativeElement.focus();
   }
 
   nextVideo() {

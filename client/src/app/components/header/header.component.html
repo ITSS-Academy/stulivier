@@ -48,13 +48,36 @@
   </div>
 
   <div class="right">
-    <button (click)="openCreateVideoDialog()" mat-flat-button>
-      <mat-icon
-        class="material-symbols-rounded icon-add"
-        fontIcon="add"
-      ></mat-icon>
-      Create
-    </button>
+    @defer (when (isCheckLogin$|async)) {
+      @if ((user$ | async)?.id) {
+        <button (click)="openCreateVideoDialog()" mat-flat-button>
+          <mat-icon
+            class="material-symbols-rounded icon-add"
+            fontIcon="add"
+          ></mat-icon>
+          Create
+        </button>
+      } @else {
+        <button
+          mat-flat-button
+          [matMenuTriggerFor]="menuCreate"
+        >
+          <mat-menu #menuCreate="matMenu">
+            <p>You need to be signed in to Create the video.</p>
+            <button
+              mat-flat-button
+              style="margin-left: 10px"
+              [routerLink]="['/login']"
+              (click)="signInWithGoogle()">Sign in</button>
+          </mat-menu>
+          <mat-icon
+            class="material-symbols-rounded icon-add"
+            fontIcon="add"
+          ></mat-icon>
+          Create
+        </button>
+      }
+    }
     @defer (when (isCheckLogin$|async)) {
       @if ((user$ | async)?.id) {
         <div class="avatar">
@@ -79,6 +102,10 @@
                 </div>
               </div>
             </div>
+            <button mat-menu-item [routerLink]="['/video-control']">
+              <mat-icon class="material-symbols-rounded">video_settings</mat-icon>
+              <span>Video control</span>
+            </button>
             <button mat-menu-item [routerLink]="['/login']" (click)="signOut()">
               <mat-icon class="material-symbols-rounded">logout</mat-icon>
               <span>Logout</span>
