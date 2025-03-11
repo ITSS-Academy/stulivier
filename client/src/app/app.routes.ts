@@ -76,6 +76,13 @@ export const routes: Routes = [
   },
 
   {
+    path: 'video-control',
+    loadChildren: () =>
+      import('./pages/video-control/video-control.route').then(
+        (m) => m.VIDEOCONTROL_ROUTES),
+  },
+
+  {
     path: '**',
     redirectTo: 'home',
   },

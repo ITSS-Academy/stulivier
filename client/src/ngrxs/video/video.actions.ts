@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { CreateVideoDto, VideoModel } from '../../models/video.model';
+import {CreateVideoDto, UpdateVideoModel, VideoModel} from '../../models/video.model';
 
 export const toggleMuteVolume = createAction('[Video] Toggle Mute Volume');
 
@@ -142,6 +142,21 @@ export const getVideosLikedByUserSuccess = createAction(
 export const getVideosLikedByUserFailure = createAction(
   '[Video] Get Videos Liked By User Failure',
   props<{ error: string }>(),
+);
+
+export const updateVideo = createAction(
+  '[Video] Update Video',
+  props<{ video: UpdateVideoModel }>()
+);
+
+export const updateVideoSuccess = createAction(
+  '[Video] Update Video Success',
+  props<{ video: UpdateVideoModel }>()
+);
+
+export const updateVideoFailure = createAction(
+  '[Video] Update Video Failure',
+  props<{ error: any }>()
 );
 
 export const clearState = createAction('[Video] Clear State');

@@ -13,6 +13,7 @@ export interface VideoModel {
     username: string;
     avatar_url: string;
   };
+  category_id: [];
 }
 
 export interface CreateVideoDto {
@@ -20,4 +21,11 @@ export interface CreateVideoDto {
   description: string;
   category_id: string[];
   playlist_id: string[];
+}
+
+export interface UpdateVideoModel {
+  id?: string;
+  title?: string;
+  description?: string;
+  category_id?: string[];
 }
