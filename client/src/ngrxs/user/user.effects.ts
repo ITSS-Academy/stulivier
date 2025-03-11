@@ -27,25 +27,6 @@ export const createUser$ = createEffect(
   { functional: true },
 );
 
-export const updateUser$ = createEffect(
-  () => {
-    const actions$ = inject(Actions);
-    const userService = inject(UserService);
-    return actions$.pipe(
-      ofType(UserActions.updateUser),
-      exhaustMap((action) => {
-        return userService.updateUser(action.user).pipe(
-          map(() => UserActions.updateUserSuccess()),
-          catchError((error) => {
-            return of(UserActions.updateUserFailure({ error: error }));
-          }),
-        );
-      }),
-    );
-  },
-  { functional: true },
-);
-
 export const getUserById$ = createEffect(
   () => {
     const actions$ = inject(Actions);
@@ -63,6 +44,73 @@ export const getUserById$ = createEffect(
             return of(
               UserActions.getUserByIdFailure({ error: obj.error.message }),
             );
+          }),
+        );
+      }),
+    );
+  },
+  { functional: true },
+);
+
+export const updateChannelImage$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const userService = inject(UserService);
+    return actions$.pipe(
+      ofType(UserActions.updateChannelImage),
+      exhaustMap((action) => {
+        return userService
+          .updateChannelImage(action.channelImg, action.userId)
+          .pipe(
+            map(() => {
+              return UserActions.updateChannelImageSuccess();
+            }),
+            catchError((error) => {
+              return of(
+                UserActions.updateChannelImageFailure({ error: error }),
+              );
+            }),
+          );
+      }),
+    );
+  },
+  { functional: true },
+);
+
+export const updateAvatar$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const userService = inject(UserService);
+    return actions$.pipe(
+      ofType(UserActions.updateAvatar),
+      exhaustMap((action) => {
+        return userService.updateAvatar(action.avatar, action.userId).pipe(
+          map(() => {
+            return UserActions.updateAvatarSuccess();
+          }),
+          catchError((error) => {
+            return of(UserActions.updateAvatarFailure({ error: error }));
+          }),
+        );
+      }),
+    );
+  },
+  { functional: true },
+);
+
+export const updateDescribe$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const userService = inject(UserService);
+    return actions$.pipe(
+      ofType(UserActions.updateDescribe),
+      exhaustMap((action) => {
+        return userService.updateDescribe(action.userId, action.describe).pipe(
+          map(() => {
+            return UserActions.updateDescribeSuccess();
+          }),
+          catchError((error) => {
+            return of(UserActions.updateDescribeFailure({ error: error }));
           }),
         );
       }),

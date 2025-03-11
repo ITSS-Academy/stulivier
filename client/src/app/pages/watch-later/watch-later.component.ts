@@ -23,6 +23,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { VideoCardVerticalSkeletonComponent } from '../../components/video-card-vertical-skeleton/video-card-vertical-skeleton.component';
 import { AuthState } from '../../../ngrxs/auth/auth.state';
 import * as AuthActions from '../../../ngrxs/auth/auth.actions';
+import { AlertService } from '../../../services/alert.service';
 
 @Component({
   selector: 'app-watch-later',
@@ -48,8 +49,6 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
   videos$!: Observable<VideoModel[]>;
   isCheckLogin$!: Observable<boolean>;
 
-  coverImage: string | ArrayBuffer | null =
-    'https://hybsmigdaummopabuqki.supabase.co/storage/v1/object/public/cover_img//nasa_earth_grid.jpg';
   isGettingWatchLaterPlaylist$!: Observable<boolean>;
 
   constructor(
@@ -60,6 +59,7 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
       auth: AuthState;
     }>,
     private router: Router,
+    private alertService: AlertService,
   ) {
     this.user$ = this.store.select('user', 'user');
     this.playlistDetail$ = this.store.select('playlist', 'playlistDetail');
@@ -91,16 +91,26 @@ export class WatchLaterComponent implements OnInit, OnDestroy {
             );
           }
         }),
+
       this.store
-        .select('playlist', 'playlistDetail')
-        .subscribe((playlistDetail) => {
-          console.log(playlistDetail);
+        .select('playlist', 'isDeleteWatchLaterPlaylistSuccess')
+        .subscribe((isDeleteWatchLaterPlaylistSuccess) => {
+          if (isDeleteWatchLaterPlaylistSuccess) {
+            this.alertService.showAlert(
+              `Delete video in watch later playlist successfully`,
+              'Close',
+              3000,
+              'end',
+              'top',
+            );
+            this.store.dispatch(
+              PlaylistActions.getWatchLaterPlaylistByUserId({
+                userId: this.user.id,
+              }),
+            );
+            this.store.dispatch(PlaylistActions.clearPlaylistState());
+          }
         }),
-      this.isGettingWatchLaterPlaylist$.subscribe(
-        (isGettingWatchLaterPlaylist) => {
-          console.log(isGettingWatchLaterPlaylist);
-        },
-      ),
     );
   }
 

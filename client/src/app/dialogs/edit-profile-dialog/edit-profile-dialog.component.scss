@@ -24,7 +24,7 @@
 
     #title {
       font-size: 1.8rem;
-      color: var(--md-sys-color-on-surface);
+      color: var(--md-sys-color-primary);
     }
   }
 
@@ -61,7 +61,7 @@
 
   .upload-video-ouline-ouside {
     width: 100%;
-    height: 379px;
+    height: calc(100vh * 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -69,6 +69,7 @@
     border: var(--md-sys-color-on-surface) 1px dashed;
     border-radius: 15px;
     margin-bottom: 10px;
+    cursor: pointer;
 
     .upload-video-ouline-ouside.drag-over {
       background-color: #e0f7fa;
@@ -198,23 +199,27 @@
     flex-direction: column;
 
     .avatar-preview {
-      width: 60%;
-      aspect-ratio: 1 / 1; /* Giữ hình vuông */
-      //height: 70%;
+      width: 160px;
+      height: 160px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 10px;
+      border-radius: 50%;
       border: var(--md-sys-color-primary) 1px dashed;
       color: var(--md-sys-color-primary);
       font-size: 15px;
+      cursor: pointer;
 
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 100%;
+        border-radius: 50%;
       }
     }
   }
+}
+
+.icon {
+  color: var(--md-sys-color-primary);
 }

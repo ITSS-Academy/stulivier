@@ -113,59 +113,77 @@ export class WatchComponent implements OnInit, OnDestroy {
         map((videos) => videos.filter((video) => video.id !== this.videoId)),
       );
     this.subscription.push(
-      this.createCommentFailure.subscribe((failure) => {
-        console.error(failure);
-      }),
-      this.store.select('user', 'user').subscribe((user) => {
+      combineLatest([
+        this.store.select('user', 'user'),
+        this.activatedRoute.queryParamMap,
+      ]).subscribe(([user, params]) => {
         this.user = user;
-      }),
-      this.store
-        .select('user', 'isGetUserSuccess')
-        .pipe(
-          filter((isGetSuccess) => isGetSuccess),
-          take(1),
-        )
-        .subscribe(() => {
-          combineLatest([
-            this.activatedRoute.queryParamMap,
-            this.store.select('user', 'isGetUserSuccess'),
-            this.store.select('user', 'isGettingUser'),
-          ]).subscribe(([params, isGetSuccess, isGetting]) => {
-            this.videoId = params.get('v') || '';
-            this.listId = params.get('list') || '';
-            this.startRadio = Number(params.get('index') || 0);
-            this.store.dispatch(VideoActions.getAllVideos());
-            this.store.dispatch(
-              CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
-            );
+        this.videoId = params.get('v') || '';
+        this.listId = params.get('list') || '';
+        this.startRadio = Number(params.get('index') || 0);
 
-            if (isGetSuccess && !isGetting) {
-              if (this.user) {
-                this.store.dispatch(
-                  VideoActions.getVideoById({
-                    videoId: this.videoId,
-                    userId: this.user.id,
-                  }),
-                );
-              }
-              if (this.listId) {
-                this.store.dispatch(
-                  PlaylistActions.getPlaylistById({ id: this.listId }),
-                );
-              }
-            } else {
-              this.store.dispatch(
-                VideoActions.getVideoById({
-                  videoId: this.videoId,
-                  userId: null,
-                }),
-              );
-              this.store.dispatch(
-                PlaylistActions.getPlaylistById({ id: this.listId as string }),
-              );
-            }
-          });
-        }),
+        // Dispatch action lấy video
+        this.store.dispatch(
+          VideoActions.getVideoById({
+            videoId: this.videoId,
+            userId: this.user?.id ? this.user.id : null,
+          }),
+        );
+
+        // Dispatch action lấy playlist nếu có listId
+        if (this.listId) {
+          this.store.dispatch(
+            PlaylistActions.getPlaylistById({ id: this.listId }),
+          );
+        }
+
+        // Dispatch action lấy tất cả video
+        this.store.dispatch(VideoActions.getAllVideos());
+
+        // Dispatch action lấy comments của video
+        this.store.dispatch(
+          CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
+        );
+      }),
+      // this.store
+      //   .select('user', 'isGetUserSuccess')
+      //   .pipe(
+      //     filter((isGetSuccess) => isGetSuccess),
+      //     take(1),
+      //   )
+      //   .subscribe(() => {
+      //     combineLatest([
+      //       this.activatedRoute.queryParamMap,
+      //       this.store.select('user', 'isGetUserSuccess'),
+      //       this.store.select('user', 'isGettingUser'),
+      //     ]).subscribe(([params, isGetSuccess, isGetting]) => {
+      //       this.videoId = params.get('v') || '';
+      //       this.listId = params.get('list') || '';
+      //       this.startRadio = Number(params.get('index') || 0);
+      //       this.store.dispatch(VideoActions.getAllVideos());
+      //       this.store.dispatch(
+      //         CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
+      //       );
+      //       console.log('Video ID:', this.videoId);
+      //
+      //       if (isGetSuccess && !isGetting) {
+      //         if (this.user) {
+      //           this.store.dispatch(
+      //             VideoActions.getVideoById({
+      //               videoId: this.videoId,
+      //               userId: this.user.id,
+      //             }),
+      //           );
+      //         }
+      //         if (this.listId) {
+      //           this.store.dispatch(
+      //             PlaylistActions.getPlaylistById({ id: this.listId }),
+      //           );
+      //         }
+      //       }
+      //     });
+      //   }),
+
       this.isGetVideoSuccess$.subscribe((isGetVideoSuccess) => {
         if (isGetVideoSuccess && this.vgApi) {
           const media = this.vgApi.getDefaultMedia();
@@ -193,16 +211,6 @@ export class WatchComponent implements OnInit, OnDestroy {
 
             containers.forEach((container: HTMLElement) => {
               const data = container.querySelector('.data') as HTMLElement;
-              // const btnLeft = container.querySelector('.button-left') as HTMLElement;
-              // const btnRight = container.querySelector('.button-right') as HTMLElement;
-              // if (!data || !btnLeft || !btnRight) {
-              //   console.error('⚠️ :', { data, btnLeft, btnRight });
-              //   return;
-              // }
-              //
-              // console.log('✅ Found data container:', data);
-              // console.log('👉 Scrolling to:', this.startRadio * 340);
-
               data.scrollLeft = this.startRadio * 340;
               this.updateButtonsVisibility();
             });

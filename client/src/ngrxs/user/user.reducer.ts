@@ -13,9 +13,17 @@ const initialState: UserState = {
   isCreateUserSuccess: false,
   createUserErrorMessage: '',
 
-  isUpdatingUser: false,
-  isUpdateUserSuccess: false,
-  updateUserErrorMessage: '',
+  isUpdatingChannelImage: false,
+  isUpdateChannelImageSuccess: false,
+  updateChannelImageErrorMessage: '',
+
+  isUpdatingAvatar: false,
+  isUpdateAvatarSuccess: false,
+  updateAvatarErrorMessage: '',
+
+  isUpdatingDescribe: false,
+  isUpdateDescribeSuccess: false,
+  updateDescribeErrorMessage: '',
 };
 
 export const userReducer = createReducer(
@@ -68,27 +76,82 @@ export const userReducer = createReducer(
       getUserErrorMessage: action.error,
     };
   }),
-  on(UserActions.updateUser, (state, action) => {
+
+  on(UserActions.updateChannelImage, (state, action) => {
     console.log(action.type);
     return <UserState>{
       ...state,
-      isUpdatingUser: true,
+      isUpdatingChannelImage: true,
     };
   }),
-  on(UserActions.updateUserSuccess, (state, action) => {
+
+  on(UserActions.updateChannelImageSuccess, (state, action) => {
     console.log(action.type);
     return <UserState>{
       ...state,
-      isUpdatingUser: false,
-      isUpdateUserSuccess: true,
+      isUpdatingChannelImage: false,
+      isUpdateChannelImageSuccess: true,
     };
   }),
-  on(UserActions.updateUserFailure, (state, action) => {
+
+  on(UserActions.updateChannelImageFailure, (state, action) => {
     console.log(action.type);
     return <UserState>{
       ...state,
-      isUpdatingUser: false,
-      updateUserErrorMessage: action.error,
+      isUpdatingChannelImage: false,
+      updateChannelImageErrorMessage: action.error,
+    };
+  }),
+
+  on(UserActions.updateAvatar, (state, action) => {
+    console.log(action.type);
+    return <UserState>{
+      ...state,
+      isUpdatingAvatar: true,
+    };
+  }),
+
+  on(UserActions.updateAvatarSuccess, (state, action) => {
+    console.log(action.type);
+    return <UserState>{
+      ...state,
+      isUpdatingAvatar: false,
+      isUpdateAvatarSuccess: true,
+    };
+  }),
+
+  on(UserActions.updateAvatarFailure, (state, action) => {
+    console.log(action.type);
+    return <UserState>{
+      ...state,
+      isUpdatingAvatar: false,
+      updateAvatarErrorMessage: action.error,
+    };
+  }),
+
+  on(UserActions.updateDescribe, (state, action) => {
+    console.log(action.type);
+    return <UserState>{
+      ...state,
+      isUpdatingDescribe: true,
+    };
+  }),
+
+  on(UserActions.updateDescribeSuccess, (state, action) => {
+    console.log(action.type);
+    return <UserState>{
+      ...state,
+      isUpdatingDescribe: false,
+      isUpdateDescribeSuccess: true,
+    };
+  }),
+
+  on(UserActions.updateDescribeFailure, (state, action) => {
+    console.log(action.type);
+    return <UserState>{
+      ...state,
+      isUpdatingDescribe: false,
+      updateDescribeErrorMessage: action.error,
     };
   }),
   on(UserActions.clearState, (state, action) => {

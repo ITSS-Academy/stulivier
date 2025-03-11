@@ -10,7 +10,15 @@ export interface UserState {
   isCreateUserSuccess: boolean;
   createUserErrorMessage: string;
 
-  isUpdatingUser: boolean;
-  isUpdateUserSuccess: boolean;
-  updateUserErrorMessage: string;
+  isUpdatingChannelImage: boolean;
+  isUpdateChannelImageSuccess: boolean;
+  updateChannelImageErrorMessage: string;
+
+  isUpdatingAvatar: boolean;
+  isUpdateAvatarSuccess: boolean;
+  updateAvatarErrorMessage: string;
+
+  isUpdatingDescribe: boolean;
+  isUpdateDescribeSuccess: boolean;
+  updateDescribeErrorMessage: string;
 }
