@@ -3,6 +3,7 @@ import {
   CreatePlaylistDto,
   PlaylistDetailModel,
   PlaylistModel,
+  PlaylistResponseModel,
   UpdatePlaylistDto,
 } from '../../models/playlist.model';
 
@@ -156,6 +157,22 @@ export const upsertPlaylistByIdFailure = createAction(
   '[Playlist] Upsert Playlist By Id Failure',
   props<{ error: string }>(),
 );
+
+export const getPlaylistWithVideos = createAction(
+  '[Playlist] Get Playlist With Videos',
+  props<{ userId: string }>(),
+);
+
+export const getPlaylistWithVideosSuccess = createAction(
+  '[Playlist] Get Playlist With Videos Success',
+  props<{ playlistWithVideos: PlaylistResponseModel[] }>(),
+);
+
+export const getPlaylistWithVideosFailure = createAction(
+  '[Playlist] Get Playlist With Videos Failure',
+  props<{ error: string }>(),
+);
+
 export const clearPlaylistState = createAction('[Playlist] Clear State');
 
 export const clearAllPlaylistState = createAction('[Playlist] Clear All State');

@@ -59,4 +59,8 @@ export class PlaylistService {
   updatePlaylistById(playlistId: string, playlist: UpdatePlaylistDto) {
     return this.http.put('playlists', playlist, { params: { playlistId } });
   }
+
+  getAllPlaylistDetails(userId: string) {
+    return this.http.get('playlists/detail', { params: { userId: userId } });
+  }
 }

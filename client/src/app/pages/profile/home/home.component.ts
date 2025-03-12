@@ -1,22 +1,36 @@
-import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {VideoCardHorizontalComponent} from '../../../components/video-card-horizontal/video-card-horizontal.component';
-import {MatButton, MatFabButton, MatMiniFabButton} from '@angular/material/button';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
+import { VideoCardHorizontalComponent } from '../../../components/video-card-horizontal/video-card-horizontal.component';
+import {
+  MatButton,
+  MatFabButton,
+  MatMiniFabButton,
+} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import {AsyncPipe, DatePipe} from '@angular/common';
-import {VideoCardVerticalComponent} from '../../../components/video-card-vertical/video-card-vertical.component';
-import {Observable, Subscription, switchMap, tap} from 'rxjs';
-import {VideoModel} from '../../../../models/video.model';
-import {Store} from '@ngrx/store';
-import {VideoState} from '../../../../ngrxs/video/video.state';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { VideoCardVerticalComponent } from '../../../components/video-card-vertical/video-card-vertical.component';
+import { Observable, Subscription, switchMap, tap } from 'rxjs';
+import { VideoModel } from '../../../../models/video.model';
+import { Store } from '@ngrx/store';
+import { VideoState } from '../../../../ngrxs/video/video.state';
 import * as VideoActions from '../../../../ngrxs/video/video.actions';
 import * as PlaylistActions from '../../../../ngrxs/playlist/playlist.actions';
-import {PlaylistCardComponent} from '../../../components/playlist-card/playlist-card.component';
-import {RouterLink} from '@angular/router';
-import {PlaylistState} from '../../../../ngrxs/playlist/playlist.state';
-import {PlaylistModel} from '../../../../models/playlist.model';
-import {UserModel} from '../../../../models/user.model';
-import {UserState} from '../../../../ngrxs/user/user.state';
-import {filter, map, take} from 'rxjs/operators';
+import { PlaylistCardComponent } from '../../../components/playlist-card/playlist-card.component';
+import { RouterLink } from '@angular/router';
+import { PlaylistState } from '../../../../ngrxs/playlist/playlist.state';
+import {
+  PlaylistModel,
+  PlaylistResponseModel,
+} from '../../../../models/playlist.model';
+import { UserModel } from '../../../../models/user.model';
+import { UserState } from '../../../../ngrxs/user/user.state';
+import { filter, map, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -30,40 +44,32 @@ import {filter, map, take} from 'rxjs/operators';
     PlaylistCardComponent,
     RouterLink,
     VideoCardHorizontalComponent,
-    DatePipe
+    DatePipe,
   ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit{
+export class HomeComponent implements OnInit, OnDestroy {
   subscription: Subscription[] = [];
   videos$: Observable<VideoModel[]>;
   playlists$: Observable<PlaylistModel[]>;
+  playlistDetail$: Observable<PlaylistResponseModel[]>;
   user$!: Observable<UserModel>;
   randomVideo!: VideoModel | null; // Dữ liệu xáo trộn
 
-  constructor(private store: Store<{ video: VideoState, playlist: PlaylistState, user: UserState }>,
-              private renderer: Renderer2, private el: ElementRef) {
+  constructor(
+    private store: Store<{
+      video: VideoState;
+      playlist: PlaylistState;
+      user: UserState;
+    }>,
+    private renderer: Renderer2,
+    private el: ElementRef,
+  ) {
     this.user$ = this.store.select('user', 'user');
     this.videos$ = this.store.select('video', 'videos');
-    this.user$.pipe(
-      filter(user => !!user?.id), // Chỉ lấy khi user có id
-      take(1)
-    ).subscribe(user => {
-      this.store.dispatch(VideoActions.getVideosByUserId({ userId: user.id }));
-    });
     this.playlists$ = this.store.select('playlist', 'playlists');
-    this.user$.pipe(
-      filter(user => !!user?.id), // Chỉ lấy khi user có id
-      take(1)
-    ).subscribe(user => {
-      this.store.dispatch(PlaylistActions.getPlaylistByUserId({ id: user.id }));
-    });
-    this.videos$.subscribe(videos => {
-      if (videos.length > 0) {
-        this.randomVideo = videos[Math.floor(Math.random() * videos.length)];
-      }
-    });
+    this.playlistDetail$ = this.store.select('playlist', 'playlistWithVideos');
   }
 
   ngOnInit() {
@@ -75,23 +81,40 @@ export class HomeComponent implements OnInit{
       this.store.select('playlist', 'playlists').subscribe((playlists) => {
         console.log(playlists);
         this.updateButtonsVisibility();
-    }),
+      }),
+      this.user$
+        .pipe(
+          filter((user) => !!user?.id), // Chỉ lấy khi user có id
+          take(1),
+        )
+        .subscribe((user) => {
+          this.store.dispatch(
+            VideoActions.getVideosByUserId({ userId: user.id }),
+          );
+          this.store.dispatch(
+            PlaylistActions.getPlaylistByUserId({ id: user.id }),
+          );
+          this.store.dispatch(
+            PlaylistActions.getPlaylistWithVideos({
+              userId: user.id,
+            }),
+          );
+        }),
+      this.videos$.subscribe((videos) => {
+        if (videos.length > 0) {
+          this.randomVideo = videos[Math.floor(Math.random() * videos.length)];
+        }
+      }),
     );
-    // this.isGetPlaylistByIdSuccess$.subscribe((isGetPlaylistByIdSuccess) => {
-    //     if (isGetPlaylistByIdSuccess) {
-          setTimeout(() => {
-            this.updateButtonsVisibility();
-          }, 5000);
-    //     }
-    //   }
-    // )
-    // this.user$.subscribe(user => {
-    //   console.log('User from store:', user); // Kiểm tra dữ liệu user
-    // });
+
+    setTimeout(() => {
+      this.updateButtonsVisibility();
+    }, 5000);
   }
 
   updateButtonsVisibility() {
-    const containers = this.el.nativeElement.querySelectorAll('.data-container');
+    const containers =
+      this.el.nativeElement.querySelectorAll('.data-container');
 
     containers.forEach((container: HTMLElement) => {
       const data = container.querySelector('.data') as HTMLElement;
@@ -104,7 +127,9 @@ export class HomeComponent implements OnInit{
 
           btnLeft.style.visibility = data.scrollLeft > 0 ? 'visible' : 'hidden';
           btnRight.style.visibility =
-            data.scrollLeft + data.clientWidth >= data.scrollWidth ? 'hidden' : 'visible';
+            data.scrollLeft + data.clientWidth >= data.scrollWidth
+              ? 'hidden'
+              : 'visible';
         };
 
         // Lắng nghe sự thay đổi của nội dung bên trong data
@@ -112,19 +137,19 @@ export class HomeComponent implements OnInit{
           updateButtonsVisibility();
         });
 
-        observer.observe(data, {childList: true, subtree: true});
+        observer.observe(data, { childList: true, subtree: true });
 
         // Lắng nghe sự kiện cuộn
         this.renderer.listen(data, 'scroll', updateButtonsVisibility);
 
         // Lắng nghe click để cập nhật nút sau khi cuộn
         this.renderer.listen(btnLeft, 'click', () => {
-          data.scrollBy({left: -340, behavior: 'smooth'});
+          data.scrollBy({ left: -340, behavior: 'smooth' });
           setTimeout(updateButtonsVisibility, 340);
         });
 
         this.renderer.listen(btnRight, 'click', () => {
-          data.scrollBy({left: 340, behavior: 'smooth'});
+          data.scrollBy({ left: 340, behavior: 'smooth' });
           setTimeout(updateButtonsVisibility, 340);
         });
 
@@ -132,5 +157,9 @@ export class HomeComponent implements OnInit{
         setTimeout(updateButtonsVisibility, 500);
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.forEach((sub) => sub.unsubscribe());
   }
 }

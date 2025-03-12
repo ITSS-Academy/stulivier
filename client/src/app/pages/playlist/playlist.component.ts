@@ -28,6 +28,7 @@ import * as AuthActions from '../../../ngrxs/auth/auth.actions';
 import { AuthState } from '../../../ngrxs/auth/auth.state';
 import { MatDialog } from '@angular/material/dialog';
 import { EditPlaylistDialogComponent } from '../../dialogs/edit-playlist-dialog/edit-playlist-dialog.component';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 @Component({
   selector: 'app-playlist',
@@ -38,6 +39,7 @@ import { EditPlaylistDialogComponent } from '../../dialogs/edit-playlist-dialog/
     VideoModule,
     VideoCardHorizontalComponent,
     PlaylistCardInPagePlaylistComponent,
+    NgxSkeletonLoaderComponent,
   ],
   templateUrl: './playlist.component.html',
   styleUrl: './playlist.component.scss',

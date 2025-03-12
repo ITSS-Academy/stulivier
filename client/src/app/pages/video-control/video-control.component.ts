@@ -1,16 +1,26 @@
-import {AfterViewInit, Component, inject, OnInit, ViewChild} from '@angular/core';
-import {count, Observable, Subscription} from 'rxjs';
-import {VideoModel} from '../../../models/video.model';
-import {UserModel} from '../../../models/user.model';
-import {Store} from '@ngrx/store';
-import {VideoState} from '../../../ngrxs/video/video.state';
-import {UserState} from '../../../ngrxs/user/user.state';
-import {filter, take} from 'rxjs/operators';
+import {
+  AfterViewInit,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { count, Observable, Subscription } from 'rxjs';
+import { VideoModel } from '../../../models/video.model';
+import { UserModel } from '../../../models/user.model';
+import { Store } from '@ngrx/store';
+import { VideoState } from '../../../ngrxs/video/video.state';
+import { UserState } from '../../../ngrxs/user/user.state';
+import { filter, take } from 'rxjs/operators';
 import * as VideoActions from '../../../ngrxs/video/video.actions';
-import {MatIconButton} from '@angular/material/button';
-import {MatIcon} from '@angular/material/icon';
-import {AsyncPipe} from '@angular/common';
-import {CdkFixedSizeVirtualScroll, CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { AsyncPipe } from '@angular/common';
+import {
+  CdkFixedSizeVirtualScroll,
+  CdkVirtualScrollViewport,
+} from '@angular/cdk/scrolling';
 import {
   MatCell,
   MatColumnDef,
@@ -19,14 +29,14 @@ import {
   MatRow,
   MatTable,
   MatTableModule,
-  MatTableDataSource
+  MatTableDataSource,
 } from '@angular/material/table';
-import {MatSort, MatSortHeader} from '@angular/material/sort';
-import {MatPaginator} from '@angular/material/paginator';
-import {RouterLink} from '@angular/router';
-import {EditProfileDialogComponent} from '../../dialogs/edit-profile-dialog/edit-profile-dialog.component';
-import {MatDialog} from '@angular/material/dialog';
-import {EditVideoDialogComponent} from '../../dialogs/edit-video-dialog/edit-video-dialog.component';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { RouterLink } from '@angular/router';
+import { EditProfileDialogComponent } from '../../dialogs/edit-profile-dialog/edit-profile-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { EditVideoDialogComponent } from '../../dialogs/edit-video-dialog/edit-video-dialog.component';
 
 @Component({
   selector: 'app-video-control',
@@ -39,21 +49,26 @@ import {EditVideoDialogComponent} from '../../dialogs/edit-video-dialog/edit-vid
     CdkVirtualScrollViewport,
     MatTable,
     MatTableModule,
-    MatSort,
     MatColumnDef,
     MatHeaderCell,
     MatCell,
-    MatSortHeader,
     MatHeaderRow,
     MatRow,
     MatPaginator,
-    RouterLink
+    RouterLink,
   ],
   templateUrl: './video-control.component.html',
-  styleUrl: './video-control.component.scss'
+  styleUrl: './video-control.component.scss',
 })
-export class VideoControlComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['position', 'thumbnail', 'title', 'description', 'created_at', 'actions'];
+export class VideoControlComponent implements OnInit, OnDestroy, AfterViewInit {
+  displayedColumns: string[] = [
+    'position',
+    'thumbnail',
+    'title',
+    'description',
+    'created_at',
+    'actions',
+  ];
   dataSource = new MatTableDataSource<VideoModel>([]);
   subscription: Subscription[] = [];
   videos$: Observable<VideoModel[]>;
@@ -62,18 +77,24 @@ export class VideoControlComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private store: Store<{
-    video: VideoState,
-    user: UserState //test only
-  }>,) {
+  constructor(
+    private store: Store<{
+      video: VideoState;
+      user: UserState; //test only
+    }>,
+  ) {
     this.videos$ = this.store.select('video', 'videos');
     this.user$ = this.store.select('user', 'user'); //test only
-    this.user$.pipe(
-      filter(user => !!user?.id), // Chỉ lấy khi user có id
-      take(1)
-    ).subscribe(user => {
-      this.store.dispatch(VideoActions.getVideosByUserId({ userId: user.id }));
-    });
+    this.user$
+      .pipe(
+        filter((user) => !!user?.id), // Chỉ lấy khi user có id
+        take(1),
+      )
+      .subscribe((user) => {
+        this.store.dispatch(
+          VideoActions.getVideosByUserId({ userId: user.id }),
+        );
+      });
   }
 
   ngOnInit() {
@@ -91,13 +112,10 @@ export class VideoControlComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleString('vi-VN', { timeZone: 'Asia/Bangkok' });
   }
-
-
 
   openEditVideoDialog(video: VideoModel) {
     this.dialog.open(EditVideoDialogComponent, {
@@ -106,6 +124,7 @@ export class VideoControlComponent implements OnInit, AfterViewInit {
       data: { video: video },
     });
   }
+
   openDeleteVideoDialog() {
     // this.dialog.open(DeleteVideoDialogComponent, {
     //   minWidth: '1000px',
@@ -113,5 +132,7 @@ export class VideoControlComponent implements OnInit, AfterViewInit {
     // });
   }
 
-  protected readonly count = count;
+  ngOnDestroy() {
+    this.subscription.forEach((sub) => sub.unsubscribe());
+  }
 }
