@@ -25,6 +25,12 @@ export class UsersController {
     return await this.usersService.findOne(req.user.uid || req.user.id);
   }
 
+  @Get('user')
+  async getUserById(@Request() req: any) {
+    const {userId} = req.query;
+    return await this.usersService.getUserById(userId);
+  }
+
   @Post('channel')
   @UseInterceptors(FileInterceptor('file'))
   async updateImage(

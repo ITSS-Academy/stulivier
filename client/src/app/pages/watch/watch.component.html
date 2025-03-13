@@ -117,7 +117,7 @@
   </div>
 
   <div class="right">
-    <div class="info">
+    <div class="info" [routerLink]="['/profile', (video$ | async)?.user_id]">
       <div class="avatar">
         <img alt="" src="{{ (video$ | async)?.user_data?.avatar_url }}" />
       </div>
