@@ -21,6 +21,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateVideoDialogComponent } from '../../dialogs/create-video-dialog/create-video-dialog.component';
 import { EditProfileDialogComponent } from '../../dialogs/edit-profile-dialog/edit-profile-dialog.component';
 import * as UserActions from '../../../ngrxs/user/user.actions';
+import * as VideoActions from '../../../ngrxs/video/video.actions';
+import  * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
 import { user } from '@angular/fire/auth';
 import { map } from 'rxjs/operators';
 
@@ -147,10 +149,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   getRouteByIndex(index: number): string {
-    return ['/featured', '/videos', '/playlists'][index] || '/featured';
+    return [`profile/${this.user.id}/featured`
+      , `profile/${this.user.id}/videos`, `profile/${this.user.id}/playlists`][index] || '/featured';
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
+    this.store.dispatch(VideoActions.clearState())
+    this.store.dispatch(PlaylistActions.clearAllPlaylistState())
   }
 }
