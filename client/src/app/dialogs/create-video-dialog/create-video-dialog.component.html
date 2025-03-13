@@ -11,7 +11,7 @@
   ></mat-progress-bar>
 
   <div id="content-container">
-    <mat-stepper #stepper [linear]="false">
+    <mat-stepper #stepper [linear]="true">
       <mat-step
         [completed]="isFileUploaded"
         [editable]="!isFileUploaded"
@@ -28,7 +28,7 @@
           <div id="step1-container">
             <div id="upload-video">
               <mat-icon class="material-symbols-rounded" id="upload-icon"
-                >upload_2
+              >upload_2
               </mat-icon>
             </div>
             <div
@@ -53,16 +53,14 @@
               </button>
             </div>
           </div>
-
-          <div>
-            <button mat-button matStepperNext>Next</button>
-          </div>
         </form>
       </mat-step>
-      <mat-step [stepControl]="uploadForm" label="Details">
+      <mat-step [completed]="uploadForm.valid"
+                [stepControl]="uploadForm"
+                label="Details">
         <form [formGroup]="uploadForm">
           <ng-template matStepLabel
-            >Fill out your video information
+          >Fill out your video information
           </ng-template>
           <div id="step2-container">
             <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
@@ -100,12 +98,10 @@
 
                 <mat-form-field>
                   <mat-label>Category</mat-label>
-                  <mat-select formControlName="categories" multiple>
-                    @for (category of categories$ | async; track $index) {
-                      <mat-option [value]="category.id"
-                        >{{ category.name }}
-                      </mat-option>
-                    }
+                  <mat-select formControlName="categories" multiple (selectionChange)="onCategorySelectionChange($event)">
+                    <mat-option *ngFor="let category of categories$ | async" [value]="category.id" [disabled]="isCategoryDisabled(category.id)">
+                      {{ category.name }}
+                    </mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -155,12 +151,22 @@
             </div>
           </div>
 
-          <div>
-            <button mat-button matStepperNext>Next</button>
+          <div style="display:flex; justify-content: space-between">
+            <button mat-button matStepperPrevious (click)="resetFileInput()">Back</button>
+            <button
+              mat-button
+              matStepperNext
+              (click)="goToStep3()"
+              [disabled]="!uploadForm.valid"
+            >
+              Next
+            </button>
+
           </div>
         </form>
       </mat-step>
-      <mat-step>
+      <mat-step [completed]="uploadForm.valid"
+                label="Visibility">
         <form [formGroup]="uploadForm">
           <ng-template matStepperIcon="edit">
             <mat-icon
