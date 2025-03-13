@@ -41,6 +41,25 @@ export class UsersService {
     }
   }
 
+  async getUserById(id: string) {
+    try {
+      // get user from supabase
+      const { data, error } = await this.supabase
+        .from('users')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (!data || data.length === 0) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+
+      return data;
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   async findOne(id: string) {
     try {
       // get user from supabase

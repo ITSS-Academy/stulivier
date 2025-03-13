@@ -1,10 +1,10 @@
 import {
   Component,
-  ElementRef,
+  ElementRef, EventEmitter,
   inject,
   Input,
   OnDestroy,
-  OnInit,
+  OnInit, Output,
   ViewChild,
 } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
@@ -19,6 +19,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateVideoDialogComponent } from '../../dialogs/create-video-dialog/create-video-dialog.component';
 import { EditProfileDialogComponent } from '../../dialogs/edit-profile-dialog/edit-profile-dialog.component';
 import * as UserActions from '../../../ngrxs/user/user.actions';
+import {user} from '@angular/fire/auth';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -29,7 +31,8 @@ import * as UserActions from '../../../ngrxs/user/user.actions';
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   readonly dialog = inject(MatDialog);
-  user$!: Observable<UserModel>;
+  userId$!: Observable<UserModel>; //người dùng khác
+  user$!: Observable<UserModel>; //bản thân
   user!: UserModel;
   @ViewChild('coverInput') coverInput!: ElementRef<HTMLInputElement>;
 
@@ -39,16 +42,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
   @Input() describe!: string;
   @Input() follower!: number;
   @Input() background_url!: string;
-  self = true;
+  self!: boolean; //bản thân
   activeTab = 0;
   subscriptions: Subscription[] = [];
+
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private store: Store<{ user: UserState }>,
   ) {
-    this.user$ = this.store.select('user', 'user');
+    this.user$ = this.store.select('user','user')
+    this.userId$ = this.store.select('user','userById')
   }
 
   triggerCoverInput(): void {
@@ -70,6 +75,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
     // Cập nhật tab khi component khởi tạo
     this.updateActiveTab(this.router.url);
 
@@ -106,8 +112,26 @@ export class ProfileComponent implements OnInit, OnDestroy {
           ),
         )
         .subscribe(() => {
-          this.store.dispatch(UserActions.getUserById());
+          this.store.dispatch(UserActions.getUser());
         }),
+
+      // Lấy userId từ URL và so sánh với user hiện tại
+      this.route.paramMap.subscribe((params) => {
+        const userIdFromUrl = params.get('id');
+        if (userIdFromUrl) {
+          this.store.dispatch(UserActions.getUserById({ userId: userIdFromUrl }));
+          console.log('user id from url', userIdFromUrl);
+
+          this.userId$ = this.store.select((state) => state.user.userById).pipe(
+            map((user) => {
+              this.self = user?.id === userIdFromUrl;
+              console.log('user hien tai', this.self, user);
+              return user;
+            })
+          );
+          this.userId$.subscribe();
+        }
+      }),
     );
   }
 
@@ -122,19 +146,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   private updateActiveTab(url: string) {
-    if (url.includes('/profile/featured')) {
+    if (url.includes('/featured')) {
       this.activeTab = 0;
-    } else if (url.includes('/profile/videos')) {
+    } else if (url.includes('/videos')) {
       this.activeTab = 1;
-    } else if (url.includes('/profile/playlists')) {
+    } else if (url.includes('/playlists')) {
       this.activeTab = 2;
     }
   }
 
   private getRouteByIndex(index: number): string {
     return (
-      ['profile/featured', 'profile/videos', 'profile/playlists'][index] ||
-      'profile/featured'
+      ['/featured', '/videos', '/playlists'][index] ||
+      '/featured'
     );
   }
 }

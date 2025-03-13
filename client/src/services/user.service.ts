@@ -11,8 +11,16 @@ export class UserService {
     return this.http.post(`users`, '');
   }
 
-  getUserById() {
+  getUser() {
     return this.http.get(`users`);
+  }
+
+  getUserById(userId: string) {
+    return this.http.get(`users/user`, {
+      params: {
+        userId: userId,
+      },
+    });
   }
 
   updateChannelImage(channelImg: File, userId: string) {
