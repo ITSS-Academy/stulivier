@@ -368,6 +368,7 @@ export class VideosService {
   }
 
   async getVideoByUserId(userId: string) {
+    console.log(userId);
     try {
       const { data, error } = await this.supabase
         .from('videos')
@@ -385,6 +386,8 @@ export class VideosService {
       if (error) {
         throw new HttpException(error, HttpStatus.BAD_REQUEST);
       }
+
+      console.log(data);
 
       return data;
     } catch (e) {
@@ -454,10 +457,14 @@ export class VideosService {
       if (video.category_id) updateFields.category_id = video.category_id;
 
       if (Object.keys(updateFields).length === 0) {
-        throw new HttpException('No valid fields to update', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'No valid fields to update',
+          HttpStatus.BAD_REQUEST,
+        );
       }
 
-      const { error } = await this.supabase.from('videos')
+      const { error } = await this.supabase
+        .from('videos')
         .update(updateFields)
         .eq('id', video.id);
 
@@ -470,5 +477,4 @@ export class VideosService {
       throw new HttpException(e, HttpStatus.BAD_REQUEST);
     }
   }
-
 }

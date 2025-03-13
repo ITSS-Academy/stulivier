@@ -1,6 +1,7 @@
 import {
   Component,
-  ElementRef, Input,
+  ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   Renderer2,
@@ -16,7 +17,7 @@ import { VideoState } from '../../../../ngrxs/video/video.state';
 import * as VideoActions from '../../../../ngrxs/video/video.actions';
 import * as PlaylistActions from '../../../../ngrxs/playlist/playlist.actions';
 import { PlaylistCardComponent } from '../../../components/playlist-card/playlist-card.component';
-import {ActivatedRoute, RouterLink} from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PlaylistState } from '../../../../ngrxs/playlist/playlist.state';
 import {
   PlaylistModel,
@@ -54,7 +55,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   userById!: UserModel;
   randomVideo!: VideoModel | null;
 
-
   constructor(
     private store: Store<{
       video: VideoState;
@@ -63,16 +63,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     }>,
     private renderer: Renderer2,
     private el: ElementRef,
-    private activatedRoute: ActivatedRoute,
   ) {
     this.user$ = this.store.select('user', 'user');
     this.userId$ = this.store.select('user', 'userById');
-    const id = this.activatedRoute.snapshot.paramMap.get('id');
-    this.store.dispatch(
-      UserActions.getUserById({
-        userId: id as any,
-      }),
-    );
     this.videos$ = this.store.select('video', 'videos');
     this.playlists$ = this.store.select('playlist', 'playlists');
     this.playlistDetail$ = this.store.select('playlist', 'playlistWithVideos');
@@ -80,32 +73,35 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription.push(
+      this.userId$.subscribe((userId) => {
+        if (userId.id) {
+          console.log(userId);
+          this.user = userId;
+          this.store.dispatch(
+            UserActions.getUserById({
+              userId: this.user.id as any,
+            }),
+          );
+          this.store.dispatch(
+            VideoActions.getVideosByUserId({ userId: this.user.id }),
+          );
+          this.store.dispatch(
+            PlaylistActions.getPlaylistByUserId({ id: this.user.id }),
+          );
+          this.store.dispatch(
+            PlaylistActions.getPlaylistWithVideos({
+              userId: this.user.id,
+            }),
+          );
+        }
+      }),
       this.store.select('video', 'videos').subscribe((videos) => {
         console.log(videos);
         this.updateButtonsVisibility();
       }),
       this.store.select('playlist', 'playlists').subscribe((playlists) => {
-        console.log(playlists);
         this.updateButtonsVisibility();
       }),
-      // this.userId$
-      //   .pipe(
-      //     filter((userId) => !!userId?.id), // Chỉ lấy khi user có id
-      //     take(1),
-      //   )
-      //   .subscribe((userId) => {
-      //     this.store.dispatch(
-      //       VideoActions.getVideosByUserId({ userId: userId.id }),
-      //     );
-      //     this.store.dispatch(
-      //       PlaylistActions.getPlaylistByUserId({ id: userId.id }),
-      //     );
-      //     this.store.dispatch(
-      //       PlaylistActions.getPlaylistWithVideos({
-      //         userId: userId.id,
-      //       }),
-      //     );
-      //   }),
       this.videos$.subscribe((videos) => {
         if (videos.length > 0) {
           this.randomVideo = videos[Math.floor(Math.random() * videos.length)];
