@@ -13,7 +13,7 @@
         </div>
 
         <div (click)="triggerCoverInput()" class="background-linear">
-          @if (self) {
+          @if ((userId$ | async)?.id == (user$ | async)?.id) {
             <button
               mat-fab
               aria-label="Example icon button with a delete icon"
@@ -51,7 +51,7 @@
               UPLOAD NEW VIDEO
             </button>
           } @else {
-            <button mat-flat-button>Subscribe</button>
+            <button mat-flat-button style="display: none">Subscribe</button>
           }
         </div>
       </div>
