@@ -41,9 +41,7 @@ export const getUser$ = createEffect(
             }),
           ),
           catchError((obj) => {
-            return of(
-              UserActions.getUserFailure({ error: obj.error.message }),
-            );
+            return of(UserActions.getUserFailure({ error: obj.error.message }));
           }),
         );
       }),
@@ -61,13 +59,13 @@ export const getUserById$ = createEffect(
       exhaustMap((action) => {
         return userService.getUserById(action.userId).pipe(
           map((response) =>
-            UserActions.getUserSuccess({
-              user: response as UserModel,
+            UserActions.getUserByIdSuccess({
+              userById: response as UserModel,
             }),
           ),
           catchError((obj) => {
             return of(
-              UserActions.getUserFailure({ error: obj.error.message }),
+              UserActions.getUserByIdFailure({ error: obj.error.message }),
             );
           }),
         );

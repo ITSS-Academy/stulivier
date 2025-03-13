@@ -51,13 +51,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscription.push(
-      this.isGettingTopCategories$.subscribe(
-        (isGettingTopCategories: boolean) => {
-          console.log(isGettingTopCategories);
-        },
-      ),
-    );
+    this.subscription.push();
   }
 
   navigateToCategory(id: string) {

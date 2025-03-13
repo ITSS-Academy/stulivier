@@ -10,6 +10,7 @@ import {
 import { UsersService } from './users.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Multer } from 'multer';
+import { Public } from '../../utils/custom_decorators';
 
 @Controller('users')
 export class UsersController {
@@ -22,12 +23,15 @@ export class UsersController {
 
   @Get()
   async findOne(@Request() req: any) {
+    console.log(req.user);
     return await this.usersService.findOne(req.user.uid || req.user.id);
   }
 
+  @Public()
   @Get('user')
   async getUserById(@Request() req: any) {
-    const {userId} = req.query;
+    const { userId } = req.query;
+    console.log('getUserById', userId);
     return await this.usersService.getUserById(userId);
   }
 

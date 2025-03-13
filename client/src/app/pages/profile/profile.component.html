@@ -3,9 +3,9 @@
     <div id="user-data">
       <div class="user-background">
         <div class="background-img">
-          @if (user?.background_url) {
+          @if ((userId$ | async)?.id) {
             <img
-              [src]="user?.background_url"
+              [src]="(userId$ | async)?.background_url"
               alt="Selected Image"
               class="background-img-preview"
             />
@@ -32,20 +32,20 @@
             <img
               alt="Selected Image"
               class="avatar-img"
-              src="{{ user?.avatar_url }}"
+              src="{{ (userId$ | async)?.avatar_url }}"
             />
           </div>
           <div class="user-data">
-            <span class="username">{{ user?.username }}</span>
+            <span class="username">{{ (userId$ | async)?.username }}</span>
             <!--            <span class="views">123,354 Views</span>-->
             <span class="describe">
-              {{ user?.describe }}
+              {{ (userId$ | async)?.describe }}
             </span>
           </div>
         </div>
 
         <div class="user-controller">
-          @if (self) {
+          @if ((userId$ | async)?.id == (user$ | async)?.id) {
             <button mat-flat-button (click)="openCreateVideoDialog()">
               <mat-icon class="material-symbols-rounded">outbox</mat-icon>
               UPLOAD NEW VIDEO

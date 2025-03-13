@@ -8,6 +8,10 @@ export interface UserState {
   isGetUserSuccess: boolean;
   getUserErrorMessage: string;
 
+  isGettingUserById: boolean;
+  isGetUserByIdSuccess: boolean;
+  getUserByIdErrorMessage: string;
+
   isCreatingUser: boolean;
   isCreateUserSuccess: boolean;
   createUserErrorMessage: string;
@@ -23,8 +27,4 @@ export interface UserState {
   isUpdatingDescribe: boolean;
   isUpdateDescribeSuccess: boolean;
   updateDescribeErrorMessage: string;
-
-  isGettingUserById: boolean;
-  isGetUserByIdSuccess: boolean;
-  getUserByIdErrorMessage: string;
 }

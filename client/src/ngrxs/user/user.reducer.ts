@@ -11,6 +11,10 @@ const initialState: UserState = {
   isGetUserSuccess: false,
   getUserErrorMessage: '',
 
+  isGettingUserById: false,
+  isGetUserByIdSuccess: false,
+  getUserByIdErrorMessage: '',
+
   isCreatingUser: false,
   isCreateUserSuccess: false,
   createUserErrorMessage: '',
@@ -26,10 +30,6 @@ const initialState: UserState = {
   isUpdatingDescribe: false,
   isUpdateDescribeSuccess: false,
   updateDescribeErrorMessage: '',
-
-  isGettingUserById: false,
-  isGetUserByIdSuccess: false,
-  getUserByIdErrorMessage: '',
 };
 
 export const userReducer = createReducer(
@@ -92,9 +92,10 @@ export const userReducer = createReducer(
   }),
   on(UserActions.getUserByIdSuccess, (state, action) => {
     console.log(action.type);
+    console.log(action.userById);
     return <UserState>{
       ...state,
-      userById: action.user,
+      userById: action.userById,
       isGettingUserById: false,
       isGetUserByIdSuccess: true,
     };
@@ -107,8 +108,6 @@ export const userReducer = createReducer(
       getUserByIdErrorMessage: action.error,
     };
   }),
-
-
 
   on(UserActions.updateChannelImage, (state, action) => {
     console.log(action.type);

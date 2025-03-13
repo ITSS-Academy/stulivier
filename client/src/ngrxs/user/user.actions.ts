@@ -24,7 +24,7 @@ export const getUserById = createAction(
 );
 export const getUserByIdSuccess = createAction(
   '[User] Get By Id Success',
-  props<{ user: UserModel }>(),
+  props<{ userById: UserModel }>(),
 );
 export const getUserByIdFailure = createAction(
   '[User] Get By Id Failure',
