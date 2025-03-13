@@ -4,18 +4,12 @@ import {
   OnDestroy,
   OnInit,
   Renderer2,
-  ViewChild,
 } from '@angular/core';
-import { VideoCardHorizontalComponent } from '../../../components/video-card-horizontal/video-card-horizontal.component';
-import {
-  MatButton,
-  MatFabButton,
-  MatMiniFabButton,
-} from '@angular/material/button';
+import { MatButton, MatMiniFabButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { VideoCardVerticalComponent } from '../../../components/video-card-vertical/video-card-vertical.component';
-import { Observable, Subscription, switchMap, tap } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { VideoModel } from '../../../../models/video.model';
 import { Store } from '@ngrx/store';
 import { VideoState } from '../../../../ngrxs/video/video.state';
@@ -43,7 +37,6 @@ import { filter, map, take } from 'rxjs/operators';
     VideoCardVerticalComponent,
     PlaylistCardComponent,
     RouterLink,
-    VideoCardHorizontalComponent,
     DatePipe,
   ],
   templateUrl: './home.component.html',
@@ -55,7 +48,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   playlists$: Observable<PlaylistModel[]>;
   playlistDetail$: Observable<PlaylistResponseModel[]>;
   user$!: Observable<UserModel>;
-  randomVideo!: VideoModel | null; // Dữ liệu xáo trộn
+  randomVideo!: VideoModel | null;
 
   constructor(
     private store: Store<{

@@ -35,6 +35,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   topCategory$: Observable<CategoryDetailModel[]>;
   isGettingTopCategories$!: Observable<boolean>;
 
+  currentlyPlayingId: string | null = null; // ID của video đang phát
+  hoveringVideoId: string | null = null; // ID của video đang được hover
+
   constructor(
     private store: Store<{ video: VideoState; category: CategoryState }>,
     private router: Router,
@@ -61,6 +64,34 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.router.navigate(['/category'], {
       queryParams: { id: id },
     });
+  }
+
+  onVideoHover(videoId: string) {
+    this.hoveringVideoId = videoId;
+
+    setTimeout(() => {
+      // Chỉ phát nếu chuột vẫn đang ở trên video sau thời gian delay
+      if (this.hoveringVideoId === videoId) {
+        // Nếu đã có video khác đang phát, dừng nó
+        if (this.currentlyPlayingId && this.currentlyPlayingId !== videoId) {
+          this.stopCurrentVideo();
+        }
+        this.currentlyPlayingId = videoId;
+      }
+    }, 500);
+  }
+
+  onVideoLeave(videoId: string) {
+    this.hoveringVideoId = null;
+
+    // Nếu video hiện tại là video vừa rời chuột thì dừng nó ngay lập tức
+    if (this.currentlyPlayingId === videoId) {
+      this.stopCurrentVideo();
+    }
+  }
+
+  stopCurrentVideo() {
+    this.currentlyPlayingId = null;
   }
 
   ngOnDestroy() {
