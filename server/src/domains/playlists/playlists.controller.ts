@@ -29,6 +29,7 @@ export class PlaylistsController {
     return await this.playlistsService.getAllPlaylists();
   }
 
+  @Public()
   @Get('user')
   async getPlaylistByUserId(@Request() req: any) {
     const { userId } = req.query;

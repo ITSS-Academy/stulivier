@@ -14,21 +14,15 @@
     <mat-stepper #stepper [linear]="true">
       <mat-step
         [completed]="isFileUploaded"
-        [editable]="!isFileUploaded"
+        [editable]="isFileUploaded"
         [stepControl]="uploadForm"
       >
         <form [formGroup]="uploadForm">
-          <ng-template matStepperIcon="done">
-            <mat-icon
-              class="material-symbols-rounded"
-              fontIcon="done"
-            ></mat-icon>
-          </ng-template>
           <ng-template matStepLabel>Upload your video</ng-template>
           <div id="step1-container">
             <div id="upload-video">
               <mat-icon class="material-symbols-rounded" id="upload-icon"
-              >upload_2
+                >upload_2
               </mat-icon>
             </div>
             <div
@@ -47,7 +41,7 @@
               <button
                 (click)="onUploadButtonClick()"
                 id="upload-button"
-                mat-raised-button
+                mat-flat-button
               >
                 Select Video
               </button>
@@ -55,12 +49,19 @@
           </div>
         </form>
       </mat-step>
-      <mat-step [completed]="uploadForm.valid"
-                [stepControl]="uploadForm"
-                label="Details">
+      <mat-step
+        [completed]="
+          !(
+            uploadForm.get('fileName')?.invalid &&
+            uploadForm.get('description')?.invalid &&
+            uploadForm.get('categories')?.invalid
+          ) && isThumbnailUploaded
+        "
+        [stepControl]="uploadForm"
+      >
         <form [formGroup]="uploadForm">
           <ng-template matStepLabel
-          >Fill out your video information
+            >Fill out your video information
           </ng-template>
           <div id="step2-container">
             <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
@@ -98,10 +99,19 @@
 
                 <mat-form-field>
                   <mat-label>Category</mat-label>
-                  <mat-select formControlName="categories" multiple (selectionChange)="onCategorySelectionChange($event)">
-                    <mat-option *ngFor="let category of categories$ | async" [value]="category.id" [disabled]="isCategoryDisabled(category.id)">
-                      {{ category.name }}
-                    </mat-option>
+                  <mat-select
+                    (selectionChange)="onCategorySelectionChange($event)"
+                    formControlName="categories"
+                    multiple
+                  >
+                    @for (category of categories$ | async; track $index) {
+                      <mat-option
+                        [disabled]="isCategoryDisabled(category.id)"
+                        [value]="category.id"
+                      >
+                        {{ category.name }}
+                      </mat-option>
+                    }
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -151,30 +161,31 @@
             </div>
           </div>
 
-          <div style="display:flex; justify-content: space-between">
-            <button mat-button matStepperPrevious (click)="resetFileInput()">Back</button>
+          <div style="display: flex; justify-content: space-between">
+            <button mat-button matStepperPrevious>Back</button>
             <button
+              (click)="goToStep3()"
+              [disabled]="
+                !(
+                  uploadForm.get('fileName')?.valid &&
+                  uploadForm.get('description')?.valid &&
+                  uploadForm.get('categories')?.valid &&
+                  isThumbnailUploaded
+                )
+              "
               mat-button
               matStepperNext
-              (click)="goToStep3()"
-              [disabled]="!uploadForm.valid"
             >
               Next
             </button>
-
           </div>
         </form>
       </mat-step>
-      <mat-step [completed]="uploadForm.valid"
-                label="Visibility">
+      <mat-step
+        [completed]="uploadForm.get('visibility')?.value !== ''"
+        label="Visibility"
+      >
         <form [formGroup]="uploadForm">
-          <ng-template matStepperIcon="edit">
-            <mat-icon
-              class="material-symbols-rounded"
-              fontIcon="edit"
-            ></mat-icon>
-          </ng-template>
-
           <ng-template matStepLabel>Visibility</ng-template>
           <div id="step3-container">
             <div class="form-left">
@@ -241,6 +252,13 @@
           </div>
         </form>
       </mat-step>
+
+      <ng-template matStepperIcon="edit">
+        <mat-icon class="material-symbols-rounded" fontIcon="edit"></mat-icon>
+      </ng-template>
+      <ng-template matStepperIcon="done">
+        <mat-icon class="material-symbols-rounded" fontIcon="done"></mat-icon>
+      </ng-template>
     </mat-stepper>
   </div>
 </div>

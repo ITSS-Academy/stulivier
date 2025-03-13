@@ -1,4 +1,11 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -26,7 +33,7 @@ import { MatDialog } from '@angular/material/dialog';
 import * as CategoryActions from '../../../ngrxs/category/category.actions';
 import * as VideoActions from '../../../ngrxs/video/video.actions';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import {AsyncPipe, NgForOf} from '@angular/common';
+import { AsyncPipe, NgForOf } from '@angular/common';
 import {
   CdkFixedSizeVirtualScroll,
   CdkVirtualScrollViewport,
@@ -39,42 +46,34 @@ import { MatInput } from '@angular/material/input';
 import { MatOption } from '@angular/material/core';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
-import {MatSelect, MatSelectChange} from '@angular/material/select';
+import { MatSelect, MatSelectChange } from '@angular/material/select';
+import { MaterialModule } from '../../../shared/modules/material.module';
+import { SharedModule } from '../../../shared/modules/shared.module';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
 @Component({
   selector: 'app-create-video-dialog',
   standalone: true,
   imports: [
-    AsyncPipe,
-    CdkFixedSizeVirtualScroll,
-    CdkTextareaAutosize,
-    CdkVirtualScrollViewport,
-    MatButton,
-    MatFormField,
-    MatHint,
-    MatIcon,
-    MatIconButton,
-    MatInput,
-    MatLabel,
-    MatOption,
-    MatProgressBar,
-    MatRadioButton,
-    MatRadioGroup,
-    MatSelect,
+    SharedModule,
+    MaterialModule,
+    MatStepper,
     MatStep,
     MatStepLabel,
-    MatStepper,
-    MatStepperIcon,
     MatStepperNext,
     MatStepperPrevious,
-    ReactiveFormsModule,
-    NgForOf,
+    MatStepperIcon,
   ],
   templateUrl: './create-video-dialog.component.html',
+  providers: [
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: { displayDefaultIndicatorType: false },
+    },
+  ],
   styleUrl: './create-video-dialog.component.scss',
 })
 export class CreateVideoDialogComponent implements OnInit, OnDestroy {
-
   uploadForm!: FormGroup;
   videoFile!: File;
   thumbnailFile!: File;
@@ -86,6 +85,7 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
   isCreateVideoSuccess$: Observable<boolean>;
   isCreateVideoSuccess = false;
   isFileUploaded = false;
+  isThumbnailUploaded = false;
   selectedCategories: string[] = [];
   @ViewChild('stepper') stepper!: MatStepper;
 
@@ -98,6 +98,7 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
     private videoService: VideoService,
     private alertService: AlertService,
     private dialog: MatDialog,
+    private cd: ChangeDetectorRef,
   ) {
     this.categories$ = this.store.select('category', 'categories');
     this.isCreateVideoSuccess$ = this.store.select(
@@ -162,25 +163,17 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
   }
 
   onFileSelected(event: Event) {
+    this.isFileUploaded = true;
+
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
 
       // Gọi hàm upload file
       this.uploadFile(file);
+      // Ép Angular cập nhật UI
+      this.cd.detectChanges();
 
-      // Cập nhật form
-      this.uploadForm.patchValue({ fileName: file.name });
-
-      // Đánh dấu đã upload file
-      this.isFileUploaded = true;
-
-      // Reset giá trị input để tránh lỗi chọn cùng một file hai lần
-      input.value = '';
-
-      console.log('File uploaded:', file);
-
-      // Chuyển sang bước tiếp theo
       this.stepper.next();
     }
   }
@@ -209,7 +202,7 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
   }
 
   onThumbnailSelected(event: Event) {
-    console.log(event);
+    this.isThumbnailUploaded = true;
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
@@ -268,27 +261,21 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
     this.subscription.forEach((sub) => sub.unsubscribe());
   }
 
-  resetFileInput() {
-    this.uploadForm.get('fileName')?.reset();
-    this.isFileUploaded = false;
-  }
-
   onCategorySelectionChange(event: MatSelectChange) {
     const selectedOptions = event.source.selected as MatOption[];
     if (selectedOptions.length > 3) {
       event.source.writeValue(this.selectedCategories); // Revert to previous selection
     } else {
-      this.selectedCategories = selectedOptions.map(option => option.value);
+      this.selectedCategories = selectedOptions.map((option) => option.value);
     }
   }
 
   isCategoryDisabled(categoryId: string): boolean {
-    return this.selectedCategories.length >= 3 && !this.selectedCategories.includes(categoryId);
+    return (
+      this.selectedCategories.length >= 3 &&
+      !this.selectedCategories.includes(categoryId)
+    );
   }
 
-  goToStep3() {
-    this.uploadForm.get('visibility')?.setValidators(Validators.required);
-    this.uploadForm.get('visibility')?.updateValueAndValidity();
-  }
-
+  goToStep3() {}
 }

@@ -141,6 +141,19 @@
     .content {
       width: 100%;
       height: calc(100% - 150px);
+
+      .comment-scroll {
+        max-width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden; // Prevent horizontal scrolling
+        padding: 0 10px;
+        scroll-behavior: smooth;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
     }
 
     .reaction-btn {

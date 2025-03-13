@@ -1,10 +1,12 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   inject,
   Input,
   OnDestroy,
-  OnInit,
+  OnInit, output,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
@@ -19,6 +21,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateVideoDialogComponent } from '../../dialogs/create-video-dialog/create-video-dialog.component';
 import { EditProfileDialogComponent } from '../../dialogs/edit-profile-dialog/edit-profile-dialog.component';
 import * as UserActions from '../../../ngrxs/user/user.actions';
+import { user } from '@angular/fire/auth';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -29,8 +33,10 @@ import * as UserActions from '../../../ngrxs/user/user.actions';
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   readonly dialog = inject(MatDialog);
-  user$!: Observable<UserModel>;
+  userId$!: Observable<UserModel>; //người dùng khác
+  user$!: Observable<UserModel>; //bản thân
   user!: UserModel;
+  userById!: UserModel;
   @ViewChild('coverInput') coverInput!: ElementRef<HTMLInputElement>;
 
   @Input() username!: string;
@@ -39,16 +45,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
   @Input() describe!: string;
   @Input() follower!: number;
   @Input() background_url!: string;
-  self = true;
+  self!: boolean; //bản thân
   activeTab = 0;
   subscriptions: Subscription[] = [];
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private store: Store<{ user: UserState }>,
   ) {
     this.user$ = this.store.select('user', 'user');
+    this.userId$ = this.store.select('user', 'userById');
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
+    this.store.dispatch(
+      UserActions.getUserById({
+        userId: id as any,
+      }),
+    );
   }
 
   triggerCoverInput(): void {
@@ -75,7 +88,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     this.subscriptions.push(
       // Lắng nghe sự thay đổi của URL trong ActivatedRoute
-      this.route.url.subscribe(() => {
+      this.activatedRoute.url.subscribe(() => {
         this.updateActiveTab(this.router.url);
       }),
 
@@ -85,8 +98,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.updateActiveTab(event.urlAfterRedirects || event.url);
         }
       }),
-
-      this.user$.subscribe((user) => (this.user = user)),
 
       combineLatest([
         this.store.select((state) => state.user.isUpdateChannelImageSuccess),
@@ -106,8 +117,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
           ),
         )
         .subscribe(() => {
-          this.store.dispatch(UserActions.getUserById());
+          this.store.dispatch(UserActions.getUser());
         }),
+
+      this.user$.subscribe((user) => {
+        this.user = user;
+      }),
+
+      this.userId$.subscribe((userId) => {
+        this.userById = userId;
+      }),
     );
   }
 
@@ -117,24 +136,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.router.navigate([route]);
   }
 
-  ngOnDestroy() {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
-
-  private updateActiveTab(url: string) {
-    if (url.includes('/profile/featured')) {
+  updateActiveTab(url: string) {
+    if (url.includes('/featured')) {
       this.activeTab = 0;
-    } else if (url.includes('/profile/videos')) {
+    } else if (url.includes('/videos')) {
       this.activeTab = 1;
-    } else if (url.includes('/profile/playlists')) {
+    } else if (url.includes('/playlists')) {
       this.activeTab = 2;
     }
   }
 
-  private getRouteByIndex(index: number): string {
-    return (
-      ['profile/featured', 'profile/videos', 'profile/playlists'][index] ||
-      'profile/featured'
-    );
+  getRouteByIndex(index: number): string {
+    return ['/featured', '/videos', '/playlists'][index] || '/featured';
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 }

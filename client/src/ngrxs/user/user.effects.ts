@@ -27,17 +27,40 @@ export const createUser$ = createEffect(
   { functional: true },
 );
 
+export const getUser$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const userService = inject(UserService);
+    return actions$.pipe(
+      ofType(UserActions.getUser),
+      exhaustMap(() => {
+        return userService.getUser().pipe(
+          map((response) =>
+            UserActions.getUserSuccess({
+              user: response as UserModel,
+            }),
+          ),
+          catchError((obj) => {
+            return of(UserActions.getUserFailure({ error: obj.error.message }));
+          }),
+        );
+      }),
+    );
+  },
+  { functional: true },
+);
+
 export const getUserById$ = createEffect(
   () => {
     const actions$ = inject(Actions);
     const userService = inject(UserService);
     return actions$.pipe(
       ofType(UserActions.getUserById),
-      exhaustMap(() => {
-        return userService.getUserById().pipe(
+      exhaustMap((action) => {
+        return userService.getUserById(action.userId).pipe(
           map((response) =>
             UserActions.getUserByIdSuccess({
-              user: response as UserModel,
+              userById: response as UserModel,
             }),
           ),
           catchError((obj) => {

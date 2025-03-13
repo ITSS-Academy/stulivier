@@ -3,9 +3,9 @@
     <div id="user-data">
       <div class="user-background">
         <div class="background-img">
-          @if ((user$ | async)?.background_url) {
+          @if ((userId$ | async)?.id) {
             <img
-              [src]="(user$ | async)?.background_url"
+              [src]="(userId$ | async)?.background_url"
               alt="Selected Image"
               class="background-img-preview"
             />
@@ -13,7 +13,7 @@
         </div>
 
         <div (click)="triggerCoverInput()" class="background-linear">
-          @if (self) {
+          @if ((userId$ | async)?.id == (user$ | async)?.id) {
             <button
               mat-fab
               aria-label="Example icon button with a delete icon"
@@ -32,26 +32,26 @@
             <img
               alt="Selected Image"
               class="avatar-img"
-              src="{{ (user$ | async)?.avatar_url }}"
+              src="{{ (userId$ | async)?.avatar_url }}"
             />
           </div>
           <div class="user-data">
-            <span class="username">{{ (user$ | async)?.username }}</span>
+            <span class="username">{{ (userId$ | async)?.username }}</span>
             <!--            <span class="views">123,354 Views</span>-->
             <span class="describe">
-              {{ (user$ | async)?.describe }}
+              {{ (userId$ | async)?.describe }}
             </span>
           </div>
         </div>
 
         <div class="user-controller">
-          @if (self) {
+          @if ((userId$ | async)?.id == (user$ | async)?.id) {
             <button mat-flat-button (click)="openCreateVideoDialog()">
               <mat-icon class="material-symbols-rounded">outbox</mat-icon>
               UPLOAD NEW VIDEO
             </button>
           } @else {
-            <button mat-flat-button>Subscribe</button>
+            <button mat-flat-button style="display: none">Subscribe</button>
           }
         </div>
       </div>

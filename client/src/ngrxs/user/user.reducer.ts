@@ -5,9 +5,15 @@ import { UserModel } from '../../models/user.model';
 
 const initialState: UserState = {
   user: <UserModel>{},
+  userById: <UserModel>{},
+
   isGettingUser: false,
   isGetUserSuccess: false,
   getUserErrorMessage: '',
+
+  isGettingUserById: false,
+  isGetUserByIdSuccess: false,
+  getUserByIdErrorMessage: '',
 
   isCreatingUser: false,
   isCreateUserSuccess: false,
@@ -52,14 +58,14 @@ export const userReducer = createReducer(
     };
   }),
 
-  on(UserActions.getUserById, (state, action) => {
+  on(UserActions.getUser, (state, action) => {
     console.log(action.type);
     return <UserState>{
       ...state,
       isGettingUser: true,
     };
   }),
-  on(UserActions.getUserByIdSuccess, (state, action) => {
+  on(UserActions.getUserSuccess, (state, action) => {
     console.log(action.type);
     return <UserState>{
       ...state,
@@ -68,12 +74,38 @@ export const userReducer = createReducer(
       isGetUserSuccess: true,
     };
   }),
-  on(UserActions.getUserByIdFailure, (state, action) => {
+  on(UserActions.getUserFailure, (state, action) => {
     console.log(action.type);
     return <UserState>{
       ...state,
       isGettingUser: false,
       getUserErrorMessage: action.error,
+    };
+  }),
+
+  on(UserActions.getUserById, (state, action) => {
+    console.log(action.type);
+    return <UserState>{
+      ...state,
+      isGettingUserById: true,
+    };
+  }),
+  on(UserActions.getUserByIdSuccess, (state, action) => {
+    console.log(action.type);
+    console.log(action.userById);
+    return <UserState>{
+      ...state,
+      userById: action.userById,
+      isGettingUserById: false,
+      isGetUserByIdSuccess: true,
+    };
+  }),
+  on(UserActions.getUserByIdFailure, (state, action) => {
+    console.log(action.type);
+    return <UserState>{
+      ...state,
+      isGettingUserById: false,
+      getUserByIdErrorMessage: action.error,
     };
   }),
 

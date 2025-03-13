@@ -8,10 +8,23 @@ export const createUserFailure = createAction(
   props<{ error: any }>(),
 );
 
-export const getUserById = createAction('[User] Get By Id');
+export const getUser = createAction('[User] Get User');
+export const getUserSuccess = createAction(
+  '[User] Get User Success',
+  props<{ user: UserModel }>(),
+);
+export const getUserFailure = createAction(
+  '[User] Get User Failure',
+  props<{ error: any }>(),
+);
+
+export const getUserById = createAction(
+  '[User] Get By Id',
+  props<{ userId: string }>(),
+);
 export const getUserByIdSuccess = createAction(
   '[User] Get By Id Success',
-  props<{ user: UserModel }>(),
+  props<{ userById: UserModel }>(),
 );
 export const getUserByIdFailure = createAction(
   '[User] Get By Id Failure',

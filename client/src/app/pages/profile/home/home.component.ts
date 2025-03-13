@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   Renderer2,
@@ -16,7 +17,7 @@ import { VideoState } from '../../../../ngrxs/video/video.state';
 import * as VideoActions from '../../../../ngrxs/video/video.actions';
 import * as PlaylistActions from '../../../../ngrxs/playlist/playlist.actions';
 import { PlaylistCardComponent } from '../../../components/playlist-card/playlist-card.component';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PlaylistState } from '../../../../ngrxs/playlist/playlist.state';
 import {
   PlaylistModel,
@@ -25,6 +26,7 @@ import {
 import { UserModel } from '../../../../models/user.model';
 import { UserState } from '../../../../ngrxs/user/user.state';
 import { filter, map, take } from 'rxjs/operators';
+import * as UserActions from '../../../../ngrxs/user/user.actions';
 
 @Component({
   selector: 'app-home',
@@ -47,7 +49,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   videos$: Observable<VideoModel[]>;
   playlists$: Observable<PlaylistModel[]>;
   playlistDetail$: Observable<PlaylistResponseModel[]>;
-  user$!: Observable<UserModel>;
+  userId$!: Observable<UserModel>; //người dùng khác
+  user$!: Observable<UserModel>; //bản thân
+  user!: UserModel;
+  userById!: UserModel;
   randomVideo!: VideoModel | null;
 
   constructor(
@@ -60,6 +65,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private el: ElementRef,
   ) {
     this.user$ = this.store.select('user', 'user');
+    this.userId$ = this.store.select('user', 'userById');
     this.videos$ = this.store.select('video', 'videos');
     this.playlists$ = this.store.select('playlist', 'playlists');
     this.playlistDetail$ = this.store.select('playlist', 'playlistWithVideos');
@@ -67,32 +73,35 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription.push(
+      this.userId$.subscribe((userId) => {
+        if (userId.id) {
+          console.log(userId);
+          this.user = userId;
+          this.store.dispatch(
+            UserActions.getUserById({
+              userId: this.user.id as any,
+            }),
+          );
+          this.store.dispatch(
+            VideoActions.getVideosByUserId({ userId: this.user.id }),
+          );
+          this.store.dispatch(
+            PlaylistActions.getPlaylistByUserId({ id: this.user.id }),
+          );
+          this.store.dispatch(
+            PlaylistActions.getPlaylistWithVideos({
+              userId: this.user.id,
+            }),
+          );
+        }
+      }),
       this.store.select('video', 'videos').subscribe((videos) => {
         console.log(videos);
         this.updateButtonsVisibility();
       }),
       this.store.select('playlist', 'playlists').subscribe((playlists) => {
-        console.log(playlists);
         this.updateButtonsVisibility();
       }),
-      this.user$
-        .pipe(
-          filter((user) => !!user?.id), // Chỉ lấy khi user có id
-          take(1),
-        )
-        .subscribe((user) => {
-          this.store.dispatch(
-            VideoActions.getVideosByUserId({ userId: user.id }),
-          );
-          this.store.dispatch(
-            PlaylistActions.getPlaylistByUserId({ id: user.id }),
-          );
-          this.store.dispatch(
-            PlaylistActions.getPlaylistWithVideos({
-              userId: user.id,
-            }),
-          );
-        }),
       this.videos$.subscribe((videos) => {
         if (videos.length > 0) {
           this.randomVideo = videos[Math.floor(Math.random() * videos.length)];

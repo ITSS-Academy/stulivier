@@ -103,7 +103,7 @@ export class AppComponent implements OnInit {
     this.store.select('auth', 'idToken').subscribe((val) => {
       if (val != '') {
         this.jwtTokenService.setToken(val);
-        this.store.dispatch(UserActions.getUserById());
+        this.store.dispatch(UserActions.getUser());
       }
     });
     this.store.select('user', 'getUserErrorMessage').subscribe((val) => {
@@ -113,7 +113,7 @@ export class AppComponent implements OnInit {
     });
     this.store.select('user', 'isCreateUserSuccess').subscribe((val) => {
       if (val) {
-        this.store.dispatch(UserActions.getUserById());
+        this.store.dispatch(UserActions.getUser());
       }
     });
   }
