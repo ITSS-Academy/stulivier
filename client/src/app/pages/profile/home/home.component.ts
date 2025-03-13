@@ -75,13 +75,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subscription.push(
       this.userId$.subscribe((userId) => {
         if (userId.id) {
-          console.log(userId);
           this.user = userId;
-          this.store.dispatch(
-            UserActions.getUserById({
-              userId: this.user.id as any,
-            }),
-          );
           this.store.dispatch(
             VideoActions.getVideosByUserId({ userId: this.user.id }),
           );
@@ -95,16 +89,19 @@ export class HomeComponent implements OnInit, OnDestroy {
           );
         }
       }),
-      this.store.select('video', 'videos').subscribe((videos) => {
-        console.log(videos);
-        this.updateButtonsVisibility();
-      }),
-      this.store.select('playlist', 'playlists').subscribe((playlists) => {
-        this.updateButtonsVisibility();
-      }),
       this.videos$.subscribe((videos) => {
+        this.updateButtonsVisibility();
         if (videos.length > 0) {
           this.randomVideo = videos[Math.floor(Math.random() * videos.length)];
+        }
+      }),
+
+      this.playlists$.subscribe((playlists) => {
+        this.updateButtonsVisibility();
+      }),
+      this.playlistDetail$.subscribe((playlistDetail) => {
+        if (playlistDetail) {
+          console.log(playlistDetail);
         }
       }),
     );

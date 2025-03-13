@@ -90,6 +90,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.forEach((sub) => sub.unsubscribe());
-    this.store.dispatch(PlaylistActions.clearPlaylistState());
+    this.store.dispatch(PlaylistActions.clearAllPlaylistState());
   }
 }

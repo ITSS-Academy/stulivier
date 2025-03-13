@@ -441,6 +441,7 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.clearAllPlaylistState, (state, action) => {
+    console.log(action.type);
     return initialState;
   }),
 );

@@ -217,11 +217,9 @@ export class VideoCardVerticalComponent
       });
       return;
     } else {
-      console.log('this.video.id', this.video.id);
       this.router.navigate(['/watch'], {
         queryParams: { v: this.video.id },
       });
-      this.store.dispatch(PlaylistActions.clearPlaylistState());
     }
   }
 

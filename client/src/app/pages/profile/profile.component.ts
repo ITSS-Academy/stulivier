@@ -1,12 +1,10 @@
 import {
   Component,
   ElementRef,
-  EventEmitter,
   inject,
   Input,
   OnDestroy,
-  OnInit, output,
-  Output,
+  OnInit,
   ViewChild,
 } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
@@ -22,9 +20,7 @@ import { CreateVideoDialogComponent } from '../../dialogs/create-video-dialog/cr
 import { EditProfileDialogComponent } from '../../dialogs/edit-profile-dialog/edit-profile-dialog.component';
 import * as UserActions from '../../../ngrxs/user/user.actions';
 import * as VideoActions from '../../../ngrxs/video/video.actions';
-import  * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
-import { user } from '@angular/fire/auth';
-import { map } from 'rxjs/operators';
+import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
 
 @Component({
   selector: 'app-profile',
@@ -58,12 +54,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ) {
     this.user$ = this.store.select('user', 'user');
     this.userId$ = this.store.select('user', 'userById');
-    const id = this.activatedRoute.snapshot.paramMap.get('id');
-    this.store.dispatch(
-      UserActions.getUserById({
-        userId: id as any,
-      }),
-    );
   }
 
   triggerCoverInput(): void {
@@ -89,6 +79,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.updateActiveTab(this.router.url);
 
     this.subscriptions.push(
+      this.activatedRoute.params.subscribe((params) => {
+        // clear state before get user by id
+        this.store.dispatch(UserActions.clearUserById());
+        this.store.dispatch(VideoActions.clearState());
+        this.store.dispatch(PlaylistActions.clearAllPlaylistState());
+
+        const id = params['id'];
+        this.store.dispatch(UserActions.getUserById({ userId: id }));
+      }),
       // Lắng nghe sự thay đổi của URL trong ActivatedRoute
       this.activatedRoute.url.subscribe(() => {
         this.updateActiveTab(this.router.url);
@@ -121,14 +120,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.store.dispatch(UserActions.getUser());
         }),
-
-      this.user$.subscribe((user) => {
-        this.user = user;
-      }),
-
-      this.userId$.subscribe((userId) => {
-        this.userById = userId;
-      }),
     );
   }
 
@@ -149,13 +140,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   getRouteByIndex(index: number): string {
-    return [`profile/${this.user.id}/featured`
-      , `profile/${this.user.id}/videos`, `profile/${this.user.id}/playlists`][index] || '/featured';
+    return (
+      [
+        `profile/${this.user.id}/featured`,
+        `profile/${this.user.id}/videos`,
+        `profile/${this.user.id}/playlists`,
+      ][index] || '/featured'
+    );
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
-    this.store.dispatch(VideoActions.clearState())
-    this.store.dispatch(PlaylistActions.clearAllPlaylistState())
+    this.store.dispatch(UserActions.clearUserById());
+    this.store.dispatch(VideoActions.clearState());
+    this.store.dispatch(PlaylistActions.clearAllPlaylistState());
   }
 }

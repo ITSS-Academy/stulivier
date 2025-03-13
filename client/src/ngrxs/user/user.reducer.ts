@@ -92,7 +92,6 @@ export const userReducer = createReducer(
   }),
   on(UserActions.getUserByIdSuccess, (state, action) => {
     console.log(action.type);
-    console.log(action.userById);
     return <UserState>{
       ...state,
       userById: action.userById,
@@ -186,10 +185,19 @@ export const userReducer = createReducer(
       updateDescribeErrorMessage: action.error,
     };
   }),
+
   on(UserActions.clearState, (state, action) => {
     console.log(action.type);
     return <UserState>{
       ...initialState,
+    };
+  }),
+
+  on(UserActions.clearUserById, (state, action) => {
+    console.log(action.type);
+    return <UserState>{
+      ...state,
+      userById: <UserModel>{},
     };
   }),
 );

@@ -3,7 +3,8 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  Renderer2, viewChild,
+  Renderer2,
+  viewChild,
   ViewChild,
 } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
@@ -13,7 +14,7 @@ import { VideoModel } from '../../../models/video.model';
 import { PlaylistDetailModel } from '../../../models/playlist.model';
 import { UserModel } from '../../../models/user.model';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { PlaylistState } from '../../../ngrxs/playlist/playlist.state';
 import { UserState } from '../../../ngrxs/user/user.state';
 import { VideoState } from '../../../ngrxs/video/video.state';
@@ -27,11 +28,11 @@ import { CommentState } from '../../../ngrxs/comment/comment.state';
 import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
 import { CommentCardComponent } from '../../components/comment-card/comment-card.component';
 import { CommentModel } from '../../../models/comment.model';
-import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
-import {MatMenuTrigger} from '@angular/material/menu';
-import {NgIf} from '@angular/common';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { NgIf } from '@angular/common';
 import * as AuthActions from '../../../ngrxs/auth/auth.actions';
-import {AuthState} from '../../../ngrxs/auth/auth.state';
+import { AuthState } from '../../../ngrxs/auth/auth.state';
 
 @Component({
   selector: 'app-watch',
@@ -106,16 +107,11 @@ export class WatchComponent implements OnInit, OnDestroy {
       (state) => state.comment.createCommentErrorMessage,
     );
     this.comments$ = this.store.select((state) => state.comment.comments);
-    this.store.dispatch(VideoActions.getAllVideos());
     this.isGetPlaylistByIdSuccess$ = this.store.select(
       (state) => state.playlist.isGetPlaylistByIdSuccess,
     );
-    this.isCheckLogin$ = this.store.select('auth', 'isCheckLoggedIn')
+    this.isCheckLogin$ = this.store.select('auth', 'isCheckLoggedIn');
     this.user$ = this.store.select('user', 'user');
-  }
-
-  toggleDescription(): void {
-    this.isDescriptionExpanded = !this.isDescriptionExpanded;
   }
 
   signInWithGoogle() {
@@ -132,38 +128,41 @@ export class WatchComponent implements OnInit, OnDestroy {
       combineLatest([
         this.store.select('user', 'user'),
         this.activatedRoute.queryParamMap,
-      ]).subscribe(([user, params]) => {
-        this.user = user;
-        this.isCheckLogin$ = this.store.select('user', 'user').pipe(
-          map(user => !!user)
-        );
-        this.videoId = params.get('v') || '';
-        this.listId = params.get('list') || '';
-        this.startRadio = Number(params.get('index') || 0);
+      ])
+        .pipe(take(1))
+        .subscribe(([user, params]) => {
+          this.user = user;
+          this.isCheckLogin$ = this.store
+            .select('user', 'user')
+            .pipe(map((user) => !!user));
+          this.videoId = params.get('v') || '';
+          this.listId = params.get('list') || '';
+          this.startRadio = Number(params.get('index') || 0);
 
-        // Dispatch action lấy video
-        this.store.dispatch(
-          VideoActions.getVideoById({
-            videoId: this.videoId,
-            userId: this.user?.id ? this.user.id : null,
-          }),
-        );
-
-        // Dispatch action lấy playlist nếu có listId
-        if (this.listId) {
+          console.log(this.user?.id);
+          // Dispatch action lấy video
           this.store.dispatch(
-            PlaylistActions.getPlaylistById({ id: this.listId }),
+            VideoActions.getVideoById({
+              videoId: this.videoId,
+              userId: this.user?.id ? this.user.id : null,
+            }),
           );
-        }
 
-        // Dispatch action lấy tất cả video
-        this.store.dispatch(VideoActions.getAllVideos());
+          // Dispatch action lấy playlist nếu có listId
+          if (this.listId) {
+            this.store.dispatch(
+              PlaylistActions.getPlaylistById({ id: this.listId }),
+            );
+          }
 
-        // Dispatch action lấy comments của video
-        this.store.dispatch(
-          CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
-        );
-      }),
+          // Dispatch action lấy tất cả video
+          this.store.dispatch(VideoActions.getAllVideos());
+
+          // Dispatch action lấy comments của video
+          this.store.dispatch(
+            CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
+          );
+        }),
       // this.store
       //   .select('user', 'isGetUserSuccess')
       //   .pipe(
@@ -244,7 +243,7 @@ export class WatchComponent implements OnInit, OnDestroy {
       }),
     );
 
-    this.router.events.subscribe(event => {
+    this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         setTimeout(() => {
           this.viewport.scrollToIndex(0, 'smooth');
@@ -450,7 +449,7 @@ export class WatchComponent implements OnInit, OnDestroy {
   }
 
   focusCommentInput() {
-      this.commentInput.nativeElement.focus();
+    this.commentInput.nativeElement.focus();
   }
 
   nextVideo() {
@@ -482,7 +481,7 @@ export class WatchComponent implements OnInit, OnDestroy {
     if (this.watchHistory.length === 0 && this.totalWatchTime >= 30) {
       this.registerView();
     }
-    if (this.user) {
+    if (this.user?.id) {
       this.store.dispatch(
         VideoActions.updateWatchTime({
           videoId: this.videoId,
@@ -518,5 +517,4 @@ export class WatchComponent implements OnInit, OnDestroy {
       this.subscription.forEach((sub) => sub.unsubscribe());
     }
   }
-
 }

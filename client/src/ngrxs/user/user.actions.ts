@@ -75,4 +75,5 @@ export const updateDescribeFailure = createAction(
   props<{ error: any }>(),
 );
 
+export const clearUserById = createAction('[User] Clear User By Id');
 export const clearState = createAction('[User] Clear State');
