@@ -10,6 +10,7 @@ const initialState: PlaylistState = {
   playlists: [],
   playlist: <PlaylistModel>{},
   playlistDetail: <PlaylistDetailModel>{},
+  playlistWithVideos: [],
 
   isGettingAllPlaylists: false,
   isGetAllPlaylistsSuccess: false,
@@ -54,6 +55,10 @@ const initialState: PlaylistState = {
   isRemovingVideoInPlaylist: false,
   isRemoveVideoInPlaylistSuccess: false,
   removeVideoInPlaylistErrorMessage: '',
+
+  isGettingPlaylistWithVideos: false,
+  isGetPlaylistWithVideosSuccess: false,
+  getPlaylistWithVideosErrorMessage: '',
 };
 
 export const playlistReducer = createReducer(
@@ -353,6 +358,34 @@ export const playlistReducer = createReducer(
       ...state,
       isUpsertingPlaylistById: false,
       upsertPlaylistByIdErrorMessage: action.error,
+    };
+  }),
+
+  on(PlaylistActions.getPlaylistWithVideos, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isGettingPlaylistWithVideos: true,
+      isGetPlaylistWithVideosSuccess: false,
+    };
+  }),
+
+  on(PlaylistActions.getPlaylistWithVideosSuccess, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      playlistWithVideos: action.playlistWithVideos,
+      isGettingPlaylistWithVideos: false,
+      isGetPlaylistWithVideosSuccess: true,
+    };
+  }),
+
+  on(PlaylistActions.getPlaylistWithVideosFailure, (state, action) => {
+    console.log(action.type);
+    return <PlaylistState>{
+      ...state,
+      isGettingPlaylistWithVideos: false,
+      getPlaylistWithVideosErrorMessage: action.error,
     };
   }),
 

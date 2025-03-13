@@ -2,10 +2,12 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   inject,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   Renderer2,
 } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
@@ -22,7 +24,9 @@ import { Observable, Subscription } from 'rxjs';
 import { AlertService } from '../../../services/alert.service';
 import { PlaylistState } from '../../../ngrxs/playlist/playlist.state';
 import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
+import * as VideoActions from '../../../ngrxs/video/video.actions';
 import { SidebarState } from '../../../ngrxs/sidebar/sidebar.state';
+import { VideoState } from '../../../ngrxs/video/video.state';
 
 @Component({
   selector: 'app-video-card-vertical',
@@ -38,12 +42,20 @@ export class VideoCardVerticalComponent
   @Input() playlistId: string | undefined;
   @Input() index!: number;
   @Input() highlight = false;
+
+  @Input() isPlaying: boolean = false; // Nhận trạng thái từ `home`
+  @Output() hover = new EventEmitter<string>(); // Emit khi hover vào video
+  @Output() leave = new EventEmitter<string>(); // Emit khi rời video
   routerLink!: string;
 
   readonly dialog = inject(MatDialog);
   subscriptions: Subscription[] = [];
   user!: UserModel;
   isSidebarOpen$!: Observable<boolean>;
+
+  isMuteVolume!: boolean;
+  hoverTimeout: any;
+  isMouseInside: boolean = false;
 
   constructor(
     private router: Router,
@@ -52,6 +64,7 @@ export class VideoCardVerticalComponent
     private store: Store<{
       user: UserState;
       playlist: PlaylistState;
+      video: VideoState;
       sidebar: SidebarState;
     }>,
     private alertService: AlertService,
@@ -75,6 +88,10 @@ export class VideoCardVerticalComponent
             );
           }
         }),
+
+      this.store.select('video', 'isMuteVolume').subscribe((isMutedVideo) => {
+        this.isMuteVolume = isMutedVideo;
+      }),
 
       this.store.select('user', 'user').subscribe((user) => {
         if (user) {
@@ -148,6 +165,44 @@ export class VideoCardVerticalComponent
     //     '320px',
     //   );
     // }
+  }
+
+  onMouseEnter() {
+    this.isMouseInside = true;
+
+    // Xóa timeout nếu có (tránh hover liên tục)
+    if (this.hoverTimeout) {
+      clearTimeout(this.hoverTimeout);
+    }
+
+    // Delay 500ms trước khi phát video
+    this.hoverTimeout = setTimeout(() => {
+      if (this.isMouseInside) {
+        this.hover.emit(this.video.id);
+      }
+    }, 500);
+  }
+
+  onMouseLeave() {
+    this.isMouseInside = false;
+
+    // Xóa timeout để tránh phát sau khi rời chuột
+    if (this.hoverTimeout) {
+      clearTimeout(this.hoverTimeout);
+    }
+
+    // Báo cho home component dừng video
+    this.leave.emit(this.video.id);
+  }
+
+  onMuteClick(event: Event) {
+    event.stopPropagation(); // Ngăn không cho sự kiện lan lên vg-player
+    this.isMuteVolume = !this.isMuteVolume;
+    const video = document.getElementById('hls-video') as HTMLVideoElement;
+    if (video) {
+      video.volume = this.isMuteVolume ? 0 : 1;
+    }
+    this.store.dispatch(VideoActions.toggleMuteVolume());
   }
 
   onVideoClick(event: Event): void {

@@ -5,7 +5,12 @@
         <p class="title">{{ item.name }}</p>
         <div class="video-container">
           @for (video of item.videos | slice: 0 : 8; track $index) {
-            <app-video-card-vertical [video]="video"></app-video-card-vertical>
+            <app-video-card-vertical
+              [video]="video"
+              [isPlaying]="currentlyPlayingId === video.id"
+              (hover)="onVideoHover(video.id)"
+              (leave)="onVideoLeave(video.id)"
+            ></app-video-card-vertical>
           }
         </div>
         <div class="action">

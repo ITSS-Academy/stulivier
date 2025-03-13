@@ -23,7 +23,7 @@ import { CommentsModule } from './domains/comments/comments.module';
     JwtModule.register({
       global: true,
       secret: configuration().jwt_secret,
-      signOptions: { expiresIn: '3600s' },
+      signOptions: { expiresIn: '7200s' },
     }),
     UsersModule,
     AuthModule,

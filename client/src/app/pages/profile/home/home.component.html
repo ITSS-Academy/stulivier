@@ -31,7 +31,6 @@
         @for (video of videos$ | async; track $index) {
           <app-video-card-vertical [video]="video"></app-video-card-vertical>
         }
-        <!--max = 15 or no max: videos$ | async-->
       </div>
       <div class="button">
         <button aria-label="Scroll to left" class="button-left" mat-mini-fab>
@@ -67,7 +66,7 @@
       </div>
     </div>
   </div>
-  @for (items of playlists$ | async; track items.id) {
+  @for (items of playlistDetail$ | async; track items.id) {
     <div class="content-container">
       <div class="content-header">
         <h3>{{ items.title }}</h3>
@@ -77,8 +76,8 @@
       </div>
       <div class="data-container">
         <div class="data" #dataContainer>
-          @for (model of items.video_id; track $index) {
-            <!--          <app-video-card-vertical [video]="model"></app-video-card-vertical>-->
+          @for (model of items.videos; track $index) {
+            <app-video-card-vertical [video]="model"></app-video-card-vertical>
           }
         </div>
         <div class="button">

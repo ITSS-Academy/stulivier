@@ -182,4 +182,16 @@ export class PlaylistsService {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
+
+  async getAllPlaylistDetails(userId: string) {
+    const { data, error } = await this.supabase.rpc('get_playlists_by_user', {
+      p_user_id: userId,
+    });
+
+    if (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+
+    return data;
+  }
 }

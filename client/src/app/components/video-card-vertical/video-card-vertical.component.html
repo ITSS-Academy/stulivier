@@ -5,12 +5,49 @@
   class="video-card"
 >
   <div class="video-container">
-    <img
-      alt="thumbnail"
-      class="thumbnail"
-      mat-card-image
-      src="{{ video.thumbnail_url }}"
-    />
+    @if (!isPlaying) {
+      <img
+        class="thumbnail"
+        (mouseenter)="onMouseEnter()"
+        alt="Thumbnail"
+        mat-card-image
+        [src]="video.thumbnail_url"
+      />
+      <video
+        #preloadVideo
+        [vgHls]="video.video_url"
+        [vgMedia]="$any(preloadVideo)"
+        [muted]="isMuteVolume"
+        crossorigin
+        playsinline
+        id="preload-hls-video"
+        preload="auto"
+        style="display: none"
+      ></video>
+    }
+
+    @if (isPlaying) {
+      <vg-player class="video-player" (mouseleave)="onMouseLeave()">
+        <vg-overlay-play></vg-overlay-play>
+        <vg-buffering></vg-buffering>
+
+        <vg-controls>
+          <vg-mute (click)="onMuteClick($event)"></vg-mute>
+        </vg-controls>
+
+        <video
+          #media
+          [vgHls]="video.video_url"
+          [vgMedia]="$any(media)"
+          [muted]="isMuteVolume"
+          autoplay
+          crossorigin
+          playsinline
+          id="hls-video"
+          preload="auto"
+        ></video>
+      </vg-player>
+    }
   </div>
   <mat-card-content>
     <div class="content-container">
