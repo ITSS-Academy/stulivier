@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
@@ -46,11 +47,14 @@ import {AuthState} from '../../../ngrxs/auth/auth.state';
   templateUrl: './watch.component.html',
   styleUrl: './watch.component.scss',
 })
-export class WatchComponent implements OnInit, OnDestroy {
+export class WatchComponent implements OnInit, OnDestroy, AfterViewInit  {
   readonly menuTrigger = viewChild.required(MatMenuTrigger);
   @ViewChild('media', { static: true }) media!: ElementRef;
   @ViewChild('commentInput') commentInput!: ElementRef;
   @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
+
+  @ViewChild('commentdiv', { static: false }) commentdiv!: CdkVirtualScrollViewport;
+  @ViewChild('content') contentDiv!: ElementRef;
 
   isDescriptionExpanded = false;
   videoId!: string;
@@ -517,6 +521,17 @@ export class WatchComponent implements OnInit, OnDestroy {
       this.store.dispatch(PlaylistActions.clearAllPlaylistState());
       this.subscription.forEach((sub) => sub.unsubscribe());
     }
+  }
+
+  ngAfterViewInit() {
+    this.comments$.subscribe(() => {
+      setTimeout(() => {
+        console.log('Viewport:', this.commentdiv); // Kiểm tra viewport có tồn tại không
+        if (this.commentdiv) {
+          this.commentdiv.scrollTo({ bottom: 0, behavior: 'smooth' });
+        }
+      }, 100);
+    });
   }
 
 }
