@@ -35,14 +35,12 @@ const initialState: UserState = {
 export const userReducer = createReducer(
   initialState,
   on(UserActions.createUser, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isCreatingUser: true,
     };
   }),
   on(UserActions.createUserSuccess, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isCreatingUser: false,
@@ -50,7 +48,6 @@ export const userReducer = createReducer(
     };
   }),
   on(UserActions.createUserFailure, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isCreatingUser: false,
@@ -59,14 +56,12 @@ export const userReducer = createReducer(
   }),
 
   on(UserActions.getUser, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isGettingUser: true,
     };
   }),
   on(UserActions.getUserSuccess, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       user: action.user,
@@ -75,7 +70,6 @@ export const userReducer = createReducer(
     };
   }),
   on(UserActions.getUserFailure, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isGettingUser: false,
@@ -84,14 +78,12 @@ export const userReducer = createReducer(
   }),
 
   on(UserActions.getUserById, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isGettingUserById: true,
     };
   }),
   on(UserActions.getUserByIdSuccess, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       userById: action.userById,
@@ -100,7 +92,6 @@ export const userReducer = createReducer(
     };
   }),
   on(UserActions.getUserByIdFailure, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isGettingUserById: false,
@@ -109,7 +100,6 @@ export const userReducer = createReducer(
   }),
 
   on(UserActions.updateChannelImage, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isUpdatingChannelImage: true,
@@ -117,7 +107,6 @@ export const userReducer = createReducer(
   }),
 
   on(UserActions.updateChannelImageSuccess, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isUpdatingChannelImage: false,
@@ -126,7 +115,6 @@ export const userReducer = createReducer(
   }),
 
   on(UserActions.updateChannelImageFailure, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isUpdatingChannelImage: false,
@@ -135,7 +123,6 @@ export const userReducer = createReducer(
   }),
 
   on(UserActions.updateAvatar, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isUpdatingAvatar: true,
@@ -143,7 +130,6 @@ export const userReducer = createReducer(
   }),
 
   on(UserActions.updateAvatarSuccess, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isUpdatingAvatar: false,
@@ -152,7 +138,6 @@ export const userReducer = createReducer(
   }),
 
   on(UserActions.updateAvatarFailure, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isUpdatingAvatar: false,
@@ -161,7 +146,6 @@ export const userReducer = createReducer(
   }),
 
   on(UserActions.updateDescribe, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isUpdatingDescribe: true,
@@ -169,7 +153,6 @@ export const userReducer = createReducer(
   }),
 
   on(UserActions.updateDescribeSuccess, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isUpdatingDescribe: false,
@@ -178,7 +161,6 @@ export const userReducer = createReducer(
   }),
 
   on(UserActions.updateDescribeFailure, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       isUpdatingDescribe: false,
@@ -187,17 +169,35 @@ export const userReducer = createReducer(
   }),
 
   on(UserActions.clearState, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...initialState,
     };
   }),
 
   on(UserActions.clearUserById, (state, action) => {
-    console.log(action.type);
     return <UserState>{
       ...state,
       userById: <UserModel>{},
+
+      isGettingUserById: false,
+      isGetUserByIdSuccess: false,
+      getUserByIdErrorMessage: '',
+
+      isCreatingUser: false,
+      isCreateUserSuccess: false,
+      createUserErrorMessage: '',
+
+      isUpdatingChannelImage: false,
+      isUpdateChannelImageSuccess: false,
+      updateChannelImageErrorMessage: '',
+
+      isUpdatingAvatar: false,
+      isUpdateAvatarSuccess: false,
+      updateAvatarErrorMessage: '',
+
+      isUpdatingDescribe: false,
+      isUpdateDescribeSuccess: false,
+      updateDescribeErrorMessage: '',
     };
   }),
 );

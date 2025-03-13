@@ -26,11 +26,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscriptions.push(
-      this.categories$.subscribe((categories) => {
-        console.log('categories', categories);
-      }),
-    );
+    this.subscriptions.push();
   }
 
   ngOnDestroy(): void {

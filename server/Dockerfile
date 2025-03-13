@@ -12,13 +12,13 @@ RUN rm -rf node_modules
 # Install dependencies in the root folder
 RUN npm install
 
-# Set the working directory to the db folder and install dependencies
-WORKDIR /app/db
-RUN rm -rf node_modules
-RUN npm install
-
-# Set the working directory back to the root folder
-WORKDIR /app
+## Set the working directory to the db folder and install dependencies
+#WORKDIR /app/db
+#RUN rm -rf node_modules
+#RUN npm install
+#
+## Set the working directory back to the root folder
+#WORKDIR /app
 
 # Build the NestJS application
 RUN npm run build

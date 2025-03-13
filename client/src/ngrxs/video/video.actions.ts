@@ -1,5 +1,9 @@
 import { createAction, props } from '@ngrx/store';
-import {CreateVideoDto, UpdateVideoModel, VideoModel} from '../../models/video.model';
+import {
+  CreateVideoDto,
+  UpdateVideoModel,
+  VideoModel,
+} from '../../models/video.model';
 
 export const toggleMuteVolume = createAction('[Video] Toggle Mute Volume');
 
@@ -146,17 +150,43 @@ export const getVideosLikedByUserFailure = createAction(
 
 export const updateVideo = createAction(
   '[Video] Update Video',
-  props<{ video: UpdateVideoModel }>()
+  props<{ video: UpdateVideoModel }>(),
 );
 
 export const updateVideoSuccess = createAction(
   '[Video] Update Video Success',
-  props<{ video: UpdateVideoModel }>()
+  props<{ video: UpdateVideoModel }>(),
 );
 
 export const updateVideoFailure = createAction(
   '[Video] Update Video Failure',
-  props<{ error: any }>()
+  props<{ error: any }>(),
+);
+
+export const deleteVideo = createAction(
+  '[Video] Delete Video',
+  props<{ id: string }>(),
+);
+
+export const deleteVideoSuccess = createAction('[Video] Delete Video Success');
+
+export const deleteVideoFailure = createAction(
+  '[Video] Delete Video Failure',
+  props<{ error: any }>(),
+);
+
+export const addToHistory = createAction(
+  '[Video] Add To History',
+  props<{ videoId: string; userId: string }>(),
+);
+
+export const addToHistorySuccess = createAction(
+  '[Video] Add To History Success',
+);
+
+export const addToHistoryFailure = createAction(
+  '[Video] Add To History Failure',
+  props<{ error: any }>(),
 );
 
 export const clearState = createAction('[Video] Clear State');

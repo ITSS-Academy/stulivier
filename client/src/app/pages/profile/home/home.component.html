@@ -43,56 +43,79 @@
     </div>
   </div>
 
-  <div class="content-container">
-    <div class="content-header">
-      <h3>Playlist</h3>
-      <button [routerLink]="['/profile/playlists']" mat-stroked-button>
-        View more
-      </button>
-    </div>
-    <div class="data-container">
-      <div #dataContainer class="data">
-        @for (playlist of playlists$ | async; track $index) {
-          <app-playlist-card [playlist]="playlist"></app-playlist-card>
-        }
-      </div>
-      <div class="button">
-        <button aria-label="Scroll to left" class="button-left" mat-mini-fab>
-          <mat-icon class="material-symbols-rounded">chevron_left</mat-icon>
-        </button>
-        <button aria-label="Scroll to right" class="button-right" mat-mini-fab>
-          <mat-icon class="material-symbols-rounded">chevron_right</mat-icon>
-        </button>
-      </div>
-    </div>
-  </div>
-  @for (items of playlistDetail$ | async; track items.id) {
+  @if ((playlists$ | async)?.length) {
     <div class="content-container">
       <div class="content-header">
-        <h3>{{ items.title }}</h3>
-        <button mat-stroked-button [routerLink]="['/playlists', items.id]">
+        <h3>Playlist</h3>
+        <button [routerLink]="['/profile/playlists']" mat-stroked-button>
           View more
         </button>
       </div>
       <div class="data-container">
-        <div class="data" #dataContainer>
-          @for (model of items.videos; track $index) {
-            <app-video-card-vertical [video]="model"></app-video-card-vertical>
+        <div #dataContainer class="data">
+          @for (playlist of playlists$ | async; track $index) {
+            <app-playlist-card [playlist]="playlist"></app-playlist-card>
           }
         </div>
         <div class="button">
-          <button mat-mini-fab aria-label="Scroll to left" class="button-left">
+          <button aria-label="Scroll to left" class="button-left" mat-mini-fab>
             <mat-icon class="material-symbols-rounded">chevron_left</mat-icon>
           </button>
           <button
-            mat-mini-fab
             aria-label="Scroll to right"
             class="button-right"
+            mat-mini-fab
           >
             <mat-icon class="material-symbols-rounded">chevron_right</mat-icon>
           </button>
         </div>
       </div>
     </div>
+  }
+  @for (items of playlistDetail$ | async; track items.id) {
+    @if (items.videos.length > 0) {
+      @if (
+        (userId$ | async)?.id == (user$ | async)?.id &&
+        items.title !== "Watch later"
+      ) {
+        <div class="content-container">
+          <div class="content-header">
+            <h3>{{ items.title }}</h3>
+            <button mat-stroked-button [routerLink]="['/playlists', items.id]">
+              View more
+            </button>
+          </div>
+          <div class="data-container">
+            <div class="data" #dataContainer>
+              @for (model of items.videos; track $index) {
+                <app-video-card-vertical
+                  [video]="model"
+                ></app-video-card-vertical>
+              }
+            </div>
+            <div class="button">
+              <button
+                mat-mini-fab
+                aria-label="Scroll to left"
+                class="button-left"
+              >
+                <mat-icon class="material-symbols-rounded"
+                  >chevron_left</mat-icon
+                >
+              </button>
+              <button
+                mat-mini-fab
+                aria-label="Scroll to right"
+                class="button-right"
+              >
+                <mat-icon class="material-symbols-rounded"
+                  >chevron_right</mat-icon
+                >
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    }
   }
 </div>

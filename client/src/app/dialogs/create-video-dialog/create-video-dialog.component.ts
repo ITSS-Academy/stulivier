@@ -119,7 +119,11 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
     });
 
     this.subscription.push(
+      this.uploadProgress$.subscribe((progress) => {
+        console.log('progress', progress);
+      }),
       this.isCreateVideoSuccess$.subscribe((isSuccess) => {
+        console.log('isSuccess', isSuccess);
         if (isSuccess) {
           this.store.dispatch(VideoActions.clearState());
 
@@ -223,7 +227,6 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
   }
 
   onThumbnailInputClick() {
-    console.log('onThumbnailInputClick');
     const fileInput = document.getElementsByClassName(
       'thumbnail-file-input',
     )[0] as HTMLInputElement;

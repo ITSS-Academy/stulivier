@@ -58,18 +58,6 @@ table {
   }
 }
 
-.edit-btn:hover {
-  background-color: rgba(0, 0, 255, 0.1); /* Màu nền đỏ nhạt */
-  color: blue !important; /* Đổi màu icon */
-  transition: 0.3s;
-}
-
-.delete-btn:hover {
-  background-color: rgba(255, 0, 0, 0.1); /* Màu nền đỏ nhạt */
-  color: red; /* Đổi màu icon */
-  transition: 0.3s;
-}
-
 .Video {
   width: 303px !important;
   height: 171px !important;

@@ -37,6 +37,9 @@ import { RouterLink } from '@angular/router';
 import { EditProfileDialogComponent } from '../../dialogs/edit-profile-dialog/edit-profile-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EditVideoDialogComponent } from '../../dialogs/edit-video-dialog/edit-video-dialog.component';
+import { ConfirmDialogComponent } from '../../dialogs/confirm-dialog/confirm-dialog.component';
+import { DialogRef } from '@angular/cdk/dialog';
+import { AlertService } from '../../../services/alert.service';
 
 @Component({
   selector: 'app-video-control',
@@ -73,6 +76,8 @@ export class VideoControlComponent implements OnInit, OnDestroy, AfterViewInit {
   subscription: Subscription[] = [];
   videos$: Observable<VideoModel[]>;
   user$!: Observable<UserModel>;
+  user!: UserModel;
+  isDeleteVideoSuccess$!: Observable<boolean>;
   readonly dialog = inject(MatDialog);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -80,30 +85,47 @@ export class VideoControlComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private store: Store<{
       video: VideoState;
-      user: UserState; //test only
+      user: UserState;
     }>,
+    private alertService: AlertService,
   ) {
     this.videos$ = this.store.select('video', 'videos');
     this.user$ = this.store.select('user', 'user'); //test only
-    this.user$
-      .pipe(
-        filter((user) => !!user?.id), // Chỉ lấy khi user có id
-        take(1),
-      )
-      .subscribe((user) => {
-        this.store.dispatch(
-          VideoActions.getVideosByUserId({ userId: user.id }),
-        );
-      });
+    this.isDeleteVideoSuccess$ = this.store.select(
+      'video',
+      'isDeleteVideoSuccess',
+    );
   }
 
   ngOnInit() {
     this.subscription.push(
+      this.user$
+        .pipe(
+          filter((user) => !!user?.id), // Chỉ lấy khi user có id
+          take(1),
+        )
+        .subscribe((user) => {
+          this.user = user;
+          this.store.dispatch(
+            VideoActions.getVideosByUserId({ userId: user.id }),
+          );
+        }),
       this.store.select('video', 'videos').subscribe((videos) => {
-        // console.log(videos);
         this.dataSource.data = videos || [];
-        // let total = videos.length || 0;
-        // console.log(total);
+      }),
+      this.isDeleteVideoSuccess$.subscribe((isDeleteVideoSuccess) => {
+        if (isDeleteVideoSuccess) {
+          this.alertService.showAlert(
+            `Delete video successfully.`,
+            'Close',
+            3000,
+            'end',
+            'top',
+          );
+          this.store.dispatch(
+            VideoActions.getVideosByUserId({ userId: this.user.id }),
+          );
+        }
       }),
     );
   }
@@ -125,11 +147,19 @@ export class VideoControlComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  openDeleteVideoDialog() {
-    // this.dialog.open(DeleteVideoDialogComponent, {
-    //   minWidth: '1000px',
-    //   disableClose: true,
-    // });
+  openDeleteVideoDialog(video: VideoModel) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      disableClose: true,
+      data: {
+        message:
+          'Are you sure you want to delete this video? This action cannot be undone.',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.store.dispatch(VideoActions.deleteVideo({ id: video.id }));
+      }
+    });
   }
 
   ngOnDestroy() {

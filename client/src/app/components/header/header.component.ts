@@ -106,6 +106,10 @@ export class HeaderComponent {
     });
   }
 
+  onImgError(event: any) {
+    event.target.src = 'assets/images/default-avatar.jpg';
+  }
+
   signOut() {
     this.store.dispatch(AuthActions.signOut());
     this.store.dispatch(UserActions.clearState());

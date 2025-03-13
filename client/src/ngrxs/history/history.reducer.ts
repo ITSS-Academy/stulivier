@@ -13,7 +13,6 @@ const initialState: HistoryState = {
 export const historyReducer = createReducer(
   initialState,
   on(HistoryActions.getHistoryByUserId, (state, action) => {
-    console.log(action.type);
     return <HistoryState>{
       ...state,
       isGettingAllVideosInHistory: true,
@@ -21,7 +20,6 @@ export const historyReducer = createReducer(
   }),
 
   on(HistoryActions.getHistoryByUserIdSuccess, (state, action) => {
-    console.log(action.type);
     return <HistoryState>{
       ...state,
       isGettingAllVideosInHistory: false,
@@ -31,7 +29,6 @@ export const historyReducer = createReducer(
   }),
 
   on(HistoryActions.getHistoryByUserIdFailure, (state, action) => {
-    console.log(action.type);
     return <HistoryState>{
       ...state,
       isGettingAllVideosInHistory: false,
@@ -40,7 +37,6 @@ export const historyReducer = createReducer(
   }),
 
   on(HistoryActions.clearHistory, (state, action) => {
-    console.log(action.type);
     return <HistoryState>{
       ...state,
       history: [],

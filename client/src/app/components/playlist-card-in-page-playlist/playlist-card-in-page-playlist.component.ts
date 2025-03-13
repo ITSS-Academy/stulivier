@@ -61,7 +61,6 @@ export class PlaylistCardInPagePlaylistComponent {
         );
         // Perform deletion logic here
       } else {
-        console.log('User cancelled deletion');
       }
     });
   }

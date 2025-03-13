@@ -6,7 +6,9 @@ import {
   Request,
   Get,
   Req,
-  UploadedFiles, Put,
+  UploadedFiles,
+  Put,
+  Delete,
 } from '@nestjs/common';
 import { VideosService } from './videos.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -102,8 +104,18 @@ export class VideosController {
 
   @Put()
   async update(@Request() req: any) {
-    // console.log('Request body:', req.body);  // Kiểm tra dữ liệu từ client
-    // console.log('Updating user:', req.user); // Kiểm tra dữ liệu gửi lên
     return await this.videosService.updateVideo(req.body);
+  }
+
+  @Post('watch-history')
+  async addToWatchHistory(@Request() req: any) {
+    const { userId, videoId } = req.body;
+    return await this.videosService.updateWatchHistory(videoId, userId);
+  }
+
+  @Delete()
+  async deleteVideo(@Request() req: any) {
+    const { videoId } = req.query;
+    return await this.videosService.deleteVideo(videoId);
   }
 }

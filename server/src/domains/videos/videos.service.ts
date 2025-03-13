@@ -310,15 +310,6 @@ export class VideosService {
         throw new HttpException(error, HttpStatus.BAD_REQUEST);
       }
 
-      if (userId != null) {
-        console.log('User ID:', userId);
-        // Update video history
-        const { error } = await this.supabase.rpc('upsert_watch_history', {
-          p_video_id: videoId,
-          p_user_id: userId,
-        });
-      }
-
       return data[0];
     } catch (e) {
       throw new HttpException(e, HttpStatus.BAD_REQUEST);
@@ -478,6 +469,38 @@ export class VideosService {
       }
 
       return { message: 'Video updated successfully' };
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async updateWatchHistory(videoId: string, userId: string) {
+    console.log(videoId);
+    console.log(userId);
+    const { error } = await this.supabase.rpc('upsert_watch_history', {
+      p_video_id: videoId,
+      p_user_id: userId,
+    });
+
+    if (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async deleteVideo(videoId: string) {
+    try {
+      const { error } = await this.supabase.rpc(
+        'delete_video_and_update_playlists',
+        {
+          video_uuid: videoId,
+        },
+      );
+
+      if (error) {
+        throw new HttpException(error, HttpStatus.BAD_REQUEST);
+      }
+
+      return { message: 'Video deleted successfully' };
     } catch (e) {
       throw new HttpException(e, HttpStatus.BAD_REQUEST);
     }

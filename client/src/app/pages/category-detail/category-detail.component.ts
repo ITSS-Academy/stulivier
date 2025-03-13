@@ -52,9 +52,6 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
           }),
         );
       }),
-      this.category$.subscribe((category) => {
-        console.log(category);
-      }),
     );
   }
 

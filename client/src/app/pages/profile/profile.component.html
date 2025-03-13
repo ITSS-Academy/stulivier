@@ -1,73 +1,80 @@
 <div id="container">
-  <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
-    <div id="user-data">
-      <div class="user-background">
-        <div class="background-img">
-          @if ((userId$ | async)?.id) {
-            <img
-              [src]="(userId$ | async)?.background_url"
-              alt="Selected Image"
-              class="background-img-preview"
-            />
-          }
-        </div>
+  @if ((userId$ | async)?.id) {
+    <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
+      <div id="user-data">
+        @if ((userId$ | async)?.background_url) {
+          <div class="user-background">
+            <div class="background-img">
+              <img
+                [src]="(userId$ | async)?.background_url"
+                alt="Selected Image"
+                class="background-img-preview"
+              />
+            </div>
 
-        <div (click)="triggerCoverInput()" class="background-linear">
-          @if ((userId$ | async)?.id == (user$ | async)?.id) {
-            <button
-              mat-fab
-              aria-label="Example icon button with a delete icon"
-              class="avatar-button"
-              (click)="openEditProfileDialog(); $event.stopPropagation()"
-            >
-              <mat-icon class="material-symbols-rounded">edit</mat-icon>
-            </button>
-          }
+            <div class="background-linear">
+              @if ((userId$ | async)?.id == (user$ | async)?.id) {
+                <button
+                  mat-fab
+                  aria-label="Example icon button with a delete icon"
+                  class="avatar-button"
+                  (click)="openEditProfileDialog(); $event.stopPropagation()"
+                >
+                  <mat-icon class="material-symbols-rounded">edit</mat-icon>
+                </button>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="user-data-controller">
+          <div class="info">
+            <div class="avatar">
+              <img
+                (error)="onImgError($event)"
+                alt="Selected Image"
+                class="avatar-img"
+                src="{{ (userId$ | async)?.avatar_url }}"
+              />
+            </div>
+            <div class="user-data">
+              <span class="username">{{ (userId$ | async)?.username }}</span>
+              <!--            <span class="views">123,354 Views</span>-->
+              <span class="describe">
+                {{ (userId$ | async)?.describe }}
+              </span>
+            </div>
+          </div>
+
+          <div class="user-controller">
+            @if ((userId$ | async)?.id == (user$ | async)?.id) {
+              <button mat-flat-button (click)="openCreateVideoDialog()">
+                <mat-icon class="material-symbols-rounded">outbox</mat-icon>
+                UPLOAD NEW VIDEO
+              </button>
+            } @else {
+              <button mat-flat-button style="display: none">Subscribe</button>
+            }
+          </div>
         </div>
       </div>
-
-      <div class="user-data-controller">
-        <div class="info">
-          <div class="avatar">
-            <img
-              alt="Selected Image"
-              class="avatar-img"
-              src="{{ (userId$ | async)?.avatar_url }}"
-            />
-          </div>
-          <div class="user-data">
-            <span class="username">{{ (userId$ | async)?.username }}</span>
-            <!--            <span class="views">123,354 Views</span>-->
-            <span class="describe">
-              {{ (userId$ | async)?.describe }}
-            </span>
-          </div>
-        </div>
-
-        <div class="user-controller">
-          @if ((userId$ | async)?.id == (user$ | async)?.id) {
-            <button mat-flat-button (click)="openCreateVideoDialog()">
-              <mat-icon class="material-symbols-rounded">outbox</mat-icon>
-              UPLOAD NEW VIDEO
-            </button>
-          } @else {
-            <button mat-flat-button style="display: none">Subscribe</button>
-          }
-        </div>
-      </div>
+      <mat-tab-group
+        (selectedTabChange)="onTabChange($event)"
+        [(selectedIndex)]="activeTab"
+        class="sticky-tab-group"
+        mat-align-tabs="start"
+        mat-stretch-tabs="false"
+        style="background-color: var(--md-sys-color-surface)"
+      >
+        <mat-tab label="Home"></mat-tab>
+        <mat-tab label="Videos"></mat-tab>
+        <mat-tab label="Playlist"></mat-tab>
+      </mat-tab-group>
+      <router-outlet></router-outlet>
+    </cdk-virtual-scroll-viewport>
+  } @else {
+    <div class="loading">
+      <mat-spinner class="circle"></mat-spinner>
     </div>
-    <mat-tab-group
-      (selectedTabChange)="onTabChange($event)"
-      [(selectedIndex)]="activeTab"
-      class="sticky-tab-group"
-      mat-align-tabs="start"
-      mat-stretch-tabs="false"
-      style="background-color: var(--md-sys-color-surface)"
-    >
-      <mat-tab label="Home"></mat-tab>
-      <mat-tab label="Videos"></mat-tab>
-      <mat-tab label="Playlist"></mat-tab>
-    </mat-tab-group>
-    <router-outlet></router-outlet>
-  </cdk-virtual-scroll-viewport>
+  }
 </div>

@@ -144,6 +144,10 @@ export class VideoCardHorizontalComponent
     }
   }
 
+  onImgError(event: any) {
+    event.target.src = 'assets/images/default-avatar.jpg';
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }

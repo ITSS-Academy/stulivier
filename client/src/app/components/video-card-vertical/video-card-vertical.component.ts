@@ -256,6 +256,10 @@ export class VideoCardVerticalComponent
     );
   }
 
+  onImgError(event: any) {
+    event.target.src = 'assets/images/default-avatar.jpg';
+  }
+
   ngOnDestroy() {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }

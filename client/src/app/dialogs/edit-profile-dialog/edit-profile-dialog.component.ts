@@ -50,14 +50,15 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 export class EditProfileDialogComponent implements OnInit, OnDestroy {
   @ViewChild('textarea', { static: false })
   subscriptions: Subscription[] = [];
+
   textarea!: ElementRef<HTMLTextAreaElement>;
   editProfileForm!: FormGroup;
   user$!: Observable<UserModel>;
   user!: UserModel;
   previewBackground!: string;
   previewAvatar!: string;
-  backgroundFile!: File;
-  avatarFile!: File;
+  backgroundFile: File | null = null;
+  avatarFile: File | null = null;
 
   constructor(
     private dialogRef: DialogRef<EditProfileDialogComponent>,
@@ -121,7 +122,7 @@ export class EditProfileDialogComponent implements OnInit, OnDestroy {
     if (this.editProfileForm.invalid) {
       return;
     }
-    if (this.avatarFile) {
+    if (this.avatarFile !== null) {
       this.store.dispatch(
         UserActions.updateAvatar({
           avatar: this.avatarFile,
@@ -129,7 +130,7 @@ export class EditProfileDialogComponent implements OnInit, OnDestroy {
         }),
       );
     }
-    if (this.backgroundFile) {
+    if (this.backgroundFile !== null) {
       this.store.dispatch(
         UserActions.updateChannelImage({
           channelImg: this.backgroundFile,
@@ -168,6 +169,8 @@ export class EditProfileDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
+    for (let i = 0; i < this.subscriptions.length; i++) {
+      this.subscriptions[i].unsubscribe();
+    }
   }
 }

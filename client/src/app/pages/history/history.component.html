@@ -1,17 +1,9 @@
 <div id="container">
   @defer (when (isCheckLogin$ | async)) {
     @if ((user$ | async)?.id) {
-      <div id="header-container">
-        <div id="playlist-thumbnail-background">
-          <img
-            [src]="
-              (videos$ | async)?.[0]?.videos?.[0]?.video_details?.thumbnail_url
-            "
-            alt="playlist-thumbnail"
-          />
-        </div>
-        <div id="playlist-info">
-          <div id="playlist-thumbnail">
+      @defer (when (videos$ | async)?.length) {
+        <div id="header-container">
+          <div id="playlist-thumbnail-background">
             <img
               [src]="
                 (videos$ | async)?.[0]?.videos?.[0]?.video_details
@@ -19,23 +11,44 @@
               "
               alt="playlist-thumbnail"
             />
-            <div id="right-playlist-thumbnail">
-              <div class="info">
-                <h2 id="playlist-title">History</h2>
-                <div class="top">
-                  <div id="user-avatar">
-                    <img
-                      [src]="(user$ | async)?.avatar_url"
-                      alt="user-avatar"
-                    />
+          </div>
+          <div id="playlist-info">
+            <div id="playlist-thumbnail">
+              <img
+                [src]="
+                  (videos$ | async)?.[0]?.videos?.[0]?.video_details
+                    ?.thumbnail_url
+                "
+                alt="playlist-thumbnail"
+              />
+              <div id="right-playlist-thumbnail">
+                <div class="info">
+                  <h2 id="playlist-title">History</h2>
+                  <div class="top">
+                    <div id="user-avatar">
+                      <img
+                        [src]="(user$ | async)?.avatar_url"
+                        alt="user-avatar"
+                      />
+                    </div>
+                    <span id="user-name">{{ (user$ | async)?.username }}</span>
                   </div>
-                  <span id="user-name">{{ (user$ | async)?.username }}</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      } @placeholder (minimum 500ms) {
+        <ngx-skeleton-loader
+          [theme]="{
+            width: '100%',
+            height: '220px',
+            filter: 'brightness(0.5)',
+          }"
+          appearance="line"
+        >
+        </ngx-skeleton-loader>
+      }
       <div id="content-container">
         <cdk-virtual-scroll-viewport id="main-content" itemSize="50">
           @defer (when (videos$ | async)?.length) {

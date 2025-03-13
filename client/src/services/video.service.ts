@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClientAuth } from '../utils/http-client-auth';
-import {CreateVideoDto, UpdateVideoModel} from '../models/video.model';
+import { CreateVideoDto, UpdateVideoModel } from '../models/video.model';
 import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
-import {UserModel} from '../models/user.model';
+import { UserModel } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -65,5 +65,13 @@ export class VideoService {
 
   updateVideo(video: UpdateVideoModel) {
     return this.http.put(`videos`, video);
+  }
+
+  addToWatchHistory(videoId: string, userId: string) {
+    return this.http.post('videos/watch-history', { videoId, userId });
+  }
+
+  deleteVideo(videoId: string) {
+    return this.http.delete(`videos`, { params: { videoId } });
   }
 }

@@ -6,40 +6,40 @@
     </mat-icon>
   </div>
   <cdk-virtual-scroll-viewport id="scroll" itemSize="50">
-    <form [formGroup]="editProfileForm" id="form-container">
-      <div class="upload-video">
+    <div class="upload-video">
+      <div
+        (click)="fileInputBackground.click()"
+        [style.border]="previewBackground ? 'none' : 'block'"
+        class="upload-video-ouline-ouside"
+      >
         <div
-          (click)="fileInputBackground.click()"
-          [style.border]="previewBackground ? 'none' : 'block'"
-          class="upload-video-ouline-ouside"
+          [style.display]="previewBackground ? 'none' : 'flex'"
+          class="upload-video-ouline-inside"
         >
-          <div
-            [style.display]="previewBackground ? 'none' : 'flex'"
-            class="upload-video-ouline-inside"
-          >
-            <div class="safety-zone">
-              <mat-icon
-                class="icon-video-upload material-symbols-rounded"
-                fontIcon="upload"
-              ></mat-icon>
-            </div>
+          <div class="safety-zone">
+            <mat-icon
+              class="icon-video-upload material-symbols-rounded"
+              fontIcon="upload"
+            ></mat-icon>
           </div>
-          <input
-            #fileInputBackground
-            (change)="onFileSelectedBackGround($event)"
-            accept="image/*"
-            hidden
-            type="file"
-          />
-          <img
-            [src]="previewBackground"
-            [style.display]="previewBackground ? 'block' : 'none'"
-            alt="Preview"
-            class="preview-image"
-          />
         </div>
-        <div class="form-container">
-          <div class="form-left">
+        <input
+          #fileInputBackground
+          (change)="onFileSelectedBackGround($event)"
+          accept="image/*"
+          hidden
+          type="file"
+        />
+        <img
+          [src]="previewBackground"
+          [style.display]="previewBackground ? 'block' : 'none'"
+          alt="Preview"
+          class="preview-image"
+        />
+      </div>
+      <div class="form-container">
+        <div class="form-left">
+          <form [formGroup]="editProfileForm" id="form-container">
             <mat-form-field appearance="outline" style="width: 100%">
               <mat-label>Describe</mat-label>
               <textarea
@@ -52,45 +52,45 @@
                 placeholder="Input describe"
               ></textarea>
             </mat-form-field>
+          </form>
 
-            <div class="input-data-item">
-              <input
-                #fileInputAvatar
-                (change)="onFileSelectedAvatar($event)"
-                accept="image/*"
-                style="display: none"
-                type="file"
-              />
-            </div>
-          </div>
-          <div class="form-right">
-            <p>Avatar preview</p>
-            <div
-              (click)="fileInputAvatar.click()"
-              [style.border]="previewAvatar ? 'none' : 'block'"
-              class="avatar-preview"
-            >
-              <img
-                [src]="previewAvatar"
-                [style.display]="previewAvatar ? 'block' : 'none'"
-                alt="Preview"
-                class="preview-image"
-              />
-            </div>
+          <div class="input-data-item">
+            <input
+              #fileInputAvatar
+              (change)="onFileSelectedAvatar($event)"
+              accept="image/*"
+              style="display: none"
+              type="file"
+            />
           </div>
         </div>
-
-        <div class="button-group">
-          <button
-            (click)="onSave()"
-            [disabled]="editProfileForm.invalid"
-            mat-flat-button
+        <div class="form-right">
+          <p>Avatar preview</p>
+          <div
+            (click)="fileInputAvatar.click()"
+            [style.border]="previewAvatar ? 'none' : 'block'"
+            class="avatar-preview"
           >
-            Save
-          </button>
-          <button (click)="onCancel()" mat-stroked-button>Cancel</button>
+            <img
+              [src]="previewAvatar"
+              [style.display]="previewAvatar ? 'block' : 'none'"
+              alt="Preview"
+              class="preview-image"
+            />
+          </div>
         </div>
       </div>
-    </form>
+
+      <div class="button-group">
+        <button
+          (click)="onSave()"
+          [disabled]="editProfileForm.invalid"
+          mat-flat-button
+        >
+          Save
+        </button>
+        <button (click)="onCancel()" mat-stroked-button>Cancel</button>
+      </div>
+    </div>
   </cdk-virtual-scroll-viewport>
 </div>

@@ -12,7 +12,6 @@ export const initialState: AuthState = {
 export const authReducer = createReducer(
   initialState,
   on(AuthActions.signInWithGoogle, (state, action) => {
-    console.log(action.type);
     return <AuthState>{
       ...state,
       error: null,
@@ -20,14 +19,12 @@ export const authReducer = createReducer(
     };
   }),
   on(AuthActions.signInWithGoogleSuccess, (state, action) => {
-    console.log(action.type);
     return <AuthState>{
       ...state,
       loading: false,
     };
   }),
   on(AuthActions.signInWithGoogleFailure, (state, action) => {
-    console.log(action.type);
     return <AuthState>{
       ...state,
       error: action.error,
@@ -35,7 +32,6 @@ export const authReducer = createReducer(
     };
   }),
   on(AuthActions.signOut, (state, action) => {
-    console.log(action.type);
     return <AuthState>{
       ...state,
       loading: true,
@@ -43,7 +39,6 @@ export const authReducer = createReducer(
     };
   }),
   on(AuthActions.signOutSuccess, (state, action) => {
-    console.log(action.type);
     return <AuthState>{
       ...state,
       idToken: '',
@@ -52,7 +47,6 @@ export const authReducer = createReducer(
     };
   }),
   on(AuthActions.signOutFailure, (state, action) => {
-    console.log(action.type);
     return <AuthState>{
       ...state,
       error: action.error,
@@ -60,14 +54,12 @@ export const authReducer = createReducer(
     };
   }),
   on(AuthActions.storeIdToken, (state, action) => {
-    console.log(action.type);
     return <AuthState>{
       ...state,
       idToken: action.idToken,
     };
   }),
   on(AuthActions.checkLoggedIn, (state, action) => {
-    console.log(action.type);
     return <AuthState>{
       ...state,
       isCheckLoggedIn: true,

@@ -1,7 +1,7 @@
 <div id="container">
   <div id="header">
     <span id="title">Edit video</span>
-    <button (click)="closeDialog()" mat-icon-button>
+    <button (click)="onCancelClick()" mat-icon-button>
       <mat-icon class="material-symbols-rounded">close</mat-icon>
     </button>
   </div>
@@ -14,41 +14,41 @@
             <mat-form-field>
               <mat-label>Title</mat-label>
               <input
+                formControlName="title"
                 matInput
                 maxlength="100"
                 placeholder="Add a title that describes your video"
-                formControlName="title"
                 required
               />
-              <mat-hint align="end" class="hint">
-<!--                {{ (editForm.get("fileName")?.value ?? "").length }}/100-->
-              </mat-hint>
+              <mat-hint align="end" class="hint"></mat-hint>
             </mat-form-field>
 
             <mat-form-field>
               <mat-label>Description</mat-label>
               <textarea
-                formControlName="description"
                 cdkAutosizeMaxRows="20"
                 cdkAutosizeMinRows="5"
                 cdkTextareaAutosize
+                formControlName="description"
                 matInput
                 maxlength="5000"
                 placeholder="Tell viewers about your video"
               ></textarea>
-              <mat-hint align="end" class="hint">
-<!--                {{-->
-<!--                  (editForm.get("description")?.value ?? "").length-->
-<!--                }}/5000-->
-              </mat-hint>
+              <mat-hint align="end" class="hint"></mat-hint>
             </mat-form-field>
 
             <mat-form-field>
               <mat-label>Category</mat-label>
-              <mat-select formControlName="categories" multiple>
+              <mat-select
+                (selectionChange)="onCategorySelectionChange($event)"
+                formControlName="categories"
+                multiple
+              >
                 @for (category of categories$ | async; track $index) {
-                  <mat-option [value]="category.id"
-                  >{{ category.name }}
+                  <mat-option
+                    [value]="category.id"
+                    [disabled]="isCategoryDisabled(category.id)"
+                    >{{ category.name }}
                   </mat-option>
                 }
               </mat-select>
@@ -58,21 +58,21 @@
 
         <div class="form-right">
           <div class="thumbnail-container">
-              <div class="thumbnail-img">
-                <img
-                  [src]="video.thumbnail_url"
-                  alt="Thumbnail"
-                />
-              </div>
+            <div class="thumbnail-img">
+              <img [src]="video.thumbnail_url" alt="Thumbnail" />
+            </div>
           </div>
         </div>
       </div>
       <div id="footer-container">
+        <button (click)="onCancelClick()" id="delete-button" mat-stroked-button>
+          Cancel
+        </button>
         <button
           (click)="onEditClick()"
           [disabled]="editForm.invalid"
           id="create-button"
-          mat-raised-button
+          mat-flat-button
         >
           Confirm
         </button>

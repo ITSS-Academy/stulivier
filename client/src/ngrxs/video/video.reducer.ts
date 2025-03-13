@@ -52,12 +52,18 @@ const initialState: VideoState = {
   isUpdateVideoSuccess: false,
   updateVideoErrorMessages: '',
 
+  isDeletingVideo: false,
+  isDeleteVideoSuccess: false,
+  deleteVideoErrorMessages: '',
+
+  isAddingToHistory: false,
+  isAddToHistorySuccess: false,
+  addToHistoryErrorMessages: '',
 };
 
 export const videoReducer = createReducer(
   initialState,
   on(VideoActions.createVideo, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isCreatingVideo: true,
@@ -66,7 +72,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.createVideoSuccess, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isCreatingVideo: false,
@@ -75,7 +80,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.createVideoFailure, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isCreatingVideo: false,
@@ -84,7 +88,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getAllVideos, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingAllVideos: true,
@@ -93,7 +96,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getAllVideosSuccess, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingAllVideos: false,
@@ -103,7 +105,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getAllVideosFailure, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingAllVideos: false,
@@ -112,7 +113,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getVideoByCategoryId, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingVideoByCategoryId: true,
@@ -120,7 +120,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getVideoByCategoryIdSuccess, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingVideoByCategoryId: false,
@@ -130,7 +129,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getVideoByCategoryIdFailure, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingVideoByCategoryId: false,
@@ -139,7 +137,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.toggleMuteVolume, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isMuteVolume: !state.isMuteVolume,
@@ -147,7 +144,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getVideoById, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingVideoById: true,
@@ -156,7 +152,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getVideoByIdSuccess, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingVideoById: false,
@@ -166,7 +161,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getVideoByIdFailure, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingVideoById: false,
@@ -175,7 +169,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.updateWatchTime, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isUpdatingWatchTime: true,
@@ -184,7 +177,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.updateWatchTimeSuccess, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isUpdatingWatchTime: false,
@@ -193,7 +185,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.updateWatchTimeFailure, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isUpdatingWatchTime: false,
@@ -202,7 +193,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.increaseViewCount, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isIncreasingViewCount: true,
@@ -211,7 +201,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.increaseViewCountSuccess, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isIncreasingViewCount: false,
@@ -220,7 +209,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.increaseViewCountFailure, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isIncreasingViewCount: false,
@@ -229,7 +217,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.toggleReaction, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isToggleReaction: true,
@@ -238,7 +225,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.toggleReactionSuccess, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isToggleReaction: false,
@@ -247,7 +233,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.toggleReactionFailure, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isToggleReaction: false,
@@ -256,7 +241,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.searchVideos, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isSearchingVideos: true,
@@ -265,7 +249,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.searchVideosSuccess, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isSearchingVideos: false,
@@ -275,7 +258,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.searchVideosFailure, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isSearchingVideos: false,
@@ -284,7 +266,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getVideosByUserId, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingVideosByUserId: true,
@@ -293,7 +274,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getVideosByUserIdSuccess, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingVideosByUserId: false,
@@ -303,7 +283,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getVideosByUserIdFailure, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingVideosByUserId: false,
@@ -312,7 +291,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getVideosLikedByUser, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingVideosLikedByUser: true,
@@ -321,7 +299,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getVideosLikedByUserSuccess, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingVideosLikedByUser: false,
@@ -331,7 +308,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.getVideosLikedByUserFailure, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isGettingVideosLikedByUser: false,
@@ -340,7 +316,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.clearState, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isCreatingVideo: false,
@@ -386,11 +361,18 @@ export const videoReducer = createReducer(
       isUpdatingVideo: false,
       isUpdateVideoSuccess: false,
       updateVideoErrorMessages: '',
+
+      isDeletingVideo: false,
+      isDeleteVideoSuccess: false,
+      deleteVideoErrorMessages: '',
+
+      isAddingToHistory: false,
+      isAddToHistorySuccess: false,
+      addToHistoryErrorMessages: '',
     };
   }),
 
   on(VideoActions.updateVideo, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isUpdatingVideo: true,
@@ -399,7 +381,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.updateVideoSuccess, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isUpdatingVideo: false,
@@ -409,7 +390,6 @@ export const videoReducer = createReducer(
   }),
 
   on(VideoActions.updateVideoFailure, (state, action) => {
-    console.log(action.type);
     return <VideoState>{
       ...state,
       isUpdatingVideo: false,
@@ -417,5 +397,51 @@ export const videoReducer = createReducer(
     };
   }),
 
+  on(VideoActions.deleteVideo, (state, action) => {
+    return <VideoState>{
+      ...state,
+      isDeletingVideo: true,
+      isDeleteVideoSuccess: false,
+    };
+  }),
 
+  on(VideoActions.deleteVideoSuccess, (state, action) => {
+    return <VideoState>{
+      ...state,
+      isDeletingVideo: false,
+      isDeleteVideoSuccess: true,
+    };
+  }),
+
+  on(VideoActions.deleteVideoFailure, (state, action) => {
+    return <VideoState>{
+      ...state,
+      isDeletingVideo: false,
+      deleteVideoErrorMessages: action.error,
+    };
+  }),
+
+  on(VideoActions.addToHistory, (state, action) => {
+    return <VideoState>{
+      ...state,
+      isAddingToHistory: true,
+      isAddToHistorySuccess: false,
+    };
+  }),
+
+  on(VideoActions.addToHistorySuccess, (state, action) => {
+    return <VideoState>{
+      ...state,
+      isAddingToHistory: false,
+      isAddToHistorySuccess: true,
+    };
+  }),
+
+  on(VideoActions.addToHistoryFailure, (state, action) => {
+    return <VideoState>{
+      ...state,
+      isAddingToHistory: false,
+      addToHistoryErrorMessages: action.error,
+    };
+  }),
 );

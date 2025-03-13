@@ -1,9 +1,11 @@
 <div class="tweet-container">
-  <div class="profile-pic">
+  <div (click)="goToUser()" class="profile-pic">
     <img alt="Profile" src="{{ comment.user.avatar_url }}" />
   </div>
   <div class="header-content">
-    <span class="username">&#64;{{ comment.user.username }}</span>
+    <span (click)="goToUser()" class="username">
+      &#64;{{ comment.user.username }}</span
+    >
     <span class="content">
       {{ comment.content }}
     </span>

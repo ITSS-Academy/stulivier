@@ -1,17 +1,14 @@
-import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PlaylistCardComponent } from '../../../components/playlist-card/playlist-card.component';
-import {Observable, Subscription} from 'rxjs';
-import {VideoModel} from '../../../../models/video.model';
-import {PlaylistModel} from '../../../../models/playlist.model';
-import {UserModel} from '../../../../models/user.model';
+import { Observable, Subscription } from 'rxjs';
+import { PlaylistModel } from '../../../../models/playlist.model';
+import { UserModel } from '../../../../models/user.model';
+import { Store } from '@ngrx/store';
+import { VideoState } from '../../../../ngrxs/video/video.state';
+import { PlaylistState } from '../../../../ngrxs/playlist/playlist.state';
+import { UserState } from '../../../../ngrxs/user/user.state';
+import { AsyncPipe } from '@angular/common';
 import * as PlaylistActions from '../../../../ngrxs/playlist/playlist.actions';
-import {Store} from '@ngrx/store';
-import {VideoState} from '../../../../ngrxs/video/video.state';
-import {PlaylistState} from '../../../../ngrxs/playlist/playlist.state';
-import {UserState} from '../../../../ngrxs/user/user.state';
-import {filter, take} from 'rxjs/operators';
-import * as VideoActions from '../../../../ngrxs/video/video.actions';
-import {AsyncPipe} from '@angular/common';
 
 @Component({
   selector: 'app-playlists',
@@ -24,31 +21,30 @@ export class PlaylistsComponent implements OnInit {
   subscription: Subscription[] = [];
   playlists$: Observable<PlaylistModel[]>;
   user$!: Observable<UserModel>;
+  userId$!: Observable<UserModel>; //người dùng khác
+  userById!: UserModel;
 
-  constructor(private store: Store<{ video: VideoState, playlist: PlaylistState, user: UserState }>,
-              private renderer: Renderer2, private el: ElementRef) {
+  constructor(
+    private store: Store<{
+      video: VideoState;
+      playlist: PlaylistState;
+      user: UserState;
+    }>,
+  ) {
     this.user$ = this.store.select('user', 'user');
-    this.user$.pipe(
-      filter(user => !!user?.id), // Chỉ lấy khi user có id
-      take(1)
-    ).subscribe(user => {
-      this.store.dispatch(VideoActions.getAllVideos());
-    });
     this.playlists$ = this.store.select('playlist', 'playlists');
-    this.user$.pipe(
-      filter(user => !!user?.id), // Chỉ lấy khi user có id
-      take(1)
-    ).subscribe(user => {
-      this.store.dispatch(PlaylistActions.getPlaylistByUserId({id: user.id}));
-    });
-
-
+    this.userId$ = this.store.select('user', 'userById');
   }
 
   ngOnInit() {
     this.subscription.push(
-      this.store.select('playlist', 'playlists').subscribe((playlists) => {
-        console.log(playlists);
+      this.userId$.subscribe((userId) => {
+        if (userId.id) {
+          this.userById = userId;
+          this.store.dispatch(
+            PlaylistActions.getPlaylistByUserId({ id: this.userById.id }),
+          );
+        }
       }),
     );
   }

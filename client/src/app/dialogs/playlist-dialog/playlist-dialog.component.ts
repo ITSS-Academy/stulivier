@@ -111,7 +111,6 @@ export class PlaylistDialogComponent implements OnInit, OnDestroy {
         playlist.video_id?.includes(this.data as any) || false;
       playlistFormArray.push(this.fb.control(isVideoIncluded));
     });
-    console.log('playlistFormArray', playlistFormArray.value);
   }
 
   closeDialog() {
@@ -126,8 +125,6 @@ export class PlaylistDialogComponent implements OnInit, OnDestroy {
   }
 
   updatePlaylist(playlist: PlaylistModel, index: number) {
-    console.log('updatePlaylist', this.playlistsFormArray.at(index).value);
-
     if (this.playlistsFormArray.at(index).value) {
       this.alertService.showAlert(
         `Added to ${playlist.title}`,

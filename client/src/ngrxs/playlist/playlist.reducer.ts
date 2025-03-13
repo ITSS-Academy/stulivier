@@ -65,7 +65,6 @@ export const playlistReducer = createReducer(
   initialState,
 
   on(PlaylistActions.getAllPlaylist, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isGettingAllPlaylists: true,
@@ -74,7 +73,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.getAllPlaylistSuccess, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isGettingAllPlaylists: false,
@@ -82,7 +80,6 @@ export const playlistReducer = createReducer(
     };
   }),
   on(PlaylistActions.getAllPlaylistFailure, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isGettingAllPlaylists: false,
@@ -91,7 +88,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.createPlaylist, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isCreatingPlaylist: true,
@@ -100,7 +96,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.createPlaylistSuccess, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isCreatingPlaylist: false,
@@ -108,7 +103,6 @@ export const playlistReducer = createReducer(
     };
   }),
   on(PlaylistActions.createPlaylistFailure, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isCreatingPlaylist: false,
@@ -117,7 +111,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.getPlaylistByUserId, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isGettingPlaylistByUserId: true,
@@ -126,7 +119,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.getPlaylistByUserIdSuccess, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       playlists: action.playlists,
@@ -135,7 +127,6 @@ export const playlistReducer = createReducer(
     };
   }),
   on(PlaylistActions.getPlaylistByUserIdFailure, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isGettingPlaylistByUserId: false,
@@ -144,7 +135,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.getPlaylistById, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isGettingPlaylistById: true,
@@ -153,7 +143,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.getPlaylistByIdSuccess, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       playlistDetail: action.playlist,
@@ -163,7 +152,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.getPlaylistByIdFailure, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isGettingPlaylistById: false,
@@ -172,7 +160,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.getWatchLaterPlaylistByUserId, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isGettingWatchLaterPlaylistByUserId: true,
@@ -181,7 +168,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.getWatchLaterPlaylistByUserIdSuccess, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       playlistDetail: action.playlist,
@@ -191,7 +177,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.getWatchLaterPlaylistByUserIdFailure, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isGettingWatchLaterPlaylistByUserId: false,
@@ -200,7 +185,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.updatePlaylist, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isUpdatingPlaylist: true,
@@ -209,7 +193,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.updatePlaylistSuccess, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isUpdatingPlaylist: false,
@@ -218,7 +201,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.updatePlaylistFailure, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isUpdatingPlaylist: false,
@@ -227,7 +209,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.updateWatchLaterPlaylist, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isUpdatingWatchLaterPlaylist: true,
@@ -236,7 +217,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.updateWatchLaterPlaylistSuccess, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isUpdatingWatchLaterPlaylist: false,
@@ -245,7 +225,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.updateWatchLaterPlaylistFailure, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isUpdatingWatchLaterPlaylist: false,
@@ -254,7 +233,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.deleteWatchLaterPlaylist, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isDeletingWatchLaterPlaylist: true,
@@ -263,7 +241,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.deleteWatchLaterPlaylistSuccess, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isDeletingWatchLaterPlaylist: false,
@@ -272,7 +249,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.deleteWatchLaterPlaylistFailure, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isDeletingWatchLaterPlaylist: false,
@@ -281,7 +257,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.removeVideoInPlaylist, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isRemovingVideoInPlaylist: true,
@@ -290,7 +265,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.removeVideoInPlaylistSuccess, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isRemovingVideoInPlaylist: false,
@@ -299,7 +273,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.removeVideoInPlaylistFailure, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isRemovingVideoInPlaylist: false,
@@ -308,7 +281,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.deletePlaylistById, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isDeletingPlaylistById: true,
@@ -317,7 +289,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.deletePlaylistByIdSuccess, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isDeletingPlaylistById: false,
@@ -326,7 +297,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.deletePlaylistByIdFailure, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isDeletingPlaylistById: false,
@@ -335,7 +305,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.upsertPlaylistById, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isUpsertingPlaylistById: true,
@@ -344,7 +313,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.upsertPlaylistByIdSuccess, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isUpsertingPlaylistById: false,
@@ -353,7 +321,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.upsertPlaylistByIdFailure, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isUpsertingPlaylistById: false,
@@ -362,7 +329,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.getPlaylistWithVideos, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isGettingPlaylistWithVideos: true,
@@ -371,7 +337,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.getPlaylistWithVideosSuccess, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       playlistWithVideos: action.playlistWithVideos,
@@ -381,7 +346,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.getPlaylistWithVideosFailure, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
       isGettingPlaylistWithVideos: false,
@@ -390,7 +354,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.clearPlaylistState, (state, action) => {
-    console.log(action.type);
     return <PlaylistState>{
       ...state,
 
@@ -441,7 +404,6 @@ export const playlistReducer = createReducer(
   }),
 
   on(PlaylistActions.clearAllPlaylistState, (state, action) => {
-    console.log(action.type);
     return initialState;
   }),
 );

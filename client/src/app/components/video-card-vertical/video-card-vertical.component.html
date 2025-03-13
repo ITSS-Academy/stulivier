@@ -53,6 +53,7 @@
     <div class="content-container">
       <div class="avatar-container">
         <img
+          (error)="onImgError($event)"
           [src]="video.user_data.avatar_url"
           alt="avatar"
           class="avatar"

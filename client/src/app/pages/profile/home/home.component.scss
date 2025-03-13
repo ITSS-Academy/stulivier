@@ -78,7 +78,7 @@
       .data {
         //position: absolute;
         width: 100%;
-        max-width: 1300px;
+        max-width: calc(100vw - 250px);
         display: flex;
         gap: 10px;
         z-index: 0;

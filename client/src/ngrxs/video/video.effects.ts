@@ -1,10 +1,14 @@
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { act, Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, exhaustMap, catchError } from 'rxjs/operators';
 import * as VideoActions from './video.actions';
 import { VideoService } from '../../services/video.service';
 import { inject } from '@angular/core';
-import {updateVideo, updateVideoFailure, updateVideoSuccess} from './video.actions';
+import {
+  updateVideo,
+  updateVideoFailure,
+  updateVideoSuccess,
+} from './video.actions';
 import { UpdateVideoModel } from '../../models/video.model';
 
 export const createVideo$ = createEffect(
@@ -44,16 +48,13 @@ export const updateVideo$ = createEffect(
 
         return videoService.updateVideo(video).pipe(
           map((updatedVideo) => updateVideoSuccess({ video: updatedVideo })),
-          catchError((error) => of(updateVideoFailure({ error })))
+          catchError((error) => of(updateVideoFailure({ error }))),
         );
-      })
+      }),
     );
   },
-  { functional: true }
+  { functional: true },
 );
-
-
-
 
 export const getAllVideos$ = createEffect(
   () => {
@@ -244,6 +245,50 @@ export const getVideosLikedByUser$ = createEffect(
             );
           }),
         );
+      }),
+    );
+  },
+  { functional: true },
+);
+
+export const deleteVideo$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const videoService = inject(VideoService);
+    return actions$.pipe(
+      ofType(VideoActions.deleteVideo),
+      exhaustMap((action) => {
+        return videoService.deleteVideo(action.id).pipe(
+          map(() => {
+            return VideoActions.deleteVideoSuccess();
+          }),
+          catchError((error) => {
+            return of(VideoActions.deleteVideoFailure({ error: error }));
+          }),
+        );
+      }),
+    );
+  },
+  { functional: true },
+);
+
+export const addToHistory$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const videoService = inject(VideoService);
+    return actions$.pipe(
+      ofType(VideoActions.addToHistory),
+      exhaustMap((action) => {
+        return videoService
+          .addToWatchHistory(action.videoId, action.userId)
+          .pipe(
+            map(() => {
+              return VideoActions.addToHistorySuccess();
+            }),
+            catchError((error) => {
+              return of(VideoActions.addToHistoryFailure({ error: error }));
+            }),
+          );
       }),
     );
   },

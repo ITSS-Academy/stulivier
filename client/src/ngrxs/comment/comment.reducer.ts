@@ -18,7 +18,6 @@ export const commentReducer = createReducer(
   initialState,
 
   on(CommentActions.createComment, (state, action) => {
-    console.log(action.type);
     return <CommentState>{
       ...state,
       isCreatingComment: true,
@@ -27,7 +26,6 @@ export const commentReducer = createReducer(
   }),
 
   on(CommentActions.createCommentSuccess, (state, action) => {
-    console.log(action.type);
     return <CommentState>{
       ...state,
       isCreatingComment: false,
@@ -36,7 +34,6 @@ export const commentReducer = createReducer(
   }),
 
   on(CommentActions.createCommentFailure, (state, action) => {
-    console.log(action.type);
     return <CommentState>{
       ...state,
       isCreatingComment: false,
@@ -45,7 +42,6 @@ export const commentReducer = createReducer(
   }),
 
   on(CommentActions.getCommentsByVideoId, (state, action) => {
-    console.log(action.type);
     return <CommentState>{
       ...state,
       isGettingCommentByVideoId: true,
@@ -54,7 +50,6 @@ export const commentReducer = createReducer(
   }),
 
   on(CommentActions.getCommentsByVideoIdSuccess, (state, action) => {
-    console.log(action.type);
     return <CommentState>{
       ...state,
       isGettingCommentByVideoId: false,
@@ -64,7 +59,6 @@ export const commentReducer = createReducer(
   }),
 
   on(CommentActions.getCommentsByVideoIdFailure, (state, action) => {
-    console.log(action.type);
     return <CommentState>{
       ...state,
       isGettingCommentByVideoId: false,

@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
@@ -47,11 +48,15 @@ import { AuthState } from '../../../ngrxs/auth/auth.state';
   templateUrl: './watch.component.html',
   styleUrl: './watch.component.scss',
 })
-export class WatchComponent implements OnInit, OnDestroy {
+export class WatchComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly menuTrigger = viewChild.required(MatMenuTrigger);
   @ViewChild('media', { static: true }) media!: ElementRef;
   @ViewChild('commentInput') commentInput!: ElementRef;
   @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
+
+  @ViewChild('commentdiv', { static: false })
+  commentdiv!: CdkVirtualScrollViewport;
+  @ViewChild('content') contentDiv!: ElementRef;
 
   isDescriptionExpanded = false;
   videoId!: string;
@@ -107,6 +112,7 @@ export class WatchComponent implements OnInit, OnDestroy {
       (state) => state.comment.createCommentErrorMessage,
     );
     this.comments$ = this.store.select((state) => state.comment.comments);
+    this.store.dispatch(VideoActions.getAllVideos());
     this.isGetPlaylistByIdSuccess$ = this.store.select(
       (state) => state.playlist.isGetPlaylistByIdSuccess,
     );
@@ -128,79 +134,38 @@ export class WatchComponent implements OnInit, OnDestroy {
       combineLatest([
         this.store.select('user', 'user'),
         this.activatedRoute.queryParamMap,
-      ])
-        .pipe(take(1))
-        .subscribe(([user, params]) => {
-          this.user = user;
-          this.isCheckLogin$ = this.store
-            .select('user', 'user')
-            .pipe(map((user) => !!user));
-          this.videoId = params.get('v') || '';
-          this.listId = params.get('list') || '';
-          this.startRadio = Number(params.get('index') || 0);
+      ]).subscribe(([user, params]) => {
+        this.user = user;
+        this.isCheckLogin$ = this.store
+          .select('user', 'user')
+          .pipe(map((user) => !!user));
+        this.videoId = params.get('v') || '';
+        this.listId = params.get('list') || '';
+        this.startRadio = Number(params.get('index') || 0);
 
-          console.log(this.user?.id);
-          // Dispatch action lấy video
+        // Dispatch action lấy video
+        this.store.dispatch(
+          VideoActions.getVideoById({
+            videoId: this.videoId,
+            userId: this.user?.id ? this.user.id : null,
+          }),
+        );
+
+        // Dispatch action lấy playlist nếu có listId
+        if (this.listId) {
           this.store.dispatch(
-            VideoActions.getVideoById({
-              videoId: this.videoId,
-              userId: this.user?.id ? this.user.id : null,
-            }),
+            PlaylistActions.getPlaylistById({ id: this.listId }),
           );
+        }
 
-          // Dispatch action lấy playlist nếu có listId
-          if (this.listId) {
-            this.store.dispatch(
-              PlaylistActions.getPlaylistById({ id: this.listId }),
-            );
-          }
+        // Dispatch action lấy tất cả video
+        this.store.dispatch(VideoActions.getAllVideos());
 
-          // Dispatch action lấy tất cả video
-          this.store.dispatch(VideoActions.getAllVideos());
-
-          // Dispatch action lấy comments của video
-          this.store.dispatch(
-            CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
-          );
-        }),
-      // this.store
-      //   .select('user', 'isGetUserSuccess')
-      //   .pipe(
-      //     filter((isGetSuccess) => isGetSuccess),
-      //     take(1),
-      //   )
-      //   .subscribe(() => {
-      //     combineLatest([
-      //       this.activatedRoute.queryParamMap,
-      //       this.store.select('user', 'isGetUserSuccess'),
-      //       this.store.select('user', 'isGettingUser'),
-      //     ]).subscribe(([params, isGetSuccess, isGetting]) => {
-      //       this.videoId = params.get('v') || '';
-      //       this.listId = params.get('list') || '';
-      //       this.startRadio = Number(params.get('index') || 0);
-      //       this.store.dispatch(VideoActions.getAllVideos());
-      //       this.store.dispatch(
-      //         CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
-      //       );
-      //       console.log('Video ID:', this.videoId);
-      //
-      //       if (isGetSuccess && !isGetting) {
-      //         if (this.user) {
-      //           this.store.dispatch(
-      //             VideoActions.getVideoById({
-      //               videoId: this.videoId,
-      //               userId: this.user.id,
-      //             }),
-      //           );
-      //         }
-      //         if (this.listId) {
-      //           this.store.dispatch(
-      //             PlaylistActions.getPlaylistById({ id: this.listId }),
-      //           );
-      //         }
-      //       }
-      //     });
-      //   }),
+        // Dispatch action lấy comments của video
+        this.store.dispatch(
+          CommentActions.getCommentsByVideoId({ videoId: this.videoId }),
+        );
+      }),
 
       this.isGetVideoSuccess$.subscribe((isGetVideoSuccess) => {
         if (isGetVideoSuccess && this.vgApi) {
@@ -239,6 +204,17 @@ export class WatchComponent implements OnInit, OnDestroy {
         if (video) {
           this.video = video;
           this.is_liked = video.is_liked;
+        }
+      }),
+      this.user$.subscribe((user) => {
+        if (user.id) {
+          this.user = user;
+          this.store.dispatch(
+            VideoActions.addToHistory({
+              videoId: this.videoId,
+              userId: this.user.id,
+            }),
+          );
         }
       }),
     );
@@ -281,15 +257,11 @@ export class WatchComponent implements OnInit, OnDestroy {
     // Khi video bị tạm dừng
     media.subscriptions.pause.subscribe(() => {
       this.isPlaying = false;
-      console.log(
-        `Video paused. Total watch time so far: ${this.totalWatchTime}`,
-      );
     });
 
     // Khi video kết thúc
     media.subscriptions.ended.subscribe(() => {
       this.isPlaying = false;
-      console.log(`Video ended. Total watch time: ${this.totalWatchTime}`);
 
       // Nếu người dùng xem trên 30 giây => tính là một lượt xem hợp lệ
       if (this.totalWatchTime >= 30) {
@@ -325,7 +297,6 @@ export class WatchComponent implements OnInit, OnDestroy {
             },
           });
         } else {
-          console.log('No more videos in the playlist.');
         }
       } else {
         this.filteredVideos$.pipe(take(1)).subscribe((videos) => {
@@ -338,7 +309,6 @@ export class WatchComponent implements OnInit, OnDestroy {
               queryParams: { v: nextVideo.id },
             });
           } else {
-            console.log('No more videos to play.');
           }
           this.store.dispatch(PlaylistActions.clearPlaylistState());
         });
@@ -362,14 +332,10 @@ export class WatchComponent implements OnInit, OnDestroy {
     if (this.watchHistory.length <= 5) {
       // Giới hạn tối đa 5 lượt xem hợp lệ trong 5 phút
       this.totalViews += 1;
-      console.log(
-        `Video được tính là một lượt xem hợp lệ (${this.totalViews} lần)`,
-      );
 
       // Gửi lên server cập nhật lượt xem
       this.store.dispatch(VideoActions.increaseViewCount({ id: this.videoId }));
     } else {
-      console.log('Phát hiện spam, không tính thêm lượt xem!');
     }
   }
 
@@ -457,7 +423,7 @@ export class WatchComponent implements OnInit, OnDestroy {
       this.registerView();
     }
 
-    if (this.user) {
+    if (this.user?.id) {
       this.store.dispatch(
         VideoActions.updateWatchTime({
           videoId: this.videoId,
@@ -465,15 +431,6 @@ export class WatchComponent implements OnInit, OnDestroy {
           watchTime: this.totalWatchTime,
         }),
       );
-
-      if (this.video.is_liked !== this.is_liked) {
-        this.store.dispatch(
-          VideoActions.toggleReaction({
-            videoId: this.videoId,
-            userId: this.user?.id as string,
-          }),
-        );
-      }
     }
   }
 
@@ -481,7 +438,7 @@ export class WatchComponent implements OnInit, OnDestroy {
     if (this.watchHistory.length === 0 && this.totalWatchTime >= 30) {
       this.registerView();
     }
-    if (this.user?.id) {
+    if (this.user) {
       this.store.dispatch(
         VideoActions.updateWatchTime({
           videoId: this.videoId,
@@ -498,14 +455,6 @@ export class WatchComponent implements OnInit, OnDestroy {
           take(1),
         ) // Lọc khi success = true và lấy duy nhất 1 lần
         .subscribe(() => {
-          if (this.video.is_liked !== this.is_liked) {
-            this.store.dispatch(
-              VideoActions.toggleReaction({
-                videoId: this.videoId,
-                userId: this.user?.id as string,
-              }),
-            );
-          }
           this.store.dispatch(VideoActions.clearState());
           this.store.dispatch(PlaylistActions.clearAllPlaylistState());
           this.subscription.forEach((sub) => sub.unsubscribe());
@@ -516,5 +465,15 @@ export class WatchComponent implements OnInit, OnDestroy {
       this.store.dispatch(PlaylistActions.clearAllPlaylistState());
       this.subscription.forEach((sub) => sub.unsubscribe());
     }
+  }
+
+  ngAfterViewInit() {
+    this.comments$.subscribe(() => {
+      setTimeout(() => {
+        if (this.commentdiv) {
+          this.commentdiv.scrollTo({ bottom: 0, behavior: 'smooth' });
+        }
+      }, 100);
+    });
   }
 }

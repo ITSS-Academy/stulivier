@@ -51,7 +51,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   playlistDetail$: Observable<PlaylistResponseModel[]>;
   userId$!: Observable<UserModel>; //người dùng khác
   user$!: Observable<UserModel>; //bản thân
-  user!: UserModel;
   userById!: UserModel;
   randomVideo!: VideoModel | null;
 
@@ -75,16 +74,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subscription.push(
       this.userId$.subscribe((userId) => {
         if (userId.id) {
-          this.user = userId;
+          this.userById = userId;
           this.store.dispatch(
-            VideoActions.getVideosByUserId({ userId: this.user.id }),
+            VideoActions.getVideosByUserId({ userId: this.userById.id }),
           );
           this.store.dispatch(
-            PlaylistActions.getPlaylistByUserId({ id: this.user.id }),
+            PlaylistActions.getPlaylistByUserId({ id: this.userById.id }),
           );
           this.store.dispatch(
             PlaylistActions.getPlaylistWithVideos({
-              userId: this.user.id,
+              userId: this.userById.id,
             }),
           );
         }
@@ -98,11 +97,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
       this.playlists$.subscribe((playlists) => {
         this.updateButtonsVisibility();
-      }),
-      this.playlistDetail$.subscribe((playlistDetail) => {
-        if (playlistDetail) {
-          console.log(playlistDetail);
-        }
       }),
     );
 

@@ -49,4 +49,11 @@ export interface VideoState {
   isUpdateVideoSuccess: boolean;
   updateVideoErrorMessages: string;
 
+  isDeletingVideo: boolean;
+  isDeleteVideoSuccess: boolean;
+  deleteVideoErrorMessages: string;
+
+  isAddingToHistory: boolean;
+  isAddToHistorySuccess: boolean;
+  addToHistoryErrorMessages: string;
 }

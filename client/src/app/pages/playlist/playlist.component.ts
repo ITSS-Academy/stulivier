@@ -39,7 +39,6 @@ import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
     VideoModule,
     VideoCardHorizontalComponent,
     PlaylistCardInPagePlaylistComponent,
-    NgxSkeletonLoaderComponent,
   ],
   templateUrl: './playlist.component.html',
   styleUrl: './playlist.component.scss',
@@ -85,7 +84,6 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.activatedRoute.queryParamMap.subscribe((queryParams) => {
         const index = queryParams.get('index');
-        console.log('index', index);
       }),
       this.store.select('user', 'user').subscribe((user: UserModel) => {
         if (user.id) {

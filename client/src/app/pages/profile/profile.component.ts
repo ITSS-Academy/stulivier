@@ -1,12 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
 import { MaterialModule } from '../../../shared/modules/material.module';
 import { VideoModule } from '../../../shared/modules/video.module';
@@ -35,7 +27,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   user$!: Observable<UserModel>; //bản thân
   user!: UserModel;
   userById!: UserModel;
-  @ViewChild('coverInput') coverInput!: ElementRef<HTMLInputElement>;
+
+  isGetUserByIdSuccess$!: Observable<boolean>;
 
   @Input() username!: string;
   @Input() avatar_url!: string;
@@ -43,7 +36,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   @Input() describe!: string;
   @Input() follower!: number;
   @Input() background_url!: string;
-  self!: boolean; //bản thân
   activeTab = 0;
   subscriptions: Subscription[] = [];
 
@@ -54,10 +46,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ) {
     this.user$ = this.store.select('user', 'user');
     this.userId$ = this.store.select('user', 'userById');
-  }
-
-  triggerCoverInput(): void {
-    this.coverInput.nativeElement.click();
+    this.isGetUserByIdSuccess$ = this.store.select(
+      'user',
+      'isGetUserByIdSuccess',
+    );
   }
 
   openEditProfileDialog() {
@@ -79,6 +71,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.updateActiveTab(this.router.url);
 
     this.subscriptions.push(
+      this.userId$.subscribe((userId) => {
+        console.log(userId);
+      }),
+      this.isGetUserByIdSuccess$.subscribe((userId) => {
+        console.log(userId);
+      }),
       this.activatedRoute.params.subscribe((params) => {
         // clear state before get user by id
         this.store.dispatch(UserActions.clearUserById());
@@ -118,9 +116,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
           ),
         )
         .subscribe(() => {
+          console.log('update success', this.userById.id);
+          this.store.dispatch(UserActions.clearUserById());
           this.store.dispatch(UserActions.getUser());
+          this.store.dispatch(
+            UserActions.getUserById({ userId: this.userById.id }),
+          );
         }),
     );
+    this.userId$.subscribe((user) => {
+      if (user) {
+        this.userById = user;
+      }
+    });
   }
 
   onTabChange(event: any) {
@@ -142,11 +150,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
   getRouteByIndex(index: number): string {
     return (
       [
-        `profile/${this.user.id}/featured`,
-        `profile/${this.user.id}/videos`,
-        `profile/${this.user.id}/playlists`,
+        `profile/${this.userById.id}/featured`,
+        `profile/${this.userById.id}/videos`,
+        `profile/${this.userById.id}/playlists`,
       ][index] || '/featured'
     );
+  }
+
+  onImgError(event: any) {
+    event.target.src = 'assets/images/default-avatar.jpg';
   }
 
   ngOnDestroy() {

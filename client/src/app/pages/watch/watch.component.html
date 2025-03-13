@@ -48,7 +48,7 @@
           <span class="title">{{ (video$ | async)?.title }}</span>
           <mat-card appearance="outlined" class="video-info">
             <mat-card-content class="description">
-              >{{ (video$ | async)?.description }}
+              {{ (video$ | async)?.description }}
             </mat-card-content>
           </mat-card>
         </mat-card-content>
@@ -117,7 +117,7 @@
   </div>
 
   <div class="right">
-    <div class="info" [routerLink]="['/profile', (video$ | async)?.user_id]">
+    <div [routerLink]="['/profile', (video$ | async)?.user_id]" class="info">
       <div class="avatar">
         <img alt="" src="{{ (video$ | async)?.user_data?.avatar_url }}" />
       </div>
@@ -131,10 +131,16 @@
     </div>
     <div class="line"></div>
     <div class="content">
-      <cdk-virtual-scroll-viewport class="comment-scroll" itemSize="50">
-        @for (comment of comments$ | async; track comment.id) {
-          <app-comment-card [comment]="comment"></app-comment-card>
-        }
+      <cdk-virtual-scroll-viewport
+        #commentdiv
+        class="comment-scroll"
+        itemSize="50"
+      >
+        <div class="comment-list">
+          @for (comment of comments$ | async; track comment.id) {
+            <app-comment-card [comment]="comment"></app-comment-card>
+          }
+        </div>
       </cdk-virtual-scroll-viewport>
     </div>
     <div class="line"></div>
@@ -170,7 +176,12 @@
             class="comment-field"
           >
             <mat-label>Comment</mat-label>
-            <input #commentInput [(ngModel)]="comment" matInput />
+            <input
+              #commentInput
+              [(ngModel)]="comment"
+              matInput
+              (keydown.enter)="createComment()"
+            />
           </mat-form-field>
           <button
             (click)="createComment()"
