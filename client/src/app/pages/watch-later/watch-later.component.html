@@ -1,18 +1,9 @@
 <div id="container">
   @defer (when (isCheckLogin$ | async)) {
     @if ((user$ | async)?.id) {
-      <div id="header-container">
-        <div id="playlist-thumbnail-background">
-          <img
-            [src]="
-              (playlistDetail$ | async)?.playlist?.thumbnail_url ??
-              'https://hybsmigdaummopabuqki.supabase.co/storage/v1/object/public/cover_img//image-default.jpg'
-            "
-            alt="playlist-thumbnail"
-          />
-        </div>
-        <div id="playlist-info">
-          <div id="playlist-thumbnail">
+      @defer (when (playlistDetail$ | async)?.videos) {
+        <div id="header-container">
+          <div id="playlist-thumbnail-background">
             <img
               [src]="
                 (playlistDetail$ | async)?.playlist?.thumbnail_url ??
@@ -20,49 +11,70 @@
               "
               alt="playlist-thumbnail"
             />
-            <div id="right-playlist-thumbnail">
-              <div class="info">
-                <h2 id="playlist-title">
-                  {{ (playlistDetail$ | async)?.playlist?.title }}
-                </h2>
-                <div class="top">
-                  <div id="user-avatar">
-                    <img
-                      [src]="(user$ | async)?.avatar_url"
-                      alt="user-avatar"
-                    />
+          </div>
+          <div id="playlist-info">
+            <div id="playlist-thumbnail">
+              <img
+                [src]="
+                  (playlistDetail$ | async)?.playlist?.thumbnail_url ??
+                  'https://hybsmigdaummopabuqki.supabase.co/storage/v1/object/public/cover_img//image-default.jpg'
+                "
+                alt="playlist-thumbnail"
+              />
+              <div id="right-playlist-thumbnail">
+                <div class="info">
+                  <h2 id="playlist-title">
+                    {{ (playlistDetail$ | async)?.playlist?.title }}
+                  </h2>
+                  <div class="top">
+                    <div id="user-avatar">
+                      <img
+                        [src]="(user$ | async)?.avatar_url"
+                        alt="user-avatar"
+                      />
+                    </div>
+                    <span id="user-name">{{ (user$ | async)?.username }}</span>
                   </div>
-                  <span id="user-name">{{ (user$ | async)?.username }}</span>
-                </div>
-                <span id="playlist-count">
-                  {{ (playlistDetail$ | async)?.videos?.length }} videos
-                </span>
-                <div id="action">
-                  <button (click)="playAll($event)" mat-flat-button>
-                    <mat-icon
-                      class="material-symbols-rounded"
-                      fontIcon="play_arrow"
-                    ></mat-icon>
-                    Play all
-                  </button>
-                  <button
-                    (click)="shuffle($event)"
-                    id="shuffle-button"
-                    mat-stroked-button
-                  >
-                    <mat-icon
-                      class="material-symbols-rounded"
-                      fontIcon="shuffle"
-                      style="color: #f4f4f2"
-                    ></mat-icon>
-                    <p>Shuffle</p>
-                  </button>
+                  <span id="playlist-count">
+                    {{ (playlistDetail$ | async)?.videos?.length }} videos
+                  </span>
+                  <div id="action">
+                    <button (click)="playAll($event)" mat-flat-button>
+                      <mat-icon
+                        class="material-symbols-rounded"
+                        fontIcon="play_arrow"
+                      ></mat-icon>
+                      Play all
+                    </button>
+                    <button
+                      (click)="shuffle($event)"
+                      id="shuffle-button"
+                      mat-stroked-button
+                    >
+                      <mat-icon
+                        class="material-symbols-rounded"
+                        fontIcon="shuffle"
+                        style="color: #f4f4f2"
+                      ></mat-icon>
+                      <p>Shuffle</p>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      } @placeholder (minimum 500ms) {
+        <ngx-skeleton-loader
+          [theme]="{
+            width: '100%',
+            height: '220px',
+            filter: 'brightness(0.5)',
+          }"
+          appearance="line"
+        >
+        </ngx-skeleton-loader>
+      }
       <div id="content-container">
         <cdk-virtual-scroll-viewport id="main-content" itemSize="50">
           @defer (when (playlistDetail$ | async)?.videos) {
@@ -106,7 +118,7 @@
         </button>
       </div>
     }
-  } @placeholder (minimum 500ms) {
+  } @placeholder (minimum 800ms) {
     <div class="loading">
       <mat-spinner class="circle"></mat-spinner>
     </div>

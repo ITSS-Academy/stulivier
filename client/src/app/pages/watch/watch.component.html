@@ -45,7 +45,12 @@
         </div>
 
         <mat-card-content class="content-container">
-          <p class="title">{{ (video$ | async)?.title }}</p>
+          <span class="title">{{ (video$ | async)?.title }}</span>
+          <mat-card appearance="outlined" class="video-info">
+            <mat-card-content class="description">
+              >{{ (video$ | async)?.description }}
+            </mat-card-content>
+          </mat-card>
         </mat-card-content>
       </mat-card>
       @if (isGetPlaylistByIdSuccess$ | async) {
@@ -155,17 +160,15 @@
             fontIcon="mode_comment"
           ></mat-icon>
           <mat-menu #menu="matMenu">
-            <button
-              mat-menu-item>
-              Open dialog
-            </button>
+            <button mat-menu-item>Open dialog</button>
           </mat-menu>
         </div>
         <div class="comment-forms">
           <mat-form-field
             (click)="focusCommentInput()"
             appearance="fill"
-            class="comment-field">
+            class="comment-field"
+          >
             <mat-label>Comment</mat-label>
             <input #commentInput [(ngModel)]="comment" matInput />
           </mat-form-field>
@@ -190,13 +193,16 @@
               mat-flat-button
               style="margin-left: 10px"
               [routerLink]="['/login']"
-              (click)="signInWithGoogle()">Sign in</button>
+              (click)="signInWithGoogle()"
+            >
+              Sign in
+            </button>
           </mat-menu>
           <mat-icon
             class="material-symbols-rounded"
             fontIcon="mode_comment"
             [matMenuTriggerFor]="menuComment"
-            style="cursor: pointer; color: var(--md-sys-color-on-surface);"
+            style="cursor: pointer; color: var(--md-sys-color-on-surface)"
           ></mat-icon>
           <mat-menu #menuComment="matMenu">
             <p>You need to be signed in to Comment the video.</p>
@@ -205,31 +211,32 @@
               style="margin-left: 10px"
               [routerLink]="['/login']"
               (click)="signInWithGoogle()"
-            >Sign in</button>
+            >
+              Sign in
+            </button>
           </mat-menu>
         </div>
         <div class="comment-forms">
           <mat-form-field
             appearance="fill"
             class="comment-field"
-            [matMenuTriggerFor]="commentInput">
+            [matMenuTriggerFor]="commentInput"
+          >
             <mat-menu #commentInput="matMenu">
-            <p>You need to be signed in to Comment the video.</p>
+              <p>You need to be signed in to Comment the video.</p>
               <button
                 mat-flat-button
                 style="margin-left: 10px"
                 [routerLink]="['/login']"
                 (click)="signInWithGoogle()"
-              >Sign in</button>
-          </mat-menu>
+              >
+                Sign in
+              </button>
+            </mat-menu>
             <mat-label>Comment</mat-label>
-            <input matInput disabled [matMenuTriggerFor]="commentInput"/>
+            <input matInput disabled [matMenuTriggerFor]="commentInput" />
           </mat-form-field>
-          <button
-            mat-flat-button disabled
-          >
-            Post
-          </button>
+          <button mat-flat-button disabled>Post</button>
         </div>
       }
     }

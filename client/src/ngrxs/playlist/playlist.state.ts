@@ -1,12 +1,14 @@
 import {
   PlaylistDetailModel,
   PlaylistModel,
+  PlaylistResponseModel,
 } from '../../models/playlist.model';
 
 export interface PlaylistState {
   playlists: PlaylistModel[];
   playlistDetail: PlaylistDetailModel;
   playlist: PlaylistModel;
+  playlistWithVideos: PlaylistResponseModel[];
 
   isCreatingPlaylist: boolean;
   isCreatePlaylistSuccess: boolean;
@@ -51,4 +53,8 @@ export interface PlaylistState {
   isUpsertingPlaylistById: boolean;
   isUpsertPlaylistByIdSuccess: boolean;
   upsertPlaylistByIdErrorMessage: string;
+
+  isGettingPlaylistWithVideos: boolean;
+  isGetPlaylistWithVideosSuccess: boolean;
+  getPlaylistWithVideosErrorMessage: string;
 }

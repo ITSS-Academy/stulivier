@@ -26,7 +26,7 @@ import { MatDialog } from '@angular/material/dialog';
 import * as CategoryActions from '../../../ngrxs/category/category.actions';
 import * as VideoActions from '../../../ngrxs/video/video.actions';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { AsyncPipe } from '@angular/common';
+import {AsyncPipe, NgForOf} from '@angular/common';
 import {
   CdkFixedSizeVirtualScroll,
   CdkVirtualScrollViewport,
@@ -39,7 +39,7 @@ import { MatInput } from '@angular/material/input';
 import { MatOption } from '@angular/material/core';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
-import { MatSelect } from '@angular/material/select';
+import {MatSelect, MatSelectChange} from '@angular/material/select';
 
 @Component({
   selector: 'app-create-video-dialog',
@@ -68,11 +68,13 @@ import { MatSelect } from '@angular/material/select';
     MatStepperNext,
     MatStepperPrevious,
     ReactiveFormsModule,
+    NgForOf,
   ],
   templateUrl: './create-video-dialog.component.html',
   styleUrl: './create-video-dialog.component.scss',
 })
 export class CreateVideoDialogComponent implements OnInit, OnDestroy {
+
   uploadForm!: FormGroup;
   videoFile!: File;
   thumbnailFile!: File;
@@ -84,13 +86,14 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
   isCreateVideoSuccess$: Observable<boolean>;
   isCreateVideoSuccess = false;
   isFileUploaded = false;
+  selectedCategories: string[] = [];
   @ViewChild('stepper') stepper!: MatStepper;
 
   @Input() Progress!: number;
 
   constructor(
     private dialogRef: DialogRef<CreateVideoDialogComponent>,
-    private formBuilder: FormBuilder,
+    private fb: FormBuilder,
     private store: Store<{ category: CategoryState; video: VideoState }>,
     private videoService: VideoService,
     private alertService: AlertService,
@@ -106,12 +109,12 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.uploadForm = this.formBuilder.group({
-      fileName: ['', [Validators.required, Validators.maxLength(100)]],
-      description: ['', [Validators.maxLength(5000)]],
-      categories: ['', Validators.required],
-      visibility: ['', Validators.required],
+    this.uploadForm = this.fb.group({
+      fileName: ['', Validators.required],
+      description: ['', Validators.required],
+      categories: [[], Validators.required],
       thumbnail: ['', Validators.required],
+      visibility: [''],
     });
 
     this.subscription.push(
@@ -139,6 +142,7 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
       this.dialogRef.close();
     } else {
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        disableClose: true,
         data: {
           message:
             'If you close, the video upload will be cancelled. Are you sure you want to close?',
@@ -161,10 +165,22 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
+
+      // Gọi hàm upload file
       this.uploadFile(file);
+
+      // Cập nhật form
       this.uploadForm.patchValue({ fileName: file.name });
+
+      // Đánh dấu đã upload file
       this.isFileUploaded = true;
 
+      // Reset giá trị input để tránh lỗi chọn cùng một file hai lần
+      input.value = '';
+
+      console.log('File uploaded:', file);
+
+      // Chuyển sang bước tiếp theo
       this.stepper.next();
     }
   }
@@ -251,4 +267,28 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscription.forEach((sub) => sub.unsubscribe());
   }
+
+  resetFileInput() {
+    this.uploadForm.get('fileName')?.reset();
+    this.isFileUploaded = false;
+  }
+
+  onCategorySelectionChange(event: MatSelectChange) {
+    const selectedOptions = event.source.selected as MatOption[];
+    if (selectedOptions.length > 3) {
+      event.source.writeValue(this.selectedCategories); // Revert to previous selection
+    } else {
+      this.selectedCategories = selectedOptions.map(option => option.value);
+    }
+  }
+
+  isCategoryDisabled(categoryId: string): boolean {
+    return this.selectedCategories.length >= 3 && !this.selectedCategories.includes(categoryId);
+  }
+
+  goToStep3() {
+    this.uploadForm.get('visibility')?.setValidators(Validators.required);
+    this.uploadForm.get('visibility')?.updateValueAndValidity();
+  }
+
 }

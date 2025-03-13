@@ -1,1 +1,49 @@
-<p>edit-playlist-dialog works!</p>
+<div id="edit-container">
+  <div id="edit-content">
+    <div (click)="closeDialog()" class="edit-playlist">
+      <h3>Edit playlist</h3>
+      <mat-icon class="material-symbols-rounded close-btn">close</mat-icon>
+    </div>
+    <div class="edit-img">
+      <img alt="" src="{{ this.data.playlist.thumbnail_url }}" />
+    </div>
+    <form [formGroup]="playlistForm" class="example-form">
+      <div class="title-form">
+        <mat-form-field class="example-full-width">
+          <mat-label>Title</mat-label>
+          <input
+            #title
+            formControlName="title"
+            matInput
+            maxlength="100"
+            placeholder="Choose a title"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="privacy-select">
+        <mat-form-field class="privacy-select-mat-form-field">
+          <mat-label>Privacy</mat-label>
+          <mat-select
+            formControlName="visibility"
+            placeholder="Choose a privacy"
+            required
+          >
+            <mat-option [value]="true">Public</mat-option>
+            <mat-option [value]="false">Private</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </form>
+
+    <div class="save-btn">
+      <button
+        (click)="saveEditPlaylist()"
+        [disabled]="playlistForm.invalid"
+        mat-raised-button
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</div>

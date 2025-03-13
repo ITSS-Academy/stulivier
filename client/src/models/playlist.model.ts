@@ -15,6 +15,16 @@ export interface PlaylistDetailModel {
   videos: VideoModel[];
 }
 
+export interface PlaylistResponseModel {
+  id: string;
+  title: string;
+  description: string;
+  thumbnail_url: string;
+  is_public: boolean;
+  user_id: string;
+  videos: VideoModel[];
+}
+
 export interface CreatePlaylistDto {
   title: string;
   is_public: boolean;

@@ -1,29 +1,35 @@
 <div class="container">
   @defer (when (isCheckLogin$ | async)) {
     @if ((user$ | async)?.id) {
-      <div class="container-playlist">
-        @for (playlist of playlists$ | async; track $index) {
-          <app-playlist-card-in-page-playlist
-            [playlist]="playlist"
-            [highlight]="$index === index"
-            (click)="onClickPlaylist(playlist.id, $index)"
-            (playAll)="onPlayAll(playlist.id)"
-            (playShuffle)="onPlayShuffle(playlist.id)"
-          ></app-playlist-card-in-page-playlist>
-        }
-      </div>
-      <div class="container-video-card-horizontal">
-        <cdk-virtual-scroll-viewport class="main-content" itemSize="50">
-          <div id="content">
-            @for (video of (playlistDetail$ | async)?.videos; track $index) {
-              <app-video-card-horizontal
-                [video]="video"
-                (removeVideoInPlaylistEvent)="removeVideoInPlaylist($event)"
-              ></app-video-card-horizontal>
-            }
-          </div>
-        </cdk-virtual-scroll-viewport>
-      </div>
+      @if ((playlists$ | async)?.length && (playlistDetail$ | async)?.videos) {
+        <div class="container-playlist">
+          @for (playlist of playlists$ | async; track $index) {
+            <app-playlist-card-in-page-playlist
+              [playlist]="playlist"
+              [highlight]="$index === index"
+              (click)="onClickPlaylist(playlist.id, $index)"
+              (playAll)="onPlayAll(playlist.id)"
+              (playShuffle)="onPlayShuffle(playlist.id)"
+            ></app-playlist-card-in-page-playlist>
+          }
+        </div>
+        <div class="container-video-card-horizontal">
+          <cdk-virtual-scroll-viewport class="main-content" itemSize="50">
+            <div id="content">
+              @for (video of (playlistDetail$ | async)?.videos; track $index) {
+                <app-video-card-horizontal
+                  [video]="video"
+                  (removeVideoInPlaylistEvent)="removeVideoInPlaylist($event)"
+                ></app-video-card-horizontal>
+              }
+            </div>
+          </cdk-virtual-scroll-viewport>
+        </div>
+      } @else {
+        <div class="loading">
+          <mat-spinner class="circle"></mat-spinner>
+        </div>
+      }
     } @else {
       <div class="user-login-require">
         <mat-icon

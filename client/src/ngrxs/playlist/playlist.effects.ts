@@ -289,3 +289,30 @@ export const deleteWatchLaterPlaylist$ = createEffect(
   },
   { functional: true },
 );
+
+export const getPlaylistWithVideos$ = createEffect(
+  () => {
+    const actions$ = inject(Actions);
+    const playlistService = inject(PlaylistService);
+    return actions$.pipe(
+      ofType(PlaylistActions.getPlaylistWithVideos),
+      exhaustMap((action) => {
+        return playlistService.getAllPlaylistDetails(action.userId).pipe(
+          map((response) =>
+            PlaylistActions.getPlaylistWithVideosSuccess({
+              playlistWithVideos: response,
+            }),
+          ),
+          catchError((obj) => {
+            return of(
+              PlaylistActions.getPlaylistWithVideosFailure({
+                error: obj.error.message,
+              }),
+            );
+          }),
+        );
+      }),
+    );
+  },
+  { functional: true },
+);

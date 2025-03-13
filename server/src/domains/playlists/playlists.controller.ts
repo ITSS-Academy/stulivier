@@ -94,4 +94,11 @@ export class PlaylistsController {
     const { playlistId } = req.query;
     return await this.playlistsService.updatePlaylistById(playlistId, body);
   }
+
+  @Public()
+  @Get('detail')
+  async getAllPlaylistDetails(@Request() req: any) {
+    const { userId } = req.query;
+    return await this.playlistsService.getAllPlaylistDetails(userId);
+  }
 }

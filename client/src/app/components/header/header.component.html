@@ -19,13 +19,6 @@
   </div>
   <div class="search-container">
     <div class="search-input">
-      @if (isInputFocused) {
-        <mat-icon
-          class="search-icon material-symbols-rounded"
-          fontIcon="search"
-        ></mat-icon>
-      }
-
       <input
         (blur)="onBlur()"
         (focus)="onFocus()"
@@ -58,17 +51,17 @@
           Create
         </button>
       } @else {
-        <button
-          mat-flat-button
-          [matMenuTriggerFor]="menuCreate"
-        >
+        <button mat-flat-button [matMenuTriggerFor]="menuCreate">
           <mat-menu #menuCreate="matMenu">
             <p>You need to be signed in to Create the video.</p>
             <button
               mat-flat-button
               style="margin-left: 10px"
               [routerLink]="['/login']"
-              (click)="signInWithGoogle()">Sign in</button>
+              (click)="signInWithGoogle()"
+            >
+              Sign in
+            </button>
           </mat-menu>
           <mat-icon
             class="material-symbols-rounded icon-add"
@@ -103,7 +96,9 @@
               </div>
             </div>
             <button mat-menu-item [routerLink]="['/video-control']">
-              <mat-icon class="material-symbols-rounded">video_settings</mat-icon>
+              <mat-icon class="material-symbols-rounded"
+                >video_settings</mat-icon
+              >
               <span>Video control</span>
             </button>
             <button mat-menu-item [routerLink]="['/login']" (click)="signOut()">
