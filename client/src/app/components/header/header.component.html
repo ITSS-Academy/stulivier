@@ -98,7 +98,7 @@
                 <div>
                   <span>{{ (user$ | async)?.username }}</span>
                   <br />
-                  <a [routerLink]="['/profile']">View your profile</a>
+                  <a [routerLink]="['/profile', (user$ | async)?.id]">View your profile</a>
                 </div>
               </div>
             </div>

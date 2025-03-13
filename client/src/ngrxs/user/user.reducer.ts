@@ -5,6 +5,8 @@ import { UserModel } from '../../models/user.model';
 
 const initialState: UserState = {
   user: <UserModel>{},
+  userById: <UserModel>{},
+
   isGettingUser: false,
   isGetUserSuccess: false,
   getUserErrorMessage: '',
@@ -24,6 +26,10 @@ const initialState: UserState = {
   isUpdatingDescribe: false,
   isUpdateDescribeSuccess: false,
   updateDescribeErrorMessage: '',
+
+  isGettingUserById: false,
+  isGetUserByIdSuccess: false,
+  getUserByIdErrorMessage: '',
 };
 
 export const userReducer = createReducer(
@@ -52,14 +58,14 @@ export const userReducer = createReducer(
     };
   }),
 
-  on(UserActions.getUserById, (state, action) => {
+  on(UserActions.getUser, (state, action) => {
     console.log(action.type);
     return <UserState>{
       ...state,
       isGettingUser: true,
     };
   }),
-  on(UserActions.getUserByIdSuccess, (state, action) => {
+  on(UserActions.getUserSuccess, (state, action) => {
     console.log(action.type);
     return <UserState>{
       ...state,
@@ -68,7 +74,7 @@ export const userReducer = createReducer(
       isGetUserSuccess: true,
     };
   }),
-  on(UserActions.getUserByIdFailure, (state, action) => {
+  on(UserActions.getUserFailure, (state, action) => {
     console.log(action.type);
     return <UserState>{
       ...state,
@@ -76,6 +82,33 @@ export const userReducer = createReducer(
       getUserErrorMessage: action.error,
     };
   }),
+
+  on(UserActions.getUserById, (state, action) => {
+    console.log(action.type);
+    return <UserState>{
+      ...state,
+      isGettingUserById: true,
+    };
+  }),
+  on(UserActions.getUserByIdSuccess, (state, action) => {
+    console.log(action.type);
+    return <UserState>{
+      ...state,
+      userById: action.user,
+      isGettingUserById: false,
+      isGetUserByIdSuccess: true,
+    };
+  }),
+  on(UserActions.getUserByIdFailure, (state, action) => {
+    console.log(action.type);
+    return <UserState>{
+      ...state,
+      isGettingUserById: false,
+      getUserByIdErrorMessage: action.error,
+    };
+  }),
+
+
 
   on(UserActions.updateChannelImage, (state, action) => {
     console.log(action.type);

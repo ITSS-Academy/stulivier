@@ -70,7 +70,7 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'profile',
+    path: 'profile/:id',
     loadChildren: () =>
       import('./pages/profile/profile.route').then((m) => m.PROFILE_ROUTES),
   },

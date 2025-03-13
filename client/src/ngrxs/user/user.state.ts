@@ -2,6 +2,8 @@ import { UserModel } from '../../models/user.model';
 
 export interface UserState {
   user: UserModel;
+  userById: UserModel;
+
   isGettingUser: boolean;
   isGetUserSuccess: boolean;
   getUserErrorMessage: string;
@@ -21,4 +23,8 @@ export interface UserState {
   isUpdatingDescribe: boolean;
   isUpdateDescribeSuccess: boolean;
   updateDescribeErrorMessage: string;
+
+  isGettingUserById: boolean;
+  isGetUserByIdSuccess: boolean;
+  getUserByIdErrorMessage: string;
 }

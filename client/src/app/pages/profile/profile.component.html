@@ -3,9 +3,9 @@
     <div id="user-data">
       <div class="user-background">
         <div class="background-img">
-          @if ((user$ | async)?.background_url) {
+          @if (user?.background_url) {
             <img
-              [src]="(user$ | async)?.background_url"
+              [src]="user?.background_url"
               alt="Selected Image"
               class="background-img-preview"
             />
@@ -32,14 +32,14 @@
             <img
               alt="Selected Image"
               class="avatar-img"
-              src="{{ (user$ | async)?.avatar_url }}"
+              src="{{ user?.avatar_url }}"
             />
           </div>
           <div class="user-data">
-            <span class="username">{{ (user$ | async)?.username }}</span>
+            <span class="username">{{ user?.username }}</span>
             <!--            <span class="views">123,354 Views</span>-->
             <span class="describe">
-              {{ (user$ | async)?.describe }}
+              {{ user?.describe }}
             </span>
           </div>
         </div>
