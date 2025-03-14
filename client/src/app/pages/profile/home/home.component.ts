@@ -1,7 +1,6 @@
 import {
   Component,
   ElementRef,
-  Input,
   OnDestroy,
   OnInit,
   Renderer2,
@@ -17,7 +16,7 @@ import { VideoState } from '../../../../ngrxs/video/video.state';
 import * as VideoActions from '../../../../ngrxs/video/video.actions';
 import * as PlaylistActions from '../../../../ngrxs/playlist/playlist.actions';
 import { PlaylistCardComponent } from '../../../components/playlist-card/playlist-card.component';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { PlaylistState } from '../../../../ngrxs/playlist/playlist.state';
 import {
   PlaylistModel,
@@ -25,8 +24,9 @@ import {
 } from '../../../../models/playlist.model';
 import { UserModel } from '../../../../models/user.model';
 import { UserState } from '../../../../ngrxs/user/user.state';
-import { filter, map, take } from 'rxjs/operators';
-import * as UserActions from '../../../../ngrxs/user/user.actions';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
+import { VideoCardVerticalSkeletonComponent } from '../../../components/video-card-vertical-skeleton/video-card-vertical-skeleton.component';
 
 @Component({
   selector: 'app-home',
@@ -40,6 +40,8 @@ import * as UserActions from '../../../../ngrxs/user/user.actions';
     PlaylistCardComponent,
     RouterLink,
     DatePipe,
+    NgxSkeletonLoaderComponent,
+    VideoCardVerticalSkeletonComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

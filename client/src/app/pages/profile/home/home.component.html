@@ -1,35 +1,96 @@
 <div id="container">
-  @if (randomVideo?.id) {
-    <div
-      class="recommend-video"
-      [routerLink]="['/watch']"
-      [queryParams]="{ v: randomVideo?.id }"
-    >
-      <img [src]="randomVideo?.thumbnail_url" alt="thumbnail" />
-      <div class="info">
-        <p class="title">{{ randomVideo?.title }}</p>
-        <div class="in-info">
-          <div class="other-info">
-            <span class="date">{{
-              randomVideo?.created_at | date: "dd/MM/yyyy"
-            }}</span>
+  @defer (when (videos$| async)?.length) {
+    @if (randomVideo?.id) {
+      <div
+        class="recommend-video"
+        [routerLink]="['/watch']"
+        [queryParams]="{ v: randomVideo?.id }"
+      >
+        <img [src]="randomVideo?.thumbnail_url" alt="thumbnail" />
+        <div class="info">
+          <p class="title">{{ randomVideo?.title }}</p>
+          <div class="in-info">
+            <div class="other-info">
+              <span class="date">{{
+                randomVideo?.created_at | date: "dd/MM/yyyy"
+              }}</span>
+            </div>
           </div>
+          <p class="description">{{ randomVideo?.description }}</p>
         </div>
-        <p class="description">{{ randomVideo?.description }}</p>
+      </div>
+    }
+  } @placeholder (minimum 500ms) {
+    <div class="video-card">
+      <!-- Skeleton Thumbnail -->
+      <ngx-skeleton-loader
+        [theme]="{
+          width: '320px',
+          height: '180px',
+          'border-radius': '10px',
+          filter: 'brightness(0.5)',
+        }"
+        appearance="line"
+      >
+      </ngx-skeleton-loader>
+
+      <div class="video-info">
+        <div class="text-info">
+          <!-- Skeleton Title -->
+          <ngx-skeleton-loader
+            [theme]="{
+              width: '800px',
+              height: '30px',
+              filter: 'brightness(0.5)',
+            }"
+            appearance="line"
+          >
+          </ngx-skeleton-loader>
+
+          <!-- Skeleton Channel & Views -->
+          <ngx-skeleton-loader
+            [theme]="{
+              width: '800px',
+              height: '50px',
+              filter: 'brightness(0.5)',
+            }"
+            appearance="line"
+          >
+          </ngx-skeleton-loader>
+
+          <ngx-skeleton-loader
+            [theme]="{
+              width: '800px',
+              height: '50px',
+              filter: 'brightness(0.5)',
+            }"
+            appearance="line"
+          >
+          </ngx-skeleton-loader>
+        </div>
       </div>
     </div>
   }
   <div class="content-container">
     <div class="content-header">
       <h3>Video</h3>
-      <button [routerLink]="['/profile/videos']" mat-stroked-button>
+      <button
+        [routerLink]="['/profile', userById.id, 'videos']"
+        mat-stroked-button
+      >
         View more
       </button>
     </div>
     <div class="data-container">
       <div #dataContainer class="data">
-        @for (video of videos$ | async; track $index) {
-          <app-video-card-vertical [video]="video"></app-video-card-vertical>
+        @defer (when (videos$| async)?.length) {
+          @for (video of videos$ | async; track $index) {
+            <app-video-card-vertical [video]="video"></app-video-card-vertical>
+          }
+        } @placeholder (minimum 500ms) {
+          @for (_ of [].constructor(4); track $index) {
+            <app-video-card-vertical-skeleton></app-video-card-vertical-skeleton>
+          }
         }
       </div>
       <div class="button">
@@ -47,7 +108,10 @@
     <div class="content-container">
       <div class="content-header">
         <h3>Playlist</h3>
-        <button [routerLink]="['/profile/playlists']" mat-stroked-button>
+        <button
+          [routerLink]="['/profile', userById.id, 'playlists']"
+          mat-stroked-button
+        >
           View more
         </button>
       </div>
@@ -100,8 +164,8 @@
                 class="button-left"
               >
                 <mat-icon class="material-symbols-rounded"
-                  >chevron_left</mat-icon
-                >
+                  >chevron_left
+                </mat-icon>
               </button>
               <button
                 mat-mini-fab
@@ -109,8 +173,8 @@
                 class="button-right"
               >
                 <mat-icon class="material-symbols-rounded"
-                  >chevron_right</mat-icon
-                >
+                  >chevron_right
+                </mat-icon>
               </button>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { SharedModule } from '../../../shared/modules/shared.module';
 import { MaterialModule } from '../../../shared/modules/material.module';
 import { VideoModule } from '../../../shared/modules/video.module';
@@ -48,6 +48,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       'isGettingTopCategories',
     );
     this.store.dispatch(CategoryActions.getTopCategories());
+  }
+
+  @HostListener('document:mouseleave', ['$event'])
+  onMouseLeave(event: MouseEvent) {
+    this.currentlyPlayingId = null;
+    this.hoveringVideoId = null;
   }
 
   ngOnInit() {

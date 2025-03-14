@@ -25,12 +25,7 @@ export class AuthService {
         const email = error.customData.email;
         // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
-        console.error('Error:', {
-          errorCode,
-          errorMessage,
-          email,
-          credential,
-        });
+
         return of(credential);
       }),
     );
@@ -39,7 +34,6 @@ export class AuthService {
   logout() {
     return from(signOut(this.auth)).pipe(
       catchError((error: any) => {
-        console.error('Error:', error);
         return of(error);
       }),
     );

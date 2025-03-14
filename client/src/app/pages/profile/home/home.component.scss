@@ -172,3 +172,20 @@
   //white-space: pre-line;
   word-wrap: break-word;
 }
+
+.video-card {
+  display: flex;
+  gap: 15px;
+}
+
+.video-info {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+}
+
+.text-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}

@@ -13,6 +13,7 @@ import * as VideoActions from '../../../ngrxs/video/video.actions';
 import * as AuthActions from '../../../ngrxs/auth/auth.actions';
 import { VideoCardVerticalComponent } from '../../components/video-card-vertical/video-card-vertical.component';
 import { VideoCardVerticalSkeletonComponent } from '../../components/video-card-vertical-skeleton/video-card-vertical-skeleton.component';
+import { NgxSkeletonLoaderComponent } from 'ngx-skeleton-loader';
 
 @Component({
   selector: 'app-liked-videos',
@@ -23,6 +24,7 @@ import { VideoCardVerticalSkeletonComponent } from '../../components/video-card-
     VideoModule,
     VideoCardVerticalComponent,
     VideoCardVerticalSkeletonComponent,
+    NgxSkeletonLoaderComponent,
   ],
   templateUrl: './liked-videos.component.html',
   styleUrl: './liked-videos.component.scss',

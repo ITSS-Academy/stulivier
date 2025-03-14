@@ -13,6 +13,8 @@ import { EditProfileDialogComponent } from '../../dialogs/edit-profile-dialog/ed
 import * as UserActions from '../../../ngrxs/user/user.actions';
 import * as VideoActions from '../../../ngrxs/video/video.actions';
 import * as PlaylistActions from '../../../ngrxs/playlist/playlist.actions';
+import { VideoState } from '../../../ngrxs/video/video.state';
+import { PlaylistState } from '../../../ngrxs/playlist/playlist.state';
 
 @Component({
   selector: 'app-profile',
@@ -29,6 +31,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
   userById!: UserModel;
 
   isGetUserByIdSuccess$!: Observable<boolean>;
+  isGetVideosByUserIdSuccess$!: Observable<boolean>;
+  isGetPlaylistsByUserIdSuccess$!: Observable<boolean>;
+  isGetPlaylistWithVideosByUserIdSuccess$!: Observable<boolean>;
 
   @Input() username!: string;
   @Input() avatar_url!: string;
@@ -42,13 +47,29 @@ export class ProfileComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private store: Store<{ user: UserState }>,
+    private store: Store<{
+      user: UserState;
+      video: VideoState;
+      playlist: PlaylistState;
+    }>,
   ) {
     this.user$ = this.store.select('user', 'user');
     this.userId$ = this.store.select('user', 'userById');
     this.isGetUserByIdSuccess$ = this.store.select(
       'user',
       'isGetUserByIdSuccess',
+    );
+    this.isGetVideosByUserIdSuccess$ = this.store.select(
+      'video',
+      'isGetVideosByUserIdSuccess',
+    );
+    this.isGetPlaylistsByUserIdSuccess$ = this.store.select(
+      'playlist',
+      'isGetPlaylistByUserIdSuccess',
+    );
+    this.isGetPlaylistWithVideosByUserIdSuccess$ = this.store.select(
+      'playlist',
+      'isGetPlaylistWithVideosSuccess',
     );
   }
 
@@ -71,12 +92,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.updateActiveTab(this.router.url);
 
     this.subscriptions.push(
-      this.userId$.subscribe((userId) => {
-        console.log(userId);
-      }),
-      this.isGetUserByIdSuccess$.subscribe((userId) => {
-        console.log(userId);
-      }),
+      this.userId$.subscribe((userId) => {}),
+      this.isGetUserByIdSuccess$.subscribe((userId) => {}),
       this.activatedRoute.params.subscribe((params) => {
         // clear state before get user by id
         this.store.dispatch(UserActions.clearUserById());
@@ -116,7 +133,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
           ),
         )
         .subscribe(() => {
-          console.log('update success', this.userById.id);
           this.store.dispatch(UserActions.clearUserById());
           this.store.dispatch(UserActions.getUser());
           this.store.dispatch(

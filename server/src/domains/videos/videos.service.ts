@@ -364,7 +364,6 @@ export class VideosService {
   }
 
   async getVideoByUserId(userId: string) {
-    console.log(userId);
     try {
       const { data, error } = await this.supabase
         .from('videos')

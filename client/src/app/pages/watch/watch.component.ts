@@ -58,7 +58,6 @@ export class WatchComponent implements OnInit, OnDestroy, AfterViewInit {
   commentdiv!: CdkVirtualScrollViewport;
   @ViewChild('content') contentDiv!: ElementRef;
 
-  isDescriptionExpanded = false;
   videoId!: string;
   listId!: string;
   startRadio!: number;
@@ -173,7 +172,6 @@ export class WatchComponent implements OnInit, OnDestroy, AfterViewInit {
           if (media && media.subscriptions) {
             this.setupVideoListeners(media);
           } else {
-            console.error('Media or subscriptions is undefined.');
           }
         }
       }),

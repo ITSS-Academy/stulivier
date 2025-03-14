@@ -1,5 +1,10 @@
 <div id="container">
-  @if ((userId$ | async)?.id) {
+  @if (
+    (userId$ | async)?.id ||
+    (isGetVideosByUserIdSuccess$ | async) ||
+    (isGetPlaylistsByUserIdSuccess$ | async) ||
+    (isGetPlaylistWithVideosByUserIdSuccess$ | async)
+  ) {
     <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
       <div id="user-data">
         @if ((userId$ | async)?.background_url) {

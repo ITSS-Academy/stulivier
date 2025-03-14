@@ -1,239 +1,225 @@
-<div class="container">
-  <div class="left">
-    <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
-      <mat-card appearance="outlined" class="video-card">
-        <div class="video-container">
-          <vg-player (onPlayerReady)="onPlayerReady($event)">
-            <vg-overlay-play></vg-overlay-play>
-            <vg-buffering></vg-buffering>
+@if (isGetVideoSuccess$ | async) {
+  <div class="container">
+    <div class="left">
+      <cdk-virtual-scroll-viewport class="scroll" itemSize="50">
+        <mat-card appearance="outlined" class="video-card">
+          <div class="video-container">
+            <vg-player (onPlayerReady)="onPlayerReady($event)">
+              <vg-overlay-play></vg-overlay-play>
+              <vg-buffering></vg-buffering>
 
-            <vg-scrub-bar>
-              <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-              <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-            </vg-scrub-bar>
+              <vg-scrub-bar>
+                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+              </vg-scrub-bar>
 
-            <vg-controls>
-              <vg-play-pause></vg-play-pause>
-              <vg-playback-button></vg-playback-button>
+              <vg-controls>
+                <vg-play-pause></vg-play-pause>
+                <vg-playback-button></vg-playback-button>
 
-              <vg-time-display
-                vgFormat="mm:ss"
-                vgProperty="current"
-              ></vg-time-display>
-              <vg-scrub-bar style="pointer-events: none"></vg-scrub-bar>
-              <vg-time-display
-                vgFormat="mm:ss"
-                vgProperty="total"
-              ></vg-time-display>
+                <vg-time-display
+                  vgFormat="mm:ss"
+                  vgProperty="current"
+                ></vg-time-display>
+                <vg-scrub-bar style="pointer-events: none"></vg-scrub-bar>
+                <vg-time-display
+                  vgFormat="mm:ss"
+                  vgProperty="total"
+                ></vg-time-display>
 
-              <vg-mute></vg-mute>
-              <vg-volume></vg-volume>
+                <vg-mute></vg-mute>
+                <vg-volume></vg-volume>
 
-              <vg-fullscreen></vg-fullscreen>
-            </vg-controls>
+                <vg-fullscreen></vg-fullscreen>
+              </vg-controls>
 
-            <video
-              #media
-              [vgHls]="(video$ | async)?.video_url ?? ''"
-              [vgMedia]="$any(media)"
-              autoplay
-              crossorigin
-              id="hls-video"
-              preload="auto"
-            ></video>
-          </vg-player>
-        </div>
-
-        <mat-card-content class="content-container">
-          <span class="title">{{ (video$ | async)?.title }}</span>
-          <mat-card appearance="outlined" class="video-info">
-            <mat-card-content class="description">
-              {{ (video$ | async)?.description }}
-            </mat-card-content>
-          </mat-card>
-        </mat-card-content>
-      </mat-card>
-      @if (isGetPlaylistByIdSuccess$ | async) {
-        <div class="content-container-playlist">
-          <div class="content-header">
-            <h3>Playlist</h3>
-            <button
-              mat-stroked-button
-              [routerLink]="[
-                '/playlists',
-                (playlistDetail$ | async)?.playlist?.id,
-              ]"
-            >
-              View more
-            </button>
+              <video
+                #media
+                [vgHls]="(video$ | async)?.video_url ?? ''"
+                [vgMedia]="$any(media)"
+                autoplay
+                crossorigin
+                id="hls-video"
+                preload="auto"
+              ></video>
+            </vg-player>
           </div>
-          <div class="data-container">
-            <div class="data" #dataContainer>
-              @for (items of (playlistDetail$ | async)?.videos; track $index) {
-                <app-video-card-vertical
-                  [video]="items"
-                  [highlight]="+startRadio === $index"
-                  [playlistId]="(playlistDetail$ | async)?.playlist?.id"
-                  [index]="$index"
-                ></app-video-card-vertical>
-              }
-            </div>
-            <div class="button">
+
+          <mat-card-content class="content-container">
+            <span class="title">{{ (video$ | async)?.title }}</span>
+            <mat-card appearance="outlined" class="video-info">
+              <mat-card-content class="description">
+                {{ (video$ | async)?.description }}
+              </mat-card-content>
+            </mat-card>
+          </mat-card-content>
+        </mat-card>
+        @if (isGetPlaylistByIdSuccess$ | async) {
+          <div class="content-container-playlist">
+            <div class="content-header">
+              <h3>Playlist</h3>
               <button
-                mat-mini-fab
-                aria-label="Scroll to left"
-                class="button-left"
+                mat-stroked-button
+                [routerLink]="[
+                  '/playlists',
+                  (playlistDetail$ | async)?.playlist?.id,
+                ]"
               >
-                <mat-icon class="material-symbols-rounded"
-                  >chevron_left
-                </mat-icon>
-              </button>
-              <button
-                mat-mini-fab
-                aria-label="Scroll to right"
-                class="button-right"
-              >
-                <mat-icon class="material-symbols-rounded"
-                  >chevron_right
-                </mat-icon>
+                View more
               </button>
             </div>
+            <div class="data-container">
+              <div class="data" #dataContainer>
+                @for (
+                  items of (playlistDetail$ | async)?.videos;
+                  track $index
+                ) {
+                  <app-video-card-vertical
+                    [video]="items"
+                    [highlight]="+startRadio === $index"
+                    [playlistId]="(playlistDetail$ | async)?.playlist?.id"
+                    [index]="$index"
+                  ></app-video-card-vertical>
+                }
+              </div>
+              <div class="button">
+                <button
+                  mat-mini-fab
+                  aria-label="Scroll to left"
+                  class="button-left"
+                >
+                  <mat-icon class="material-symbols-rounded"
+                    >chevron_left
+                  </mat-icon>
+                </button>
+                <button
+                  mat-mini-fab
+                  aria-label="Scroll to right"
+                  class="button-right"
+                >
+                  <mat-icon class="material-symbols-rounded"
+                    >chevron_right
+                  </mat-icon>
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      }
-      <div class="content-header">
-        <h3 class="recommended-video">Recommend video</h3>
-        <!--        <button mat-stroked-button [routerLink]="['/playlists/{{id}}']">View more</button>-->
-      </div>
-      <div class="video-list">
-        @for (video of filteredVideos$ | async; track $index) {
-          <app-video-card-vertical
-            [video]="video"
-            (click)="nextVideo()"
-          ></app-video-card-vertical>
         }
-      </div>
-    </cdk-virtual-scroll-viewport>
-  </div>
-
-  <div class="right">
-    <div [routerLink]="['/profile', (video$ | async)?.user_id]" class="info">
-      <div class="avatar">
-        <img alt="" src="{{ (video$ | async)?.user_data?.avatar_url }}" />
-      </div>
-      <div class="user-info">
-        <span class="username">
-          {{ (video$ | async)?.user_data?.username }}
-        </span>
-        <!--                <span class="sub">0 subscribers</span>-->
-      </div>
-      <!--              <button mat-flat-button>Subscribe</button>-->
-    </div>
-    <div class="line"></div>
-    <div class="content">
-      <cdk-virtual-scroll-viewport
-        #commentdiv
-        class="comment-scroll"
-        itemSize="50"
-      >
-        <div class="comment-list">
-          @for (comment of comments$ | async; track comment.id) {
-            <app-comment-card [comment]="comment"></app-comment-card>
+        <div class="content-header">
+          <h3 class="recommended-video">Recommend video</h3>
+          <!--        <button mat-stroked-button [routerLink]="['/playlists/{{id}}']">View more</button>-->
+        </div>
+        <div class="video-list">
+          @for (video of filteredVideos$ | async; track $index) {
+            <app-video-card-vertical
+              [video]="video"
+              (click)="nextVideo()"
+            ></app-video-card-vertical>
           }
         </div>
       </cdk-virtual-scroll-viewport>
     </div>
-    <div class="line"></div>
-    @defer (when (isCheckLogin$|async)) {
-      @if ((user$ | async)?.id) {
-        <div class="reaction-btn">
-          @if (this.is_liked) {
+
+    <div class="right">
+      <div [routerLink]="['/profile', (video$ | async)?.user_id]" class="info">
+        <div class="avatar">
+          <img alt="" src="{{ (video$ | async)?.user_data?.avatar_url }}" />
+        </div>
+        <div class="user-info">
+          <span class="username">
+            {{ (video$ | async)?.user_data?.username }}
+          </span>
+          <!--                <span class="sub">0 subscribers</span>-->
+        </div>
+        <!--              <button mat-flat-button>Subscribe</button>-->
+      </div>
+      <div class="line"></div>
+      <div class="content">
+        <cdk-virtual-scroll-viewport
+          #commentdiv
+          class="comment-scroll"
+          itemSize="50"
+        >
+          <div class="comment-list">
+            @for (comment of comments$ | async; track comment.id) {
+              <app-comment-card [comment]="comment"></app-comment-card>
+            }
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </div>
+      <div class="line"></div>
+      @defer (when (isCheckLogin$|async)) {
+        @if ((user$ | async)?.id) {
+          <div class="reaction-btn">
+            @if (this.is_liked) {
+              <mat-icon
+                class="material-symbols-rounded icon liked"
+                fontIcon="favorite"
+                (click)="toggleReaction()"
+              ></mat-icon>
+            } @else {
+              <mat-icon
+                class="material-symbols-rounded icon"
+                fontIcon="favorite"
+                (click)="toggleReaction()"
+              ></mat-icon>
+            }
             <mat-icon
-              class="material-symbols-rounded icon liked"
-              fontIcon="favorite"
-              (click)="toggleReaction()"
+              (click)="focusCommentInput()"
+              class="material-symbols-rounded icon"
+              fontIcon="mode_comment"
             ></mat-icon>
-          } @else {
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item>Open dialog</button>
+            </mat-menu>
+          </div>
+          <div class="comment-forms">
+            <mat-form-field
+              (click)="focusCommentInput()"
+              appearance="fill"
+              class="comment-field"
+            >
+              <mat-label>Comment</mat-label>
+              <input
+                #commentInput
+                [(ngModel)]="comment"
+                matInput
+                (keydown.enter)="createComment()"
+              />
+            </mat-form-field>
+            <button
+              (click)="createComment()"
+              [disabled]="comment == ''"
+              mat-flat-button
+            >
+              Post
+            </button>
+          </div>
+        } @else {
+          <div class="reaction-btn">
             <mat-icon
               class="material-symbols-rounded icon"
               fontIcon="favorite"
-              (click)="toggleReaction()"
+              [matMenuTriggerFor]="menuLiked"
             ></mat-icon>
-          }
-          <mat-icon
-            (click)="focusCommentInput()"
-            class="material-symbols-rounded icon"
-            fontIcon="mode_comment"
-          ></mat-icon>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item>Open dialog</button>
-          </mat-menu>
-        </div>
-        <div class="comment-forms">
-          <mat-form-field
-            (click)="focusCommentInput()"
-            appearance="fill"
-            class="comment-field"
-          >
-            <mat-label>Comment</mat-label>
-            <input
-              #commentInput
-              [(ngModel)]="comment"
-              matInput
-              (keydown.enter)="createComment()"
-            />
-          </mat-form-field>
-          <button
-            (click)="createComment()"
-            [disabled]="comment == ''"
-            mat-flat-button
-          >
-            Post
-          </button>
-        </div>
-      } @else {
-        <div class="reaction-btn">
-          <mat-icon
-            class="material-symbols-rounded icon"
-            fontIcon="favorite"
-            [matMenuTriggerFor]="menuLiked"
-          ></mat-icon>
-          <mat-menu #menuLiked="matMenu">
-            <p>You need to be signed in to Like the video.</p>
-            <button
-              mat-flat-button
-              style="margin-left: 10px"
-              [routerLink]="['/login']"
-              (click)="signInWithGoogle()"
-            >
-              Sign in
-            </button>
-          </mat-menu>
-          <mat-icon
-            class="material-symbols-rounded"
-            fontIcon="mode_comment"
-            [matMenuTriggerFor]="menuComment"
-            style="cursor: pointer; color: var(--md-sys-color-on-surface)"
-          ></mat-icon>
-          <mat-menu #menuComment="matMenu">
-            <p>You need to be signed in to Comment the video.</p>
-            <button
-              mat-flat-button
-              style="margin-left: 10px"
-              [routerLink]="['/login']"
-              (click)="signInWithGoogle()"
-            >
-              Sign in
-            </button>
-          </mat-menu>
-        </div>
-        <div class="comment-forms">
-          <mat-form-field
-            appearance="fill"
-            class="comment-field"
-            [matMenuTriggerFor]="commentInput"
-          >
-            <mat-menu #commentInput="matMenu">
+            <mat-menu #menuLiked="matMenu">
+              <p>You need to be signed in to Like the video.</p>
+              <button
+                mat-flat-button
+                style="margin-left: 10px"
+                [routerLink]="['/login']"
+                (click)="signInWithGoogle()"
+              >
+                Sign in
+              </button>
+            </mat-menu>
+            <mat-icon
+              class="material-symbols-rounded"
+              fontIcon="mode_comment"
+              [matMenuTriggerFor]="menuComment"
+              style="cursor: pointer; color: var(--md-sys-color-on-surface)"
+            ></mat-icon>
+            <mat-menu #menuComment="matMenu">
               <p>You need to be signed in to Comment the video.</p>
               <button
                 mat-flat-button
@@ -244,12 +230,35 @@
                 Sign in
               </button>
             </mat-menu>
-            <mat-label>Comment</mat-label>
-            <input matInput disabled [matMenuTriggerFor]="commentInput" />
-          </mat-form-field>
-          <button mat-flat-button disabled>Post</button>
-        </div>
+          </div>
+          <div class="comment-forms">
+            <mat-form-field
+              appearance="fill"
+              class="comment-field"
+              [matMenuTriggerFor]="commentInput"
+            >
+              <mat-menu #commentInput="matMenu">
+                <p>You need to be signed in to Comment the video.</p>
+                <button
+                  mat-flat-button
+                  style="margin-left: 10px"
+                  [routerLink]="['/login']"
+                  (click)="signInWithGoogle()"
+                >
+                  Sign in
+                </button>
+              </mat-menu>
+              <mat-label>Comment</mat-label>
+              <input matInput disabled [matMenuTriggerFor]="commentInput" />
+            </mat-form-field>
+            <button mat-flat-button disabled>Post</button>
+          </div>
+        }
       }
-    }
+    </div>
   </div>
-</div>
+} @else {
+  <div class="loading">
+    <mat-spinner class="circle"></mat-spinner>
+  </div>
+}

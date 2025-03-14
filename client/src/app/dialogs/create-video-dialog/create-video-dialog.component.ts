@@ -119,11 +119,8 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
     });
 
     this.subscription.push(
-      this.uploadProgress$.subscribe((progress) => {
-        console.log('progress', progress);
-      }),
+      this.uploadProgress$.subscribe((progress) => {}),
       this.isCreateVideoSuccess$.subscribe((isSuccess) => {
-        console.log('isSuccess', isSuccess);
         if (isSuccess) {
           this.store.dispatch(VideoActions.clearState());
 
@@ -201,7 +198,6 @@ export class CreateVideoDialogComponent implements OnInit, OnDestroy {
 
       // Handle the file upload
     } else {
-      console.error('Invalid file type. Please upload an MP4 file.');
     }
   }
 
